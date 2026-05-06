@@ -105,6 +105,8 @@ It turns scattered Skill files into trackable,rollable, reusable, and deliverabl
 Download a pre-built release for your platform from the
 [Releases](https://github.com/liu673/skill-studio/releases) page.
 
+> **Note**: Each release body lists the platform installers, checksum files, auto-update prerequisites, and preview-build limits. See [docs/release-notes.md](docs/release-notes.md) for the release note template used by the workflow.
+
 > **Note**: Current pre-built artifacts are unsigned preview builds. Windows and
 > macOS may show system security warnings. After users install a baseline build
 > that includes the updater, future versions can be updated from inside the app.
@@ -240,9 +242,10 @@ platform. For cross-platform releases, run the command on each target OS.
 | macOS | `.dmg` (unsigned preview builds may trigger Gatekeeper warnings) |
 | Linux | `.AppImage`, `.deb`, `.rpm` |
 
-> **Installer note**: All release artifacts should be accompanied by a
-> SHA256 checksum files. See `scripts/generate_checksums.sh` and
-> `scripts/generate_checksums.ps1`.
+> **Installer note**: All release artifacts should be accompanied by SHA256
+> checksum files. The release body also explains the platform installers,
+> update metadata, and signature files; see [docs/release-notes.md](docs/release-notes.md).
+> See `scripts/generate_checksums.sh` and `scripts/generate_checksums.ps1`.
 
 ### Preview Release Limits
 

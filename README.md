@@ -115,6 +115,8 @@ Skill Studio 是一个本地优先的桌面端 Skill 资产管理工具，用于
 
 从 [Releases](https://github.com/liu673/skill-studio/releases) 页面下载对应平台的预构建安装包。
 
+> **说明**：每个 release 的正文都会列出各平台安装包、校验文件、自动更新前置条件和预发布限制；详细模板见 [docs/release-notes.md](docs/release-notes.md)。
+
 > **说明**：当前预构建安装包按未签名预览版发布。Windows 和 macOS 可能出现系统安全提示。安装带自动更新能力的基线版本后，后续版本可在应用内检查更新。下载后请对照 Release 附带的 SHA256 校验文件确认文件完整性。
 
 ### 从源码构建
@@ -243,6 +245,7 @@ npm run tauri build
 | Linux | `.AppImage`、`.deb`、`.rpm` |
 
 > **安装包说明**：每个 release 产物应附带 SHA256 校验文件。
+> Release 正文会同步说明平台安装包、更新元数据和签名文件；正文模板见 [docs/release-notes.md](docs/release-notes.md)。
 > 生成脚本见 `scripts/generate_checksums.sh` 和 `scripts/generate_checksums.ps1`。
 
 ### 预览版发布限制
