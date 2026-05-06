@@ -1,0 +1,75 @@
+# ===========================================
+# Skill Studio - Open Source .gitignore
+# ===========================================
+
+# ========== Node ==========
+node_modules/
+
+# ========== Build Output ==========
+dist/
+build/
+target/
+
+# ========== OS ==========
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ========== Temp Files ==========
+*.tmp
+*.bak
+*.log
+.tmp/
+release/
+releases/
+
+# ========== Secrets & Credentials ==========
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.sqlite
+*.sqlite3
+*.db
+
+# ========== Git Internals ==========
+.worktrees/
+
+# ========== Claude Code Session Data ==========
+.claude/
+.superpowers/
+
+# ========== gstack Browser Data ==========
+.gstack/
+.gstack-preview/
+
+# ========== Editor & IDE ==========
+.vscode/launch.json
+.vscode/tasks.json
+
+# ===========================================
+# Files tracked in git that should NOT be
+# committed to the open source repository.
+# Remove them with:
+#   git rm -r --cached <path>
+# ===========================================
+
+# Personal development notes and working logs
+docs_idea/
+
+# Private project plans and internal documentation
+docs_self/
+
+# Logo source artwork (keep the generated icons instead)
+branding/logo-source.png
+
+# Build-generated schema files
+src-tauri/gen/schemas/*.json
+
+# Development-only logo generation scripts
+scripts/generate-app-icon-previews.py
+scripts/generate-horizontal-logo.ps1
+scripts/prepare-logo-master.py

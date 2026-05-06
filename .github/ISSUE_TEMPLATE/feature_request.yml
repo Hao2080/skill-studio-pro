@@ -1,0 +1,32 @@
+name: Feature request
+description: Suggest an improvement for Skill Studio.
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What workflow is blocked or inefficient today?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+      description: What should Skill Studio do?
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Scope
+      options:
+        - label: This feature touches local file access.
+        - label: This feature touches external network access or imports.
+        - label: This feature touches platform sync.
+        - label: This feature touches team collaboration.

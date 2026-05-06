@@ -1,0 +1,10 @@
+export const WORKSPACE_LABEL = "工作区";
+export const LATEST_SNAPSHOT_LABEL = "最新快照";
+export const ACTIVE_SNAPSHOT_LABEL = "生效版本";
+export const SYNC_TO_PLATFORM_LABEL = "同步到平台";
+export const VERSION_HISTORY_LABEL = "版本与发布";
+export const CONTENT_VIEW_LABEL = "内容浏览";
+export const LOCAL_VERSIONS_LABEL = "本地版本";
+export const RELEASE_STATUS_LABEL = "同步状态";
+export const TEAM_COLLABORATION_LABEL = "团队空间";
+export const VERSION_HISTORY_EMPTY_DIFF_HINT = "点击左侧时间轴选择两个版本，或先选旧版本后对比工作区。";
