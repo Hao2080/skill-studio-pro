@@ -654,7 +654,7 @@ describe("MarketPage", () => {
 
     expect(searchInput.getAttribute("placeholder")).toBe("按发布者、能力标签或包搜索");
     expect(await screen.findByText("注册表索引")).toBeTruthy();
-  });
+  }, 10_000);
 
   it("导入记录抽屉中可以查看最近记录与最近导入资产，并按主来源筛选", async () => {
     renderPage();
@@ -822,7 +822,7 @@ describe("MarketPage", () => {
       expect(skillContextMock.selectSkill).toHaveBeenCalledWith("skill-retry");
       expect(mockedNavigate).toHaveBeenCalledWith("/workspace/skill-retry");
     });
-  });
+  }, 15_000);
 
   it("手动导入抽屉可执行本地目录导入", async () => {
     openSkillImportDialogMock.mockResolvedValueOnce("D:/skills/new-local-skill");

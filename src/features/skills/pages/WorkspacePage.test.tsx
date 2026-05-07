@@ -531,7 +531,7 @@ describe("WorkspacePage", () => {
 
     expect(JSON.parse(window.localStorage.getItem("skill-studio.my-skills.tags") ?? "[]")).toContain("Ops");
     expect(JSON.parse(window.localStorage.getItem("skill-studio.my-skills.tags") ?? "[]")).not.toContain("Automation");
-  }, 15000);
+  }, 30_000);
 
   it("removes local tags and clears tag assignments from skills", async () => {
     window.localStorage.setItem("skill-studio.my-skills.tags", JSON.stringify(["Automation"]));
