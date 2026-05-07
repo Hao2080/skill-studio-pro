@@ -5,10 +5,13 @@
 <p align="center">
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+[![Latest Release](https://img.shields.io/github/v/release/liu673/skill-studio?include_prereleases)](https://github.com/liu673/skill-studio/releases)
+[![Downloads](https://img.shields.io/github/downloads/liu673/skill-studio/total)](https://github.com/liu673/skill-studio/releases)
 [![Tauri](https://img.shields.io/badge/Tauri-2.0-FFC107?logo=tauri)](https://v2.tauri.app)
 [![React](https://img.shields.io/badge/React-18-61DAFB?logo=react)](https://react.dev)
 [![Rust](https://img.shields.io/badge/Rust-1.75+-CE422B?logo=rust)](https://www.rust-lang.org)
-[![Build Status](https://img.shields.io/github/actions/workflow/status/liu673/skill-studio/ci.yml?branch=main)](https://github.com/liu673/skill-studio/actions)
+[![CI](https://img.shields.io/github/actions/workflow/status/liu673/skill-studio/ci.yml?branch=main&label=CI)](https://github.com/liu673/skill-studio/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/actions/workflow/status/liu673/skill-studio/release.yml?label=Release)](https://github.com/liu673/skill-studio/actions/workflows/release.yml)
 
 </p>
 
@@ -16,11 +19,21 @@
 
 # Skill Studio
 
-Skill Studio is a local-first desktop application for managing AI Agent Skills — create, import, organize, version, compare, and sync Skill assets across platforms and teams.
+Skill Studio is a local-first desktop application for managing AI Agent Skills: create, import, organize, version, compare, and sync Skill assets across platforms and teams.
 
-It turns scattered Skill files into trackable,rollable, reusable, and deliverable assets. Supported platforms include Cursor, Claude Code, Codex, Windsurf, Roo Code, and 40+ others.
+It turns scattered Skill files into trackable, rollbackable, reusable, and deliverable assets. Supported platforms include Cursor, Claude Code, Codex, Windsurf, Roo Code, and 40+ others.
 
-> **Status**: v0.1.0 is in preparation for open source release. Production-ready builds will be available soon.
+> **Status**: v0.1.0 is available as a cross-platform preview release. Windows, macOS, and Linux installers are available from [Releases](https://github.com/liu673/skill-studio/releases).
+
+## Download
+
+| Platform | Recommended download |
+|----------|----------------------|
+| Windows | Download the `.exe` or `.msi` from [Releases](https://github.com/liu673/skill-studio/releases) |
+| macOS | Download the `.dmg` from [Releases](https://github.com/liu673/skill-studio/releases) |
+| Linux | Download the `.AppImage`, `.deb`, or `.rpm` from [Releases](https://github.com/liu673/skill-studio/releases) |
+
+Current installers are unsigned preview builds. Windows and macOS may show system security warnings; verify downloads with the SHA256 files attached to each release.
 
 ## Screenshots
 
@@ -69,6 +82,7 @@ It turns scattered Skill files into trackable,rollable, reusable, and deliverabl
 ## Contents
 
 - [Features](#features)
+- [Download](#download)
 - [Screenshots](#screenshots)
 - [Quick Start](#quick-start)
 - [Core Concepts](#core-concepts)
@@ -76,6 +90,8 @@ It turns scattered Skill files into trackable,rollable, reusable, and deliverabl
 - [Architecture](#architecture)
 - [Development](#development)
 - [Build](#build)
+- [Release Guide](docs/RELEASE.md)
+- [Roadmap](ROADMAP.md)
 - [Security](#security)
 - [Contributing](#contributing)
 - [License](#license)
@@ -260,6 +276,8 @@ platform. For cross-platform releases, run the command on each target OS.
 - Release builds require the GitHub Secret `TAURI_SIGNING_PRIVATE_KEY`; if the key has a password, also add `TAURI_SIGNING_PRIVATE_KEY_PASSWORD`.
 - Bump versions in `package.json`, `src-tauri/Cargo.toml`, and `src-tauri/tauri.conf.json` before publishing.
 - Versions that do not include the updater cannot update automatically; users must install one updater-enabled baseline build manually.
+
+See [docs/RELEASE.md](docs/RELEASE.md) for the full release process.
 
 ---
 

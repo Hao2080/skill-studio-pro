@@ -5,10 +5,13 @@
 <p align="center">
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+[![Latest Release](https://img.shields.io/github/v/release/liu673/skill-studio?include_prereleases)](https://github.com/liu673/skill-studio/releases)
+[![Downloads](https://img.shields.io/github/downloads/liu673/skill-studio/total)](https://github.com/liu673/skill-studio/releases)
 [![Tauri](https://img.shields.io/badge/Tauri-2.0-FFC107?logo=tauri)](https://v2.tauri.app)
 [![React](https://img.shields.io/badge/React-18-61DAFB?logo=react)](https://react.dev)
 [![Rust](https://img.shields.io/badge/Rust-1.75+-CE422B?logo=rust)](https://www.rust-lang.org)
-[![Build Status](https://img.shields.io/github/actions/workflow/status/liu673/skill-studio/ci.yml?branch=main)](https://github.com/liu673/skill-studio/actions)
+[![CI](https://img.shields.io/github/actions/workflow/status/liu673/skill-studio/ci.yml?branch=main&label=CI)](https://github.com/liu673/skill-studio/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/actions/workflow/status/liu673/skill-studio/release.yml?label=Release)](https://github.com/liu673/skill-studio/actions/workflows/release.yml)
 
 </p>
 
@@ -20,7 +23,17 @@ Skill Studio 是一个本地优先的桌面端 Skill 资产管理工具，用于
 
 支持的平台包括 Cursor、Claude Code、Codex、Windsurf、Roo Code 等 45+ 种 Agent 平台。
 
-> **当前状态**：v0.1.0 正在筹备开源发布，稳定版本即将发布。
+> **当前状态**：v0.1.0 已作为跨平台预览版发布。Windows、macOS 和 Linux 安装包可在 [Releases](https://github.com/liu673/skill-studio/releases) 下载。
+
+## 下载
+
+| 平台 | 推荐下载 |
+|---|---|
+| Windows | 从 [Releases](https://github.com/liu673/skill-studio/releases) 下载 `.exe` 或 `.msi` |
+| macOS | 从 [Releases](https://github.com/liu673/skill-studio/releases) 下载 `.dmg` |
+| Linux | 从 [Releases](https://github.com/liu673/skill-studio/releases) 下载 `.AppImage`、`.deb` 或 `.rpm` |
+
+当前安装包是未签名预览版。Windows 和 macOS 可能出现系统安全提示；下载后请使用 Release 附带的 SHA256 文件校验完整性。
 
 ## 截图
 
@@ -69,6 +82,7 @@ Skill Studio 是一个本地优先的桌面端 Skill 资产管理工具，用于
 ## 目录
 
 - [功能概览](#功能概览)
+- [下载](#下载)
 - [截图](#截图)
 - [快速上手](#快速上手)
 - [核心概念](#核心概念)
@@ -76,17 +90,8 @@ Skill Studio 是一个本地优先的桌面端 Skill 资产管理工具，用于
 - [技术架构](#技术架构)
 - [本地开发](#本地开发)
 - [构建安装包](#构建安装包)
-- [安全说明](#安全说明)
-- [参与贡献](#参与贡献)
-- [许可证](#许可证)
-
-- [功能概览](#功能概览)
-- [快速上手](#快速上手)
-- [核心概念](#核心概念)
-- [支持的平台](#支持的平台)
-- [技术架构](#技术架构)
-- [本地开发](#本地开发)
-- [构建安装包](#构建安装包)
+- [发布指南](docs/RELEASE.md)
+- [路线图](ROADMAP.md)
 - [安全说明](#安全说明)
 - [参与贡献](#参与贡献)
 - [许可证](#许可证)
@@ -261,6 +266,8 @@ npm run tauri build
 - Release 构建需要 GitHub Secrets：`TAURI_SIGNING_PRIVATE_KEY`，若私钥设置了密码，还需要 `TAURI_SIGNING_PRIVATE_KEY_PASSWORD`。
 - 发布时必须同步提升 `package.json`、`src-tauri/Cargo.toml` 和 `src-tauri/tauri.conf.json` 版本号。
 - 旧版本若未内置 updater，无法自动升级到新版本，需要用户手动安装一次基线版本。
+
+完整发布流程见 [docs/RELEASE.md](docs/RELEASE.md)。
 
 ---
 

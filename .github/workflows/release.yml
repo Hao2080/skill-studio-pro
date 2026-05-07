@@ -65,8 +65,7 @@ jobs:
           releaseName: Skill Studio ${{ github.ref_name }}
           releaseDraft: false
           prerelease: true
-          uploadUpdaterJson: true
-          uploadUpdaterSignatures: true
+          includeUpdaterJson: true
 
       - name: Generate checksums
         shell: bash
@@ -128,8 +127,7 @@ jobs:
           releaseName: Skill Studio ${{ github.ref_name }}
           releaseDraft: false
           prerelease: true
-          uploadUpdaterJson: true
-          uploadUpdaterSignatures: true
+          includeUpdaterJson: true
           updaterJsonPreferNsis: true
 
       - name: Generate checksums
@@ -192,8 +190,7 @@ jobs:
           releaseName: Skill Studio ${{ github.ref_name }}
           releaseDraft: false
           prerelease: true
-          uploadUpdaterJson: true
-          uploadUpdaterSignatures: true
+          includeUpdaterJson: true
 
       - name: Generate checksums
         shell: bash

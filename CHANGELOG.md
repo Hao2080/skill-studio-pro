@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [0.1.0] - Unreleased
+## [0.1.0] - 2026-05-07
 
 ### Added
 
@@ -33,7 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Known Issues
 
 - **File system capability**: Tauri capabilities currently grant broad file system access. Scope will be narrowed to minimum necessary permissions before the first stable release.
-- **Installers and signing**: Cross-platform builds (Windows `.msi`/`.exe`, macOS `.dmg`, Linux `.AppImage`/`.deb`), code signing, notarization, and auto-update infrastructure are not yet finalized.
+- **Installers and signing**: Preview installers are published for Windows, macOS, and Linux, but Windows code signing and macOS notarization are not yet finalized.
 - **UI polish**: Some page layouts and internationalized strings are still being refined for consistency.
 - **Third-party Skill trust**: Imported Skills from external markets do not yet have provenance confidence scoring or dependency license reporting.
 
