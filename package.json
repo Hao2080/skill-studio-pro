@@ -32,7 +32,7 @@
     "check": "npm run typecheck && npm run test && npm run build && npm run rust:fmt && npm run rust:check && npm run rust:clippy && npm run rust:test && npm run security:repo"
   },
   "dependencies": {
-    "@lobehub/icons-static-svg": "^1.87.0",
+    "@lobehub/icons-static-svg": "^1.93.0",
     "@tauri-apps/api": "^2",
     "@tauri-apps/plugin-dialog": "^2.6.0",
     "@tauri-apps/plugin-fs": "^2.4.5",
