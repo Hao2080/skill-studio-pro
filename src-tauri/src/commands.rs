@@ -2,10 +2,14 @@
 pub mod files;
 #[path = "commands/health.rs"]
 pub mod health;
+#[path = "commands/inventory.rs"]
+pub mod inventory;
 #[path = "commands/market.rs"]
 pub mod market;
 #[path = "commands/organization.rs"]
 pub mod organization;
+#[path = "commands/origin.rs"]
+pub mod origin;
 #[path = "commands/platforms.rs"]
 pub mod platforms;
 #[path = "commands/projects.rs"]
@@ -39,6 +43,15 @@ macro_rules! command_handlers {
     () => {
         tauri::generate_handler![
             crate::commands::health::db_health_check,
+            crate::commands::inventory::inventory_root_list,
+            crate::commands::inventory::inventory_root_upsert,
+            crate::commands::inventory::inventory_scan_start,
+            crate::commands::inventory::inventory_scan_cancel,
+            crate::commands::inventory::inventory_instance_list,
+            crate::commands::inventory::inventory_instance_get,
+            crate::commands::origin::origin_resolution_get,
+            crate::commands::origin::origin_resolution_confirm,
+            crate::commands::origin::origin_resolution_recalculate,
             crate::commands::skills::skill_list,
             crate::commands::skills::skill_get,
             crate::commands::skills::skill_source_list,

@@ -2,9 +2,126 @@ use rusqlite::Connection;
 
 pub fn ensure_tables(conn: &Connection) -> Result<(), String> {
     create_skill_tables(conn)?;
+    create_inventory_tables(conn)?;
     create_team_tables(conn)?;
     create_project_tables(conn)?;
     Ok(())
+}
+
+fn create_inventory_tables(conn: &Connection) -> Result<(), String> {
+    conn.execute_batch(
+        "CREATE TABLE IF NOT EXISTS schema_migrations (
+            version               INTEGER PRIMARY KEY,
+            name                  TEXT NOT NULL,
+            applied_at            INTEGER NOT NULL
+        );
+        CREATE TABLE IF NOT EXISTS scan_roots (
+            id                    TEXT PRIMARY KEY,
+            root_type             TEXT NOT NULL,
+            platform_name         TEXT,
+            path                  TEXT NOT NULL,
+            normalized_path       TEXT NOT NULL UNIQUE,
+            enabled               INTEGER NOT NULL DEFAULT 1,
+            recursive             INTEGER NOT NULL DEFAULT 1,
+            watch_enabled         INTEGER NOT NULL DEFAULT 1,
+            ignore_rules_json     TEXT,
+            last_scan_at          INTEGER,
+            created_at            INTEGER NOT NULL,
+            updated_at            INTEGER NOT NULL
+        );
+        CREATE TABLE IF NOT EXISTS scan_runs (
+            id                    TEXT PRIMARY KEY,
+            mode                  TEXT NOT NULL,
+            status                TEXT NOT NULL,
+            roots_total           INTEGER NOT NULL DEFAULT 0,
+            roots_completed       INTEGER NOT NULL DEFAULT 0,
+            candidates_seen       INTEGER NOT NULL DEFAULT 0,
+            instances_changed     INTEGER NOT NULL DEFAULT 0,
+            error_count           INTEGER NOT NULL DEFAULT 0,
+            started_at            INTEGER NOT NULL,
+            completed_at          INTEGER,
+            cancelled_at          INTEGER,
+            error_summary         TEXT
+        );
+        CREATE TABLE IF NOT EXISTS skill_instances (
+            id                    TEXT PRIMARY KEY,
+            central_skill_id      TEXT,
+            scan_root_id          TEXT,
+            platform_name         TEXT,
+            scope_type            TEXT NOT NULL,
+            absolute_path         TEXT NOT NULL,
+            normalized_path       TEXT NOT NULL UNIQUE,
+            folder_name           TEXT NOT NULL,
+            parsed_name           TEXT,
+            canonical_name        TEXT NOT NULL,
+            description           TEXT,
+            short_description     TEXT,
+            metadata_json         TEXT NOT NULL DEFAULT '{}',
+            headings_json         TEXT NOT NULL DEFAULT '[]',
+            content_hash          TEXT NOT NULL,
+            skill_md_hash         TEXT NOT NULL,
+            manifest_hash         TEXT,
+            scan_signature        TEXT NOT NULL,
+            file_count            INTEGER NOT NULL DEFAULT 0,
+            has_scripts           INTEGER NOT NULL DEFAULT 0,
+            has_executables       INTEGER NOT NULL DEFAULT 0,
+            risk_flags_json       TEXT NOT NULL DEFAULT '[]',
+            duplicate_kinds_json  TEXT NOT NULL DEFAULT '[]',
+            parse_status          TEXT NOT NULL,
+            parse_error           TEXT,
+            parse_warnings_json   TEXT NOT NULL DEFAULT '[]',
+            git_remote            TEXT,
+            git_commit            TEXT,
+            plugin_manifest_json  TEXT,
+            first_seen_at         INTEGER NOT NULL,
+            last_seen_at          INTEGER NOT NULL,
+            last_modified_at      INTEGER,
+            missing_at            INTEGER,
+            FOREIGN KEY (central_skill_id) REFERENCES skills(id),
+            FOREIGN KEY (scan_root_id) REFERENCES scan_roots(id)
+        );
+        CREATE TABLE IF NOT EXISTS skill_instance_files (
+            instance_id           TEXT NOT NULL,
+            relative_path         TEXT NOT NULL,
+            file_type             TEXT NOT NULL,
+            size_bytes            INTEGER NOT NULL,
+            modified_at           INTEGER,
+            content_hash          TEXT,
+            risk_flags_json       TEXT NOT NULL DEFAULT '[]',
+            PRIMARY KEY (instance_id, relative_path),
+            FOREIGN KEY (instance_id) REFERENCES skill_instances(id) ON DELETE CASCADE
+        );
+        CREATE TABLE IF NOT EXISTS source_evidence (
+            id                    TEXT PRIMARY KEY,
+            instance_id           TEXT,
+            skill_id              TEXT,
+            evidence_type         TEXT NOT NULL,
+            evidence_key          TEXT NOT NULL,
+            evidence_value        TEXT,
+            source_candidate      TEXT,
+            weight                INTEGER NOT NULL,
+            is_conflict           INTEGER NOT NULL DEFAULT 0,
+            resolver_version      TEXT NOT NULL,
+            observed_at           INTEGER NOT NULL,
+            FOREIGN KEY (instance_id) REFERENCES skill_instances(id) ON DELETE CASCADE
+        );
+        CREATE TABLE IF NOT EXISTS source_resolutions (
+            id                    TEXT PRIMARY KEY,
+            instance_id           TEXT NOT NULL UNIQUE,
+            source_type           TEXT NOT NULL,
+            source_label          TEXT NOT NULL,
+            source_ref            TEXT,
+            confidence            INTEGER NOT NULL CHECK (confidence BETWEEN 0 AND 100),
+            resolution_status     TEXT NOT NULL,
+            rationale             TEXT NOT NULL,
+            user_confirmed        INTEGER NOT NULL DEFAULT 0,
+            evidence_hash         TEXT NOT NULL,
+            resolved_at           INTEGER NOT NULL,
+            updated_at            INTEGER NOT NULL,
+            FOREIGN KEY (instance_id) REFERENCES skill_instances(id) ON DELETE CASCADE
+        );",
+    )
+    .map_err(|e| format!("创建 inventory 表失败: {}", e))
 }
 
 pub fn ensure_indexes(conn: &Connection) -> Result<(), String> {
@@ -432,6 +549,41 @@ fn create_project_tables(conn: &Connection) -> Result<(), String> {
 
 fn create_indexes(conn: &Connection) -> Result<(), String> {
     let indexes = [
+        (
+            "idx_scan_roots_enabled_platform",
+            "CREATE INDEX IF NOT EXISTS idx_scan_roots_enabled_platform
+             ON scan_roots(enabled, platform_name, normalized_path)",
+        ),
+        (
+            "idx_scan_runs_started_at",
+            "CREATE INDEX IF NOT EXISTS idx_scan_runs_started_at
+             ON scan_runs(started_at DESC, id DESC)",
+        ),
+        (
+            "idx_skill_instances_root_seen",
+            "CREATE INDEX IF NOT EXISTS idx_skill_instances_root_seen
+             ON skill_instances(scan_root_id, missing_at, last_seen_at DESC)",
+        ),
+        (
+            "idx_skill_instances_name_hash",
+            "CREATE INDEX IF NOT EXISTS idx_skill_instances_name_hash
+             ON skill_instances(canonical_name, content_hash, missing_at)",
+        ),
+        (
+            "idx_skill_instance_files_hash",
+            "CREATE INDEX IF NOT EXISTS idx_skill_instance_files_hash
+             ON skill_instance_files(content_hash, instance_id)",
+        ),
+        (
+            "idx_source_evidence_instance",
+            "CREATE INDEX IF NOT EXISTS idx_source_evidence_instance
+             ON source_evidence(instance_id, evidence_type, observed_at DESC)",
+        ),
+        (
+            "idx_source_resolutions_confidence",
+            "CREATE INDEX IF NOT EXISTS idx_source_resolutions_confidence
+             ON source_resolutions(resolution_status, confidence DESC)",
+        ),
         (
             "idx_skill_snapshots_skill_id_snapshot_number",
             "CREATE INDEX IF NOT EXISTS idx_skill_snapshots_skill_id_snapshot_number

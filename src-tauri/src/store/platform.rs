@@ -30,6 +30,13 @@ struct PlatformDef {
     supports_copy: bool,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct InventoryPlatformDefinition {
+    pub name: String,
+    pub display_name: String,
+    pub skills_dir: PathBuf,
+}
+
 fn builtin_platform(
     name: &'static str,
     display_name: &'static str,
@@ -142,6 +149,19 @@ fn platform_definitions() -> Vec<PlatformDef> {
         builtin_platform("adal", "AdaL", ".adal/skills", ".adal"),
         builtin_platform("hermes", "Hermes Agent", ".hermes/skills", ".hermes"),
     ]
+}
+
+/// Inventory intentionally consumes the upstream platform registry through this
+/// projection so platform paths continue to have a single source of truth.
+pub fn inventory_platform_definitions(home: &Path) -> Vec<InventoryPlatformDefinition> {
+    platform_definitions()
+        .into_iter()
+        .map(|definition| InventoryPlatformDefinition {
+            name: definition.name.to_string(),
+            display_name: definition.display_name.to_string(),
+            skills_dir: home.join(definition.skill_dir_rel),
+        })
+        .collect()
 }
 
 #[derive(Clone)]

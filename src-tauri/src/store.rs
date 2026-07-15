@@ -39,9 +39,9 @@ pub use organization::{
 pub use platform::{
     batch_import_platform_skills, create_custom_platform, delete_custom_platform, detect_changes,
     detect_platforms, get_platform_governance_impact, get_skill_platform_releases,
-    import_platform_skill, publish_snapshot_to_platforms, remove_skill_from_platforms,
-    save_platform_connection, scan_platform_skills, sync_all_to_platforms, sync_skill_to_platforms,
-    test_platform_path,
+    import_platform_skill, inventory_platform_definitions, publish_snapshot_to_platforms,
+    remove_skill_from_platforms, save_platform_connection, scan_platform_skills,
+    sync_all_to_platforms, sync_skill_to_platforms, test_platform_path,
 };
 pub use project::{
     build_project_sync_plan, create_project, delete_project, delete_project_platform_connection,

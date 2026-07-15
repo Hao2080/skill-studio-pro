@@ -30,6 +30,24 @@ pub fn apply(conn: &Connection) -> Result<(), String> {
     ensure_team_member_updated_at_column(conn)?;
     ensure_team_submission_base_columns(conn)?;
     ensure_project_tables(conn)?;
+    record_inventory_index_migration(conn)?;
+    Ok(())
+}
+
+fn record_inventory_index_migration(conn: &Connection) -> Result<(), String> {
+    conn.execute(
+        "INSERT OR IGNORE INTO schema_migrations (version, name, applied_at)
+         VALUES (1, 'inventory_index_v1', strftime('%s','now') * 1000)",
+        [],
+    )
+    .map_err(|e| format!("记录 inventory migration 失败: {}", e))?;
+    let current: i64 = conn
+        .pragma_query_value(None, "user_version", |row| row.get(0))
+        .map_err(|e| format!("读取 schema version 失败: {}", e))?;
+    if current < super::CURRENT_SCHEMA_VERSION {
+        conn.pragma_update(None, "user_version", super::CURRENT_SCHEMA_VERSION)
+            .map_err(|e| format!("更新 schema version 失败: {}", e))?;
+    }
     Ok(())
 }
 

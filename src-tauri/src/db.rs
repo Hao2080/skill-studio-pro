@@ -2,6 +2,8 @@ use rusqlite::Connection;
 use std::path::{Path, PathBuf};
 use tauri::Runtime;
 
+pub const CURRENT_SCHEMA_VERSION: i64 = 1;
+
 #[path = "db/migrations.rs"]
 mod migrations;
 #[path = "db/schema.rs"]
@@ -46,6 +48,11 @@ pub fn get_table_names(conn: &Connection) -> Result<Vec<String>, String> {
         .collect::<Result<Vec<String>, _>>()
         .map_err(|e| e.to_string())?;
     Ok(tables)
+}
+
+pub fn get_schema_version(conn: &Connection) -> Result<i64, String> {
+    conn.pragma_query_value(None, "user_version", |row| row.get(0))
+        .map_err(|e| format!("读取 schema version 失败: {}", e))
 }
 
 fn configure_connection(conn: &Connection) -> Result<(), String> {
