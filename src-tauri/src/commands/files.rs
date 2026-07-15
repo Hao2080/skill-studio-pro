@@ -36,5 +36,6 @@ pub fn write_skill_file(
     content: String,
 ) -> Result<(), String> {
     super::validate_required_id("skillId", &skill_id)?;
-    store::write_skill_file(&app, &skill_id, &relative_path, &content)
+    let _ = (app, relative_path, content);
+    Err("SAFE_EDIT_SESSION_REQUIRED: 请使用 lifecycle_text_file_save".to_string())
 }

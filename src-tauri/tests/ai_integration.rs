@@ -124,7 +124,10 @@ fn temporary_credentials() -> CredentialManager {
 fn ai_migration_seeds_configurable_default_routes() {
     let temp = tempfile::tempdir().unwrap();
     let conn = db::init_db_at_path(temp.path()).unwrap();
-    assert_eq!(db::get_schema_version(&conn).unwrap(), 3);
+    assert_eq!(
+        db::get_schema_version(&conn).unwrap(),
+        db::CURRENT_SCHEMA_VERSION
+    );
     for table in [
         "ai_provider_configs",
         "ai_task_routes",

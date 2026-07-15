@@ -37,13 +37,15 @@ pub fn skill_create(app: AppHandle, input: CreateSkillInput) -> Result<Skill, St
 
 #[tauri::command]
 pub fn skill_import(app: AppHandle, input: ImportSkillInput) -> Result<Skill, String> {
-    store::import_skill(&app, &input)
+    let _ = (app, input);
+    Err("SAFE_IMPORT_PLAN_REQUIRED: 请使用 import_plan_create 和 import_plan_execute".to_string())
 }
 
 #[tauri::command]
 pub fn skill_delete(app: AppHandle, skill_id: String) -> Result<(), String> {
     super::validate_required_id("skillId", &skill_id)?;
-    store::delete_skill(&app, &skill_id)
+    let _ = app;
+    Err("SAFE_TRASH_PLAN_REQUIRED: 请使用 trash_plan_create 和 trash_move_execute".to_string())
 }
 
 #[tauri::command]

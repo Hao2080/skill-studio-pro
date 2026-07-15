@@ -8,6 +8,7 @@ pub mod db;
 pub mod diff;
 pub mod domain;
 pub mod inventory;
+pub mod lifecycle;
 pub mod market;
 pub mod origin;
 pub mod platform;

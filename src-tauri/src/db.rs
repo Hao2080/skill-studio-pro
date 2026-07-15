@@ -2,7 +2,7 @@ use rusqlite::Connection;
 use std::path::{Path, PathBuf};
 use tauri::Runtime;
 
-pub const CURRENT_SCHEMA_VERSION: i64 = 3;
+pub const CURRENT_SCHEMA_VERSION: i64 = 4;
 
 #[path = "db/migrations.rs"]
 mod migrations;

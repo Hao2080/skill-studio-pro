@@ -66,6 +66,10 @@ fn ensure_workspace_layout(root: &std::path::Path) -> Result<(), String> {
     paths::ensure_dir(&root.join("snapshots"))?;
     paths::ensure_dir(&root.join("imports"))?;
     paths::ensure_dir(&root.join("staging"))?;
+    paths::ensure_dir(&root.join("staging").join("import"))?;
+    paths::ensure_dir(&root.join("staging").join("journals"))?;
+    paths::ensure_dir(&root.join("trash").join("skills"))?;
+    paths::ensure_dir(&root.join("trash").join("manifests"))?;
     paths::ensure_dir(&root.join("logs"))?;
     paths::ensure_dir(&root.join("team"))?;
     paths::ensure_dir(&root.join("team").join("versions"))?;
@@ -198,6 +202,10 @@ pub fn temp_imports_root() -> Result<PathBuf, String> {
 
 pub fn staging_root() -> Result<PathBuf, String> {
     Ok(workspace_root()?.join("staging"))
+}
+
+pub fn trash_root() -> Result<PathBuf, String> {
+    Ok(workspace_root()?.join("trash"))
 }
 
 pub fn logs_root() -> Result<PathBuf, String> {

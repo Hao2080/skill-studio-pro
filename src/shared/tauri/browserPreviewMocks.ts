@@ -371,10 +371,12 @@ export async function invokeBrowserPreviewCommand<T>(command: string, args?: Rec
       }
       return content as T;
     }
-    case "write_skill_file": {
-      const skillId = args?.skillId as string;
-      const relativePath = args?.relativePath as string;
-      const content = args?.content as string;
+    case "write_skill_file":
+    case "lifecycle_text_file_save": {
+      const input = (args?.input ?? args) as Record<string, unknown>;
+      const skillId = input.skillId as string;
+      const relativePath = input.relativePath as string;
+      const content = input.content as string;
       const files = getSkillFiles(state, skillId);
       files[relativePath] = content;
 
@@ -384,7 +386,14 @@ export async function invokeBrowserPreviewCommand<T>(command: string, args?: Rec
       }
       currentStatus.hasChanges = true;
 
-      return undefined as T;
+      return {
+        skillId,
+        relativePath,
+        afterHash: `preview-${Date.now()}`,
+        recoverySnapshotId: `preview-recovery-${skillId}`,
+        recoveryPointCreated: true,
+        outdatedMappingCount: 0,
+      } as T;
     }
     case "open_file_in_editor":
       return undefined as T;

@@ -398,6 +398,42 @@ fn create_skill_tables(conn: &Connection) -> Result<(), String> {
             error_summary   TEXT,
             created_at      INTEGER NOT NULL,
             completed_at    INTEGER
+        );
+        CREATE TABLE IF NOT EXISTS trash_entries (
+            id              TEXT PRIMARY KEY,
+            entity_type     TEXT NOT NULL,
+            entity_id       TEXT NOT NULL,
+            display_name    TEXT NOT NULL,
+            original_path   TEXT NOT NULL,
+            trash_path      TEXT NOT NULL UNIQUE,
+            manifest_path   TEXT NOT NULL,
+            related_state_json TEXT NOT NULL,
+            content_hash    TEXT NOT NULL,
+            status          TEXT NOT NULL,
+            deleted_at      INTEGER NOT NULL,
+            restored_at     INTEGER,
+            permanently_deleted_at INTEGER,
+            confirmation_token_hash TEXT,
+            confirmation_expires_at INTEGER
+        );
+        CREATE TABLE IF NOT EXISTS edit_recovery_points (
+            skill_id        TEXT NOT NULL,
+            session_id      TEXT NOT NULL,
+            snapshot_id     TEXT NOT NULL,
+            created_at      INTEGER NOT NULL,
+            PRIMARY KEY (skill_id, session_id),
+            FOREIGN KEY (skill_id) REFERENCES skills(id),
+            FOREIGN KEY (snapshot_id) REFERENCES skill_snapshots(id)
+        );
+        CREATE TABLE IF NOT EXISTS staging_journals (
+            id              TEXT PRIMARY KEY,
+            operation_type  TEXT NOT NULL,
+            journal_path    TEXT NOT NULL UNIQUE,
+            phase           TEXT NOT NULL,
+            status          TEXT NOT NULL,
+            created_at      INTEGER NOT NULL,
+            updated_at      INTEGER NOT NULL,
+            recovered_at    INTEGER
         );",
     )
     .map_err(|e| format!("创建中央库事务表失败: {}", e))?;

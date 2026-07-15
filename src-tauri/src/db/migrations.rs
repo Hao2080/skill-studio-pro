@@ -33,7 +33,75 @@ pub fn apply(conn: &Connection) -> Result<(), String> {
     record_inventory_index_migration(conn)?;
     apply_library_mapping_v2(conn)?;
     apply_ai_routing_v3(conn)?;
+    apply_lifecycle_v4(conn)?;
     Ok(())
+}
+
+fn apply_lifecycle_v4(conn: &Connection) -> Result<(), String> {
+    let tx = conn
+        .unchecked_transaction()
+        .map_err(|error| format!("开启生命周期迁移失败: {error}"))?;
+    for (column, definition) in [
+        ("source_commit", "TEXT"),
+        ("source_ref_name", "TEXT"),
+        ("source_subdir", "TEXT"),
+        ("plan_id", "TEXT"),
+    ] {
+        if !has_column(&tx, "skill_import_logs", column)? {
+            tx.execute_batch(&format!(
+                "ALTER TABLE skill_import_logs ADD COLUMN {column} {definition}"
+            ))
+            .map_err(|error| format!("新增 skill_import_logs.{column} 失败: {error}"))?;
+        }
+    }
+    tx.execute_batch(
+        "CREATE TABLE IF NOT EXISTS trash_entries (
+            id TEXT PRIMARY KEY, entity_type TEXT NOT NULL, entity_id TEXT NOT NULL,
+            display_name TEXT NOT NULL, original_path TEXT NOT NULL,
+            trash_path TEXT NOT NULL UNIQUE, manifest_path TEXT NOT NULL,
+            related_state_json TEXT NOT NULL, content_hash TEXT NOT NULL,
+            status TEXT NOT NULL, deleted_at INTEGER NOT NULL, restored_at INTEGER,
+            permanently_deleted_at INTEGER, confirmation_token_hash TEXT,
+            confirmation_expires_at INTEGER
+         );
+         CREATE TABLE IF NOT EXISTS edit_recovery_points (
+            skill_id TEXT NOT NULL, session_id TEXT NOT NULL, snapshot_id TEXT NOT NULL,
+            created_at INTEGER NOT NULL, PRIMARY KEY (skill_id, session_id),
+            FOREIGN KEY (skill_id) REFERENCES skills(id),
+            FOREIGN KEY (snapshot_id) REFERENCES skill_snapshots(id)
+         );
+         CREATE TABLE IF NOT EXISTS staging_journals (
+            id TEXT PRIMARY KEY, operation_type TEXT NOT NULL,
+            journal_path TEXT NOT NULL UNIQUE, phase TEXT NOT NULL,
+            status TEXT NOT NULL, created_at INTEGER NOT NULL,
+            updated_at INTEGER NOT NULL, recovered_at INTEGER
+         );
+         CREATE INDEX IF NOT EXISTS idx_trash_entries_status_deleted
+           ON trash_entries(status, deleted_at DESC);
+         CREATE INDEX IF NOT EXISTS idx_operation_logs_type_status_created
+           ON operation_logs(operation_type, status, created_at DESC);
+         CREATE INDEX IF NOT EXISTS idx_staging_journals_status_updated
+           ON staging_journals(status, updated_at);
+         CREATE INDEX IF NOT EXISTS idx_skill_import_logs_plan
+           ON skill_import_logs(plan_id, created_at DESC);",
+    )
+    .map_err(|error| format!("创建生命周期迁移对象失败: {error}"))?;
+    let now = chrono::Utc::now().timestamp_millis();
+    tx.execute(
+        "INSERT OR IGNORE INTO schema_migrations (version, name, applied_at)
+         VALUES (4, 'lifecycle_v4', ?1)",
+        [now],
+    )
+    .map_err(|error| format!("记录生命周期 migration 失败: {error}"))?;
+    let current: i64 = tx
+        .pragma_query_value(None, "user_version", |row| row.get(0))
+        .map_err(|error| format!("读取 schema version 失败: {error}"))?;
+    if current < 4 {
+        tx.pragma_update(None, "user_version", 4)
+            .map_err(|error| format!("更新 schema version 失败: {error}"))?;
+    }
+    tx.commit()
+        .map_err(|error| format!("提交生命周期迁移失败: {error}"))
 }
 
 fn apply_ai_routing_v3(conn: &Connection) -> Result<(), String> {
@@ -93,8 +161,8 @@ fn apply_ai_routing_v3(conn: &Connection) -> Result<(), String> {
     let current: i64 = tx
         .pragma_query_value(None, "user_version", |row| row.get(0))
         .map_err(|error| format!("读取 schema version 失败: {error}"))?;
-    if current < super::CURRENT_SCHEMA_VERSION {
-        tx.pragma_update(None, "user_version", super::CURRENT_SCHEMA_VERSION)
+    if current < 3 {
+        tx.pragma_update(None, "user_version", 3)
             .map_err(|error| format!("更新 schema version 失败: {error}"))?;
     }
     tx.commit()

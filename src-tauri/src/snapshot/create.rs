@@ -67,6 +67,23 @@ pub fn create_snapshot<R: Runtime>(
         )
         .map_err(|e| format!("更新 skill 时间戳失败: {}", e))?;
 
+        crate::lifecycle::repository::insert_operation(
+            &conn,
+            "snapshot_create",
+            "skill",
+            Some(&input.skill_id),
+            &skill.name,
+            None,
+            None,
+            Some(&revision_hash),
+            Some(&id),
+            "success",
+            None,
+            None,
+            now,
+            Some(now),
+        )?;
+
         Ok(())
     })();
 

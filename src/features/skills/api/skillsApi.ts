@@ -14,6 +14,8 @@ import type {
 } from "@/types/skill";
 import { invokeCommand } from "@/shared/tauri/invokeCommand";
 
+const editSessions = new Map<string, string>();
+
 export interface CreateSkillPayload {
   name: string;
   description?: string;
@@ -162,7 +164,15 @@ export async function readSkillFile(skillId: string, relativePath: string): Prom
 }
 
 export async function writeSkillFile(skillId: string, relativePath: string, content: string): Promise<void> {
-  return invokeCommand<void>("write_skill_file", { skillId, relativePath, content });
+  const key = `${skillId}:${relativePath}`;
+  let editSessionId = editSessions.get(key);
+  if (!editSessionId) {
+    editSessionId = globalThis.crypto?.randomUUID?.() ?? `edit-${Date.now()}-${Math.random()}`;
+    editSessions.set(key, editSessionId);
+  }
+  await invokeCommand("lifecycle_text_file_save", {
+    input: { skillId, relativePath, content, editSessionId },
+  });
 }
 
 export async function openFileInEditor(skillId: string, relativePath: string): Promise<void> {

@@ -8,8 +8,12 @@ pub mod health;
 pub mod inventory;
 #[path = "commands/library.rs"]
 pub mod library;
+#[path = "commands/lifecycle.rs"]
+pub mod lifecycle;
 #[path = "commands/market.rs"]
 pub mod market;
+#[path = "commands/operations.rs"]
+pub mod operations;
 #[path = "commands/organization.rs"]
 pub mod organization;
 #[path = "commands/origin.rs"]
@@ -26,6 +30,8 @@ pub mod skills;
 pub mod snapshots;
 #[path = "commands/teams.rs"]
 pub mod teams;
+#[path = "commands/trash.rs"]
+pub mod trash;
 
 pub(crate) fn validate_required_id(field: &str, value: &str) -> Result<(), String> {
     if value.trim().is_empty() {
@@ -72,6 +78,18 @@ macro_rules! command_handlers {
             crate::commands::library::library_skill_publish_execute,
             crate::commands::library::library_skill_remove_mapping,
             crate::commands::library::library_skill_drift_check,
+            crate::commands::lifecycle::import_plan_create,
+            crate::commands::lifecycle::import_plan_execute,
+            crate::commands::lifecycle::lifecycle_text_file_save,
+            crate::commands::lifecycle::lifecycle_staging_recover,
+            crate::commands::trash::trash_plan_create,
+            crate::commands::trash::trash_move_execute,
+            crate::commands::trash::trash_list,
+            crate::commands::trash::trash_restore_plan,
+            crate::commands::trash::trash_restore_execute,
+            crate::commands::trash::trash_purge_confirmation_create,
+            crate::commands::trash::trash_purge_execute,
+            crate::commands::operations::operation_list,
             crate::commands::skills::skill_list,
             crate::commands::skills::skill_get,
             crate::commands::skills::skill_source_list,
