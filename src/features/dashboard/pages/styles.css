@@ -1,0 +1,55 @@
+.dashboard-page {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--page-gap);
+  height: 100%;
+  min-height: 0;
+  padding: var(--page-padding);
+  overflow: auto;
+  background:
+    radial-gradient(circle at top left, color-mix(in srgb, var(--accent-blue) 4%, transparent), transparent 28%),
+    linear-gradient(180deg, color-mix(in srgb, var(--bg-surface) 10%, var(--bg-base)), color-mix(in srgb, var(--bg-surface) 2%, var(--bg-base)));
+}
+
+.dashboard-page__header {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.dashboard-page__title.ant-typography {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: var(--page-title-size);
+  line-height: var(--page-title-line-height);
+}
+
+.dashboard-page__subtitle.ant-typography {
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.dashboard-page__metrics {
+  margin: 0 !important;
+}
+
+.dashboard-page__metric-card.ant-card {
+  border-radius: var(--panel-radius);
+  box-shadow: none;
+}
+
+.dashboard-page__metric-card .ant-card-body {
+  padding: 16px;
+}
+
+.dashboard-page__metric-card .ant-statistic-title {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.dashboard-page__metric-card .ant-statistic-content {
+  color: var(--text-primary);
+  font-size: 28px;
+  line-height: 1.15;
+}

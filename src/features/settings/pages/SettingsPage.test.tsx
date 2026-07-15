@@ -1,0 +1,305 @@
+/** @vitest-environment jsdom */
+import { render, screen, cleanup, fireEvent, waitFor } from "@testing-library/react";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { SettingsPage } from "@/features/settings/pages/SettingsPage";
+
+const invokeMock = vi.fn();
+const checkAndInstallUpdateMock = vi.fn();
+const relaunchAppMock = vi.fn();
+
+vi.mock("@tauri-apps/api/core", () => ({
+  invoke: (...args: unknown[]) => invokeMock(...args),
+}));
+
+vi.mock("@/features/settings/api/updateApi", () => ({
+  checkAndInstallUpdate: (...args: unknown[]) => checkAndInstallUpdateMock(...args),
+  relaunchApp: () => relaunchAppMock(),
+}));
+
+const messageApi = {
+  success: vi.fn(),
+  error: vi.fn(),
+  warning: vi.fn(),
+};
+
+vi.mock("antd", async () => {
+  const actual = await vi.importActual<typeof import("antd")>("antd");
+  return {
+    ...actual,
+    App: {
+      ...actual.App,
+      useApp: () => ({ message: messageApi }),
+    },
+  };
+});
+
+vi.mock("@/features/settings/state/ThemeContext", () => ({
+  useTheme: () => ({
+    theme: "dark",
+    resolvedTheme: "dark",
+    setTheme: vi.fn(),
+  }),
+}));
+
+vi.mock("@/features/settings/state/AppSettingsContext", () => ({
+  useAppSettings: () => ({
+    settings: {
+      theme: "dark",
+      uiLanguage: "zh-CN",
+      snapshotBeforePublish: true,
+      snapshotMaxCount: 20,
+    },
+  }),
+}));
+
+vi.mock("@/features/settings/state/I18nContext", () => ({
+  useI18n: () => ({
+    language: "zh-CN",
+    resolvedLanguage: "zh-CN",
+    setLanguage: vi.fn(),
+    t: (key: string) =>
+      ({
+        "settings.title": "设置",
+        "settings.nav.aria": "设置分类",
+        "settings.section.general": "界面与语言",
+        "settings.section.recovery": "版本保护",
+        "settings.section.storage": "数据与存储",
+        "settings.section.about": "关于",
+        "settings.summary.theme": "主题",
+        "settings.summary.language": "语言",
+        "settings.summary.guard": "同步保护",
+        "settings.summary.retention": "保留上限",
+        "settings.field.theme": "主题模式",
+        "settings.field.language": "界面语言",
+        "settings.field.languageHint": "控制导航、设置页与组件语言。",
+        "settings.field.dataDir": "数据目录",
+        "settings.field.workspaceDir": "工作区目录",
+        "settings.field.skillsDir": "技能目录",
+        "settings.field.projectsDir": "项目目录",
+        "settings.field.snapshotsDir": "快照目录",
+        "settings.field.dbFile": "数据库文件",
+        "settings.field.settingsFile": "设置文件",
+        "settings.field.none": "无",
+        "settings.field.version": "版本",
+        "settings.field.runtime": "运行栈",
+        "settings.field.copy": "复制",
+        "settings.field.copied": "已复制",
+        "settings.field.copyFailed": "复制失败",
+        "settings.update.title": "应用更新",
+        "settings.update.hint": "检查 GitHub Releases 中的新版安装包，下载并验证签名后安装。",
+        "settings.update.action": "检查更新",
+        "settings.update.checking": "检查中...",
+        "settings.update.installing": "安装中...",
+        "settings.update.progress": "已下载 {progress}",
+        "settings.update.none": "当前已是最新版本。",
+        "settings.update.installed": "已安装 {version}，正在重启应用。",
+        "settings.update.failed": "更新检查失败，请稍后重试或从 Releases 页面手动下载。",
+        "settings.theme.light": "浅色",
+        "settings.theme.dark": "深色",
+        "settings.theme.system": "跟随系统",
+        "settings.language.system": "跟随系统",
+        "settings.language.zh-CN": "简体中文",
+        "settings.language.en-US": "English",
+        "settings.switch.on": "开启",
+        "settings.switch.off": "关闭",
+        "settings.snapshot.limit20": "20 版",
+        "settings.snapshot.limit50": "50 版",
+        "settings.snapshot.limit0": "不限",
+        "settings.loading": "加载中...",
+        "settings.runtime.tauri": "Tauri 2.0",
+        "settings.runtime.react": "React 18",
+        "settings.runtime.ts": "TypeScript",
+        "settings.runtime.desktop": "桌面应用",
+      }[key] ?? key),
+  }),
+}));
+
+vi.mock("@/features/settings/components/AutoSnapshotSettings", () => ({
+  AutoSnapshotSettings: () => <div>自动快照设置占位</div>,
+}));
+
+describe("SettingsPage platform settings", () => {
+  beforeEach(() => {
+    invokeMock.mockReset();
+    checkAndInstallUpdateMock.mockReset();
+    relaunchAppMock.mockReset();
+    messageApi.success.mockClear();
+    messageApi.error.mockClear();
+    messageApi.warning.mockClear();
+  });
+
+  afterEach(() => {
+    cleanup();
+  });
+
+  it("renders the streamlined settings workspace without top summary cards", async () => {
+    invokeMock.mockImplementation((command: string) => {
+      if (command === "db_health_check") {
+        return Promise.resolve({
+          workspacePath: "D:/SkillStudio",
+          dbPath: "D:/SkillStudio/metadata.db",
+          settingsPath: "D:/SkillStudio/settings.json",
+          skillsPath: "D:/SkillStudio/skills",
+          projectsPath: "D:/SkillStudio/projects",
+          snapshotsPath: "D:/SkillStudio/snapshots",
+          tables: [],
+        });
+      }
+
+      return Promise.resolve(undefined);
+    });
+
+    render(<SettingsPage />);
+
+    expect(screen.getByRole("heading", { name: "设置" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "界面与语言" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "版本保护" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "数据与存储" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "关于" })).toBeTruthy();
+    expect(screen.getByText("界面语言")).toBeTruthy();
+    expect(screen.queryByText("同步保护")).toBeNull();
+    expect(screen.queryByText("保留上限")).toBeNull();
+    expect(await screen.findByText("D:/SkillStudio")).toBeTruthy();
+    expect(screen.getByText("D:/SkillStudio/skills")).toBeTruthy();
+    expect(screen.getByText("D:/SkillStudio/projects")).toBeTruthy();
+    expect(screen.getByText("D:/SkillStudio/snapshots")).toBeTruthy();
+    expect(screen.getByText("D:/SkillStudio/metadata.db")).toBeTruthy();
+    expect(screen.getByRole("button", { name: "检查更新" })).toBeTruthy();
+    expect(screen.queryByText("平台中心")).toBeNull();
+  });
+
+  it("checks for updates from the about section", async () => {
+    invokeMock.mockImplementation((command: string) => {
+      if (command === "db_health_check") {
+        return Promise.resolve({
+          workspacePath: "D:/SkillStudio",
+          dbPath: "D:/SkillStudio/metadata.db",
+          settingsPath: "D:/SkillStudio/settings.json",
+          skillsPath: "D:/SkillStudio/skills",
+          projectsPath: "D:/SkillStudio/projects",
+          snapshotsPath: "D:/SkillStudio/snapshots",
+          tables: [],
+        });
+      }
+
+      return Promise.resolve(undefined);
+    });
+    checkAndInstallUpdateMock.mockResolvedValue({ status: "current" });
+
+    render(<SettingsPage />);
+
+    fireEvent.click(screen.getByRole("button", { name: "检查更新" }));
+
+    await waitFor(() => {
+      expect(checkAndInstallUpdateMock).toHaveBeenCalledTimes(1);
+    });
+    expect(messageApi.success).toHaveBeenCalledWith("当前已是最新版本。");
+    expect(relaunchAppMock).not.toHaveBeenCalled();
+  });
+
+  it.skip("shows manual directory input and latest sync result for each platform — UI simplified in current SettingsPage", async () => {
+    invokeMock.mockImplementation((command: string) => {
+      if (command === "db_health_check") {
+        return Promise.resolve({ dbPath: "/tmp/metadata.db" });
+      }
+      if (command === "platform_detect") {
+        return Promise.resolve({
+          platforms: [
+            {
+              id: "conn-1",
+              platformName: "claude",
+              detected: true,
+              enabled: true,
+              skillsDir: "/Users/demo/.claude/skills",
+              lastSyncAt: 1712600000000,
+              lastSyncStatus: "success",
+              lastSyncMessage: undefined,
+            },
+          ],
+        });
+      }
+      return Promise.resolve(undefined);
+    });
+
+    render(<SettingsPage />);
+
+    expect(await screen.findByDisplayValue("/Users/demo/.claude/skills")).toBeTruthy();
+    expect(screen.getByRole("button", { name: "测试连接" })).toBeTruthy();
+    expect(screen.getByText("最近同步")).toBeTruthy();
+    expect(screen.getByText("最近结果")).toBeTruthy();
+    expect(screen.getByText("成功")).toBeTruthy();
+  });
+
+  it.skip("saves manual directory and refreshes platform state after connection test succeeds — UI simplified in current SettingsPage", async () => {
+    let platformCallCount = 0;
+    invokeMock.mockImplementation((command: string, args?: Record<string, unknown>) => {
+      if (command === "db_health_check") {
+        return Promise.resolve({ dbPath: "/tmp/metadata.db" });
+      }
+      if (command === "platform_detect") {
+        platformCallCount += 1;
+        if (platformCallCount === 1) {
+          return Promise.resolve({
+            platforms: [
+              {
+                id: "conn-1",
+                platformName: "Claude Code",
+                detected: false,
+                enabled: false,
+                skillsDir: undefined,
+              },
+            ],
+          });
+        }
+        return Promise.resolve({
+          platforms: [
+            {
+              id: "conn-1",
+              platformName: "claude",
+              detected: true,
+              enabled: true,
+              skillsDir: "/custom/skills",
+              lastSyncAt: 1712600200000,
+              lastSyncStatus: "success",
+              lastSyncMessage: undefined,
+            },
+          ],
+        });
+      }
+      if (command === "platform_connection_update") {
+        expect(args).toEqual({
+          input: {
+            platformName: "claude",
+            skillsDir: "/custom/skills",
+            enabled: true,
+          },
+        });
+        return Promise.resolve({ ok: true });
+      }
+      if (command === "platform_connection_test") {
+        expect(args).toEqual({
+          input: {
+            platformName: "claude",
+            skillsDir: "/custom/skills",
+          },
+        });
+        return Promise.resolve({ ok: true });
+      }
+      return Promise.resolve(undefined);
+    });
+
+    render(<SettingsPage />);
+
+    const input = await screen.findByPlaceholderText("输入 Skill 平台目录");
+    fireEvent.change(input, { target: { value: "/custom/skills" } });
+    fireEvent.click(screen.getByRole("checkbox"));
+    fireEvent.click(screen.getByRole("button", { name: "保存配置" }));
+    fireEvent.click(screen.getByRole("button", { name: "测试连接" }));
+
+    await waitFor(() => {
+      expect(messageApi.success).toHaveBeenCalledWith("连接成功");
+    });
+    expect(await screen.findByDisplayValue("/custom/skills")).toBeTruthy();
+    expect(screen.getByText("已启用")).toBeTruthy();
+  });
+});

@@ -1,0 +1,145 @@
+Skill Studio
+Copyright 2026 Skill Studio contributors
+
+This product is licensed under the Apache License, Version 2.0.
+See the LICENSE file for the full license text.
+
+---
+
+Third-Party Software Notices
+============================
+
+This product includes the following third-party open source components.
+Each component remains under its respective license. In case of conflict
+between a component's license and the Apache License 2.0, the component's
+license takes precedence with respect to that component only.
+
+The authoritative list of all included dependencies, their versions, and
+their licenses is maintained in:
+
+  - Frontend:  package.json / package-lock.json
+  - Backend:    src-tauri/Cargo.toml / src-tauri/Cargo.lock
+
+---
+
+Frontend Dependencies
+---------------------
+
+- **Tauri** (https://tauri.app) — MIT / Apache-2.0
+  Desktop runtime and IPC framework.
+
+- **React**, **React DOM** — MIT
+  User interface library.
+
+- **Vite** (https://vitejs.dev) — MIT
+  Frontend build tool and dev server.
+
+- **TypeScript** (https://www.typescriptlang.org) — Apache-2.0
+  Static type checker and language.
+
+- **Ant Design** (https://ant.design) — MIT
+  UI component library.
+
+- **lucide-react** (https://lucide.dev) — ISC
+  Icon library.
+
+- **simple-icons** (https://simpleicons.org) — CC0-1.0
+  Platform brand icons.
+
+- **@lobehub/icons-static-svg** (https://github.com/lobehub/lobe-icon) — MIT
+  Additional icon assets.
+
+- **Vitest** (https://vitest.dev) — MIT
+  Frontend test runner.
+
+- **@testing-library/react** — MIT
+  React component testing utilities.
+
+Backend Dependencies (Rust)
+---------------------------
+
+- **tauri** — MIT / Apache-2.0
+  Desktop runtime.
+
+- **tauri-plugin-dialog** — MIT
+  Native file dialogs and window management.
+
+- **tauri-plugin-fs** — MIT
+  File system access APIs.
+
+- **tauri-plugin-opener** — MIT
+  URL and file opening utilities.
+
+- **serde / serde_json** — MIT / Apache-2.0
+  Serialization framework.
+
+- **rusqlite** — MIT
+  SQLite database bindings.
+
+- **reqwest** — MIT
+  HTTP client.
+
+- **tokio** — MIT
+  Async runtime.
+
+- **uuid** — Apache-2.0 / MIT
+  UUID generation.
+
+- **chrono** — MIT / Apache-2.0
+  Date and time utilities.
+
+- **sha2** — MIT / Apache-2.0
+  SHA-2 cryptographic hashing.
+
+- **similar** — MIT
+  Text diffing and patching.
+
+- **regex** — MIT / Apache-2.0
+  Regular expressions.
+
+- **dirs** — MIT / Apache-2.0
+  Platform-specific directory paths.
+
+- **open** — MIT / Apache-2.0
+  Cross-platform URL/file opening.
+
+---
+
+Trademark Notice
+---------------
+
+Skill Studio is a project name and trademark of its contributors.
+
+The names, logos, and brands of third-party AI agent platforms mentioned
+in this application (including but not limited to Cursor, Claude Code,
+Codex, Windsurf, and others) are the property of their respective owners.
+Their appearance in Skill Studio is solely for identification and
+interoperability purposes and does not constitute or imply endorsement,
+sponsorship, or recommendation by those owners.
+
+---
+
+Asset Licenses
+--------------
+
+Application icons and logos included in this repository are original works
+created for this project and licensed under the same Apache License 2.0,
+unless otherwise noted in the file header.
+
+If you redistribute this software or create derivative works that include
+visual assets from this project, please preserve the applicable copyright
+notices.
+
+---
+
+Maintainer Responsibility
+--------------------------
+
+Before publishing any release artifact, maintainers are responsible for:
+
+1. Verifying the complete dependency tree and confirming license compatibility
+2. Checking for any components with copyleft licenses that may impose
+   additional obligations
+3. Confirming that bundled assets (icons, fonts, images) are correctly
+   attributed
+4. Updating this NOTICE file if new dependencies or assets are introduced

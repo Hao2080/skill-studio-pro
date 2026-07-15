@@ -1,0 +1,55 @@
+{
+  "name": "skill-studio",
+  "private": true,
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "description": "Local-first desktop workspace for AI Agent Skill assets",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/liu673/skill-studio.git"
+  },
+  "homepage": "https://github.com/liu673/skill-studio",
+  "bugs": {
+    "url": "https://github.com/liu673/skill-studio/issues"
+  },
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "brand:assets": "node scripts/generate-brand-assets.mjs",
+    "typecheck": "tsc --noEmit",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "tauri": "tauri",
+    "test": "vitest run",
+    "rust:fmt": "cargo fmt --manifest-path src-tauri/Cargo.toml --check",
+    "rust:check": "cargo check --manifest-path src-tauri/Cargo.toml",
+    "rust:test": "cargo test --manifest-path src-tauri/Cargo.toml",
+    "check": "npm run typecheck && npm run test && npm run build && npm run rust:fmt && npm run rust:check && npm run rust:test"
+  },
+  "dependencies": {
+    "@lobehub/icons-static-svg": "^1.87.0",
+    "@tauri-apps/api": "^2",
+    "@tauri-apps/plugin-dialog": "^2.6.0",
+    "@tauri-apps/plugin-fs": "^2.4.5",
+    "@tauri-apps/plugin-opener": "^2",
+    "@tauri-apps/plugin-process": "^2.3.1",
+    "@tauri-apps/plugin-updater": "^2.10.1",
+    "antd": "^5.21.0",
+    "lucide-react": "^0.577.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^7.13.1",
+    "simple-icons": "^16.17.0"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2",
+    "@testing-library/react": "^16.3.2",
+    "@types/react": "^18.3.1",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.4",
+    "jsdom": "^29.0.2",
+    "typescript": "~5.6.2",
+    "vite": "^6.0.3",
+    "vitest": "^4.1.3"
+  }
+}

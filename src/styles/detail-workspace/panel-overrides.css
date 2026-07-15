@@ -1,0 +1,218 @@
+/* Skill detail tabs redesign overrides */
+
+.file-workspace__status-line {
+  display: block;
+  padding: 6px 14px 8px;
+  color: var(--text-faint);
+  font-size: 10.5px;
+  line-height: 1.4;
+}
+
+.file-content-panel__toolbar-sep {
+  display: inline-block;
+  width: 1px;
+  height: 12px;
+  background: var(--skill-detail-line-strong);
+  flex-shrink: 0;
+  align-self: center;
+}
+
+/* ===== Overview Panel Redesign ===== */
+
+.skill-overview__blocker-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  padding: 9px 14px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--accent-yellow) 10%, var(--bg-surface));
+  border: 1px solid color-mix(in srgb, var(--accent-yellow) 30%, transparent);
+}
+
+.skill-overview__blocker-bar--warning {
+  border-color: color-mix(in srgb, var(--accent-yellow) 40%, transparent);
+}
+
+.skill-overview__blocker-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-yellow);
+}
+
+.skill-overview__blocker-message {
+  flex: 1;
+  min-width: 0;
+  color: var(--text-secondary);
+  font-size: 12px;
+  line-height: 1.4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.skill-overview__blocker-close {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text-faint);
+  cursor: pointer;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.skill-overview__blocker-close:hover,
+.skill-overview__blocker-close:focus-visible {
+  color: var(--text-primary);
+  background: color-mix(in srgb, var(--bg-hover) 60%, transparent);
+}
+
+.skill-overview__blocker-close:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--accent-blue) 28%, transparent);
+  outline-offset: 1px;
+}
+
+.skill-overview__platform-list {
+  display: flex;
+  flex-direction: column;
+  padding: 4px 0 8px;
+}
+
+.skill-overview__platform-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  min-width: 0;
+}
+
+.skill-overview__platform-dot {
+  flex-shrink: 0;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--text-faint);
+}
+
+.skill-overview__platform-dot.is-synced {
+  background: var(--accent-green);
+}
+
+.skill-overview__platform-dot.is-pending {
+  background: var(--accent-blue);
+}
+
+.skill-overview__platform-name {
+  flex: 1;
+  min-width: 0;
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.skill-overview__platform-status {
+  color: var(--text-faint);
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.skill-overview__platform-empty {
+  margin: 0;
+  padding: 8px 16px 12px;
+  color: var(--text-faint);
+  font-size: 11.5px;
+  font-style: italic;
+}
+
+.skill-overview__activity-log {
+  display: flex;
+  flex-direction: column;
+  padding: 4px 0 8px;
+}
+
+.skill-overview__activity-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 5px 16px;
+  min-width: 0;
+}
+
+.skill-overview__activity-meta {
+  flex-shrink: 0;
+  color: var(--text-faint);
+  font-size: 10.5px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.skill-overview__activity-title {
+  flex: 1;
+  min-width: 0;
+  color: var(--text-muted);
+  font-size: 11.5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.skill-overview__activity-empty {
+  margin: 0;
+  padding: 8px 16px 12px;
+  color: var(--text-faint);
+  font-size: 11.5px;
+  font-style: italic;
+}
+
+/* ===== File Panel Empty State ===== */
+
+.file-content-panel__empty-hint {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--text-faint);
+  font-size: 13px;
+}
+
+/* ===== File Panel Diff View ===== */
+
+.file-content-panel__diff-view {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+.file-content-panel__diff-view > .version-compare-panel {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.file-content-panel__diff-toolbar {
+  flex-shrink: 0;
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--skill-detail-line);
+}
+
+.file-content-panel__diff-back.ant-btn-link {
+  padding: 0;
+  height: auto;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.file-content-panel__diff-back.ant-btn-link:hover,
+.file-content-panel__diff-back.ant-btn-link:focus-visible {
+  color: var(--text-primary);
+}
