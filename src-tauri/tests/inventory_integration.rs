@@ -111,6 +111,79 @@ fn upstream_platform_definitions_discover_five_required_agents() {
 }
 
 #[test]
+fn one_run_scans_multiple_roots_with_nested_system_and_plugin_skills() {
+    let data = temp_dir("inventory-multi-root-data");
+    let home = temp_dir("inventory-multi-root-home");
+    let system_root = temp_dir("inventory-multi-root-system");
+    let plugin_root = temp_dir("inventory-multi-root-plugin");
+    write(
+        &system_root.join(".system/builtin/SKILL.md"),
+        "---\nname: Builtin\n---\n# Builtin\n",
+    );
+    write(
+        &plugin_root.join("cache/demo/.codex-plugin/plugin.json"),
+        r#"{"name":"nested-plugin"}"#,
+    );
+    write(
+        &plugin_root.join("cache/demo/skills/plugin-skill/SKILL.md"),
+        "---\nname: Plugin Skill\n---\n# Plugin\n",
+    );
+    let conn = db::init_db_at_path(&data).unwrap();
+    let roots = [
+        (&system_root, "agent_global"),
+        (&plugin_root, "plugin_cache"),
+    ]
+    .into_iter()
+    .map(|(path, root_type)| {
+        inventory::service::root_upsert(
+            &conn,
+            &ScanRootUpsertInput {
+                id: None,
+                root_type: root_type.to_string(),
+                platform_name: Some("codex".to_string()),
+                path: path.to_string_lossy().to_string(),
+                enabled: Some(true),
+                recursive: Some(true),
+                watch_enabled: Some(false),
+                ignore_rules: Vec::new(),
+            },
+        )
+        .unwrap()
+        .id
+    })
+    .collect::<Vec<_>>();
+    drop(conn);
+    let run = inventory::service::run_scan_at_path(
+        &data,
+        &home,
+        &ScanStartInput {
+            mode: ScanMode::Full,
+            root_ids: roots,
+        },
+    )
+    .unwrap();
+    assert_eq!(run.status, "completed");
+    assert_eq!(run.roots_completed, 2);
+    let conn = rusqlite::Connection::open(data.join("metadata.db")).unwrap();
+    let list = inventory::service::instance_list(
+        &conn,
+        &InstanceListInput {
+            limit: Some(10),
+            ..Default::default()
+        },
+    )
+    .unwrap();
+    assert_eq!(list.total, 2);
+    let kinds = list
+        .items
+        .iter()
+        .map(|item| origin::service::get(&conn, &item.id).unwrap().source_type)
+        .collect::<Vec<_>>();
+    assert!(kinds.contains(&"system".to_string()));
+    assert!(kinds.contains(&"plugin".to_string()));
+}
+
+#[test]
 fn full_and_incremental_scans_are_read_only_and_isolate_skill_errors() {
     let data = temp_dir("inventory-scan-data");
     let home = temp_dir("inventory-scan-home");

@@ -13,7 +13,7 @@ fn library_service() -> Result<LibraryService, String> {
 }
 
 fn mapping_service() -> Result<MappingService, String> {
-    let home = dirs::home_dir().ok_or_else(|| "无法解析用户主目录".to_string())?;
+    let home = crate::workspace::home_dir()?;
     MappingService::new(crate::workspace::workspace_root()?, home)
 }
 

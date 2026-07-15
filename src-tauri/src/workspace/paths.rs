@@ -2,14 +2,42 @@ use std::path::{Component, Path, PathBuf};
 
 const WORKSPACE_DIR_NAME: &str = ".skill-studio-pro";
 const CONFIG_APP_DIR_NAME: &str = "skill-studio-pro";
+const HOME_OVERRIDE_ENV: &str = "SKILL_STUDIO_PRO_HOME";
+const CONFIG_OVERRIDE_ENV: &str = "SKILL_STUDIO_PRO_CONFIG_HOME";
+const WORKSPACE_OVERRIDE_ENV: &str = "SKILL_STUDIO_PRO_WORKSPACE";
+
+fn absolute_env_path(name: &str) -> Result<Option<PathBuf>, String> {
+    let Some(raw) = std::env::var_os(name).filter(|value| !value.is_empty()) else {
+        return Ok(None);
+    };
+    let path = PathBuf::from(raw);
+    if !path.is_absolute() {
+        return Err(format!("{name} 必须是绝对路径"));
+    }
+    Ok(Some(normalize_components(&path)))
+}
+
+pub fn home_dir_path() -> Result<PathBuf, String> {
+    if let Some(path) = absolute_env_path(HOME_OVERRIDE_ENV)? {
+        return Ok(path);
+    }
+    dirs::home_dir().ok_or_else(|| "无法解析用户主目录".to_string())
+}
 
 pub fn default_workspace_root_path() -> Result<PathBuf, String> {
-    dirs::home_dir()
-        .map(|home| home.join(WORKSPACE_DIR_NAME))
-        .ok_or_else(|| "无法解析用户主目录".to_string())
+    if let Some(path) = absolute_env_path(WORKSPACE_OVERRIDE_ENV)? {
+        return Ok(path);
+    }
+    home_dir_path().map(|home| home.join(WORKSPACE_DIR_NAME))
 }
 
 pub fn config_root_path() -> Result<PathBuf, String> {
+    if let Some(path) = absolute_env_path(CONFIG_OVERRIDE_ENV)? {
+        return Ok(path);
+    }
+    if std::env::var_os(HOME_OVERRIDE_ENV).is_some() {
+        return home_dir_path().map(|home| home.join(".config").join(CONFIG_APP_DIR_NAME));
+    }
     match dirs::config_dir() {
         Some(config_dir) => Ok(config_dir.join(CONFIG_APP_DIR_NAME)),
         None => default_workspace_root_path().map(|root| root.join(".config")),
@@ -23,11 +51,9 @@ pub fn normalize_workspace_path(raw: &str) -> Result<PathBuf, String> {
     }
 
     let expanded = if trimmed == "~" {
-        dirs::home_dir().ok_or_else(|| "无法解析用户主目录".to_string())?
+        home_dir_path()?
     } else if trimmed.starts_with("~/") || trimmed.starts_with("~\\") {
-        dirs::home_dir()
-            .ok_or_else(|| "无法解析用户主目录".to_string())?
-            .join(&trimmed[2..])
+        home_dir_path()?.join(&trimmed[2..])
     } else {
         PathBuf::from(trimmed)
     };

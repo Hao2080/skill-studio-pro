@@ -320,6 +320,36 @@ fn git_import_records_ref_commit_and_subdirectory() {
 }
 
 #[test]
+fn git_import_rejects_option_and_protocol_injection_before_execution() {
+    let (_temp, service) = workspace();
+    for (git_url, git_ref, repo_subdir, expected) in [
+        (
+            Some("--upload-pack=calc"),
+            None,
+            None,
+            "INVALID_GIT_ARGUMENT",
+        ),
+        (Some("ext::sh -c calc"), None, None, "UNSAFE_GIT_PROTOCOL"),
+    ] {
+        let error = service
+            .create_import_plan(&ImportPlanInput {
+                source_type: ImportSourceType::GitRepository,
+                local_path: None,
+                git_url: git_url.map(str::to_string),
+                zip_path: None,
+                repo_subdir: repo_subdir.map(str::to_string),
+                branch: None,
+                git_ref: git_ref.map(str::to_string),
+                commit: None,
+                market_source: None,
+                target_agents: Vec::new(),
+            })
+            .unwrap_err();
+        assert!(error.contains(expected), "unexpected error: {error}");
+    }
+}
+
+#[test]
 fn zip_import_accepts_valid_archive_and_rejects_zip_slip() {
     let (temp, service) = workspace();
     let valid = temp.path().join("valid.zip");
@@ -577,6 +607,75 @@ fn trash_restore_and_purge_are_id_scoped_and_preserve_manifest() {
         })
         .unwrap();
     assert!(trash.list().unwrap().iter().all(|item| item.id != entry.id));
+}
+
+#[test]
+fn restore_conflict_never_overwrites_and_expired_purge_token_is_rejected() {
+    let (temp, service) = workspace();
+    let source = temp.path().join("source/restore-conflict");
+    write_skill(&source, "Restore Conflict");
+    let imported = install_local(&service, &source).imported.remove(0);
+    let trash = TrashService::new(temp.path().join("workspace"), temp.path().join("home")).unwrap();
+    let delete = trash.create_delete_plan(&imported.skill_id).unwrap();
+    let original = PathBuf::from(&delete.original_path);
+    let entry = trash
+        .execute_delete(&DeleteExecuteInput {
+            plan_id: delete.id,
+            plan_hash: delete.plan_hash,
+        })
+        .unwrap();
+    write_skill(&original, "Unmanaged Occupant");
+    let conflict = trash
+        .create_restore_plan(&RestorePlanInput {
+            trash_entry_id: entry.id.clone(),
+            mode: RestoreMode::Original,
+            new_name: None,
+        })
+        .unwrap();
+    assert_eq!(conflict.conflict.as_deref(), Some("target_exists"));
+    let error = trash
+        .execute_restore(&RestoreExecuteInput {
+            plan_id: conflict.id,
+            plan_hash: conflict.plan_hash,
+        })
+        .unwrap_err();
+    assert!(error.contains("RESTORE_CONFLICT"));
+    assert!(Path::new(&entry.trash_path).exists());
+    assert!(fs::read_to_string(original.join("SKILL.md"))
+        .unwrap()
+        .contains("Unmanaged Occupant"));
+
+    let confirmation = trash.create_purge_confirmation(&entry.id).unwrap();
+    let conn = service.open_connection().unwrap();
+    conn.execute(
+        "UPDATE trash_entries SET confirmation_expires_at = 0 WHERE id = ?1",
+        [&entry.id],
+    )
+    .unwrap();
+    drop(conn);
+    let expired = trash
+        .execute_purge(&PurgeExecuteInput {
+            trash_entry_id: entry.id.clone(),
+            confirmation_token: confirmation.confirmation_token,
+        })
+        .unwrap_err();
+    assert!(expired.contains("PURGE_CONFIRMATION_INVALID_OR_EXPIRED"));
+    assert!(Path::new(&entry.trash_path).exists());
+
+    let renamed = trash
+        .create_restore_plan(&RestorePlanInput {
+            trash_entry_id: entry.id,
+            mode: RestoreMode::NewName,
+            new_name: Some("Restore Conflict Recovered".to_string()),
+        })
+        .unwrap();
+    let restored = trash
+        .execute_restore(&RestoreExecuteInput {
+            plan_id: renamed.id,
+            plan_hash: renamed.plan_hash,
+        })
+        .unwrap();
+    assert_eq!(restored.status, "restored");
 }
 
 #[test]

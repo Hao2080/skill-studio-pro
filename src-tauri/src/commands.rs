@@ -209,24 +209,97 @@ mod tests {
     fn integration_commands_remain_registered_with_the_tauri_handler() {
         let source = include_str!("commands.rs");
         for command in [
+            "inventory_root_list",
+            "inventory_root_upsert",
             "inventory_instance_file_read",
             "inventory_scan_start",
+            "inventory_scan_cancel",
+            "inventory_instance_list",
+            "inventory_instance_get",
+            "origin_resolution_get",
+            "origin_resolution_confirm",
+            "origin_resolution_recalculate",
+            "library_skill_list",
+            "library_skill_get",
+            "library_instance_register_plan",
+            "library_instance_register_execute",
             "library_skill_publish_plan",
             "library_skill_publish_execute",
+            "library_skill_remove_mapping",
+            "library_skill_drift_check",
             "import_plan_create",
             "import_plan_execute",
+            "lifecycle_text_file_save",
+            "lifecycle_staging_recover",
+            "trash_plan_create",
+            "trash_move_execute",
+            "trash_list",
             "trash_restore_plan",
+            "trash_restore_execute",
             "trash_purge_confirmation_create",
             "trash_purge_execute",
             "operation_list",
+            "ai_provider_list",
             "ai_provider_save",
             "ai_provider_test",
+            "ai_task_route_list",
             "ai_task_route_save",
+            "ai_artifact_generate",
+            "ai_artifact_cancel",
+            "ai_artifact_list",
         ] {
             assert!(
                 source.contains(command),
                 "missing Tauri command registration: {command}"
             );
         }
+    }
+
+    #[cfg(not(target_os = "windows"))]
+    #[test]
+    fn tauri_accepts_browser_camel_case_for_wrapped_and_direct_arguments() {
+        use tauri::test::{get_ipc_response, mock_builder, mock_context, noop_assets, INVOKE_KEY};
+
+        let app = mock_builder()
+            .invoke_handler(tauri::generate_handler![
+                crate::commands::inventory::inventory_scan_cancel,
+                crate::commands::ai::ai_artifact_cancel,
+            ])
+            .build(mock_context(noop_assets()))
+            .unwrap();
+        let webview = tauri::WebviewWindowBuilder::new(&app, "main", Default::default())
+            .build()
+            .unwrap();
+        let request = |cmd: &str, body: serde_json::Value| tauri::webview::InvokeRequest {
+            cmd: cmd.into(),
+            callback: tauri::ipc::CallbackFn(0),
+            error: tauri::ipc::CallbackFn(1),
+            url: "http://tauri.localhost".parse().unwrap(),
+            body: tauri::ipc::InvokeBody::Json(body),
+            headers: Default::default(),
+            invoke_key: INVOKE_KEY.to_string(),
+        };
+        let cancelled = get_ipc_response(
+            &webview,
+            request(
+                "inventory_scan_cancel",
+                serde_json::json!({ "input": { "runId": "missing-run" } }),
+            ),
+        )
+        .unwrap()
+        .deserialize::<bool>()
+        .unwrap();
+        assert!(!cancelled);
+        let ai_cancelled = get_ipc_response(
+            &webview,
+            request(
+                "ai_artifact_cancel",
+                serde_json::json!({ "cancellationId": "missing-call" }),
+            ),
+        )
+        .unwrap()
+        .deserialize::<bool>()
+        .unwrap();
+        assert!(!ai_cancelled);
     }
 }

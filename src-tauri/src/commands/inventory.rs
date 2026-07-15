@@ -13,7 +13,7 @@ pub const INSTANCES_CHANGED_EVENT: &str = "inventory://instances-changed";
 #[tauri::command]
 pub fn inventory_root_list(app: AppHandle) -> Result<Vec<ScanRoot>, String> {
     let conn = store::get_conn(&app)?;
-    let home = dirs::home_dir().ok_or_else(|| "无法解析用户主目录".to_string())?;
+    let home = workspace::home_dir()?;
     service::root_list(&conn, &home)
 }
 
@@ -29,7 +29,7 @@ pub fn inventory_root_upsert(
 #[tauri::command]
 pub fn inventory_scan_start(app: AppHandle, input: ScanStartInput) -> Result<ScanRun, String> {
     let conn = store::get_conn(&app)?;
-    let home = dirs::home_dir().ok_or_else(|| "无法解析用户主目录".to_string())?;
+    let home = workspace::home_dir()?;
     let prepared = service::prepare_scan(&conn, workspace::db_path()?, &home, &input)?;
     let initial_run = prepared.run.clone();
     let failed_prepared = prepared.clone();

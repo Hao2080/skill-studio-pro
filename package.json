@@ -16,7 +16,8 @@
     "rust:check": "cargo check --manifest-path src-tauri/Cargo.toml",
     "rust:clippy": "cargo clippy --manifest-path src-tauri/Cargo.toml --all-targets -- -D warnings",
     "rust:test": "cargo test --manifest-path src-tauri/Cargo.toml",
-    "check": "npm run typecheck && npm run test && npm run build && npm run rust:fmt && npm run rust:check && npm run rust:clippy && npm run rust:test"
+    "security:repo": "node scripts/verify-repository-hygiene.mjs",
+    "check": "npm run typecheck && npm run test && npm run build && npm run rust:fmt && npm run rust:check && npm run rust:clippy && npm run rust:test && npm run security:repo"
   },
   "dependencies": {
     "@lobehub/icons-static-svg": "^1.87.0",
@@ -34,6 +35,7 @@
   "devDependencies": {
     "@tauri-apps/cli": "^2",
     "@testing-library/react": "^16.3.2",
+    "@types/node": "^26.1.1",
     "@types/react": "^18.3.1",
     "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react": "^4.3.4",

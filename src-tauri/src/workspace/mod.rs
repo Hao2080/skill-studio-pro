@@ -132,6 +132,10 @@ pub fn workspace_root() -> Result<PathBuf, String> {
     resolve_workspace_root(&config::load_bootstrap_config()?)
 }
 
+pub fn home_dir() -> Result<PathBuf, String> {
+    paths::home_dir_path()
+}
+
 pub fn db_path() -> Result<PathBuf, String> {
     Ok(workspace_root()?.join("metadata.db"))
 }

@@ -210,3 +210,47 @@ pub fn tree_stats(root: &Path) -> Result<(u64, u64), String> {
     }
     Ok((files, bytes))
 }
+
+#[cfg(test)]
+mod tests {
+    use super::{assert_owned_path, resolve_write_target};
+
+    #[test]
+    fn recursive_and_edit_guards_reject_root_and_link_escape() {
+        let temp = tempfile::tempdir().unwrap();
+        let root = temp.path().join("allowed");
+        let outside = temp.path().join("outside");
+        std::fs::create_dir_all(root.join("skill")).unwrap();
+        std::fs::create_dir_all(&outside).unwrap();
+        assert!(assert_owned_path(&root, &root)
+            .unwrap_err()
+            .contains("PATH_OUTSIDE_ALLOWED_ROOT"));
+
+        let link = root.join("skill").join("link");
+        #[cfg(unix)]
+        std::os::unix::fs::symlink(&outside, &link).unwrap();
+        #[cfg(windows)]
+        if std::os::windows::fs::symlink_dir(&outside, &link).is_err() {
+            use std::os::windows::process::CommandExt;
+
+            let command = format!("mklink /J \"{}\" \"{}\"", link.display(), outside.display());
+            let status = std::process::Command::new("cmd")
+                .args(["/D", "/C"])
+                .raw_arg(&command)
+                .status()
+                .expect("Windows junction command should start");
+            assert!(
+                status.success(),
+                "a temp junction is required for this guard test: {command}"
+            );
+        }
+        assert!(
+            resolve_write_target(&root.join("skill"), "link/escaped.txt")
+                .unwrap_err()
+                .contains("SYMLINK_ESCAPE")
+        );
+        assert!(assert_owned_path(&root, &link)
+            .unwrap_err()
+            .contains("SYMLINK_RECURSIVE_OPERATION_REJECTED"));
+    }
+}

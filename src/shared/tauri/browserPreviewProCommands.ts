@@ -92,6 +92,8 @@ let routes: AiTaskRoute[] = [
   { taskType: "final_summary", providerId: "openai", modelId: "gpt-5.6", promptVersion: "summary/v1", responsibility: "最终摘要与内容提炼", enabled: true, updatedAt: now },
 ];
 
+let restorePlanEntryId: string | undefined;
+
 let trash: TrashEntry[] = mockTrashEntries.map((entry) => ({
   id: entry.id,
   entityType: "skill",
@@ -164,6 +166,10 @@ function createInstallPlan(args?: Record<string, unknown>): InstallPlan {
 export async function invokeBrowserPreviewProCommand<T>(command: string, args?: Record<string, unknown>): Promise<T> {
   switch (command) {
     case "inventory_root_list": return [{ id: "preview-root", rootType: "agent_global", platformName: "codex", path: "preview/skills", normalizedPath: "preview/skills", enabled: true, recursive: true, watchEnabled: true, ignoreRules: [], createdAt: now, updatedAt: now, available: true }] as T;
+    case "inventory_root_upsert": {
+      const input = args?.input as { id?: string; rootType: string; platformName?: string; path: string; enabled?: boolean; recursive?: boolean; watchEnabled?: boolean; ignoreRules?: string[] };
+      return { id: input.id ?? "preview-root-custom", rootType: input.rootType, platformName: input.platformName, path: input.path, normalizedPath: input.path.toLowerCase(), enabled: input.enabled ?? true, recursive: input.recursive ?? true, watchEnabled: input.watchEnabled ?? true, ignoreRules: input.ignoreRules ?? [], createdAt: now, updatedAt: now, available: true } as T;
+    }
     case "inventory_scan_start": return { id: "preview-scan", mode: "incremental", status: "completed", rootsTotal: 1, rootsCompleted: 1, candidatesSeen: mockSkills.length, instancesChanged: 0, errorCount: 0, startedAt: now, completedAt: now } as T;
     case "inventory_scan_cancel": return true as T;
     case "inventory_instance_list": return { items: mockSkills.map(instance), total: mockSkills.length, resolutions: Object.fromEntries(mockSkills.map((skill) => [skill.id, instanceDetail(skill).resolution])) } as T;
@@ -172,6 +178,11 @@ export async function invokeBrowserPreviewProCommand<T>(command: string, args?: 
       return instanceDetail(skill) as T;
     }
     case "inventory_instance_file_read": return "---\nname: preview-skill\n---\n# Preview Skill\n" as T;
+    case "origin_resolution_get": return instanceDetail(mockSkills.find((item) => item.id === args?.instanceId) ?? mockSkills[0]).resolution as T;
+    case "origin_resolution_confirm": {
+      const input = args?.input as { instanceId: string; sourceType: string; sourceLabel: string; sourceRef?: string };
+      return { ...instanceDetail(mockSkills.find((item) => item.id === input.instanceId) ?? mockSkills[0]).resolution, instanceId: input.instanceId, sourceType: input.sourceType, sourceLabel: input.sourceLabel, sourceRef: input.sourceRef, confidence: 100, resolutionStatus: "confirmed", userConfirmed: true, updatedAt: now } as T;
+    }
     case "origin_resolution_recalculate": return instanceDetail(mockSkills.find((item) => item.id === (args?.input as {instanceId:string}).instanceId) ?? mockSkills[0]).resolution as T;
     case "library_skill_list": return centralSkills as T;
     case "library_skill_get": return (centralSkills.find((item) => item.id === args?.skillId) ?? centralSkills[0]) as T;
@@ -183,11 +194,32 @@ export async function invokeBrowserPreviewProCommand<T>(command: string, args?: 
       return { id: "preview-publish-plan", skillId: input.skillId, snapshotId: input.snapshotId, sourcePath: "preview/source", sourceHash: "preview-hash", targets: input.targets.map((target) => ({ platformName: target.platformName, displayName: target.platformName, targetPath: `preview/${target.platformName}`, syncMode: "copy", driftStatus: "in_sync", driftPolicy: "abort", status: "ready", symlinkCapability: "supported" })), planHash: "preview-publish-hash", createdAt: now, expiresAt: now + 300_000 } as T;
     }
     case "library_skill_publish_execute": return { planId: "preview-publish-plan", status: "success", targets: [{ platformName: "codex", targetPath: "preview/codex", status: "success", contentHash: "preview-hash" }] } as T;
+    case "library_skill_remove_mapping": {
+      const input = args?.input as { platformName: string };
+      return { platformName: input.platformName, targetPath: `preview/${input.platformName}`, status: "success", contentHash: "preview-hash" } as T;
+    }
     case "import_plan_create": return createInstallPlan(args) as T;
     case "import_plan_execute": return { planId: "preview-import-plan", status: "success", imported: [{ candidateId: "preview-candidate", skillId: "preview-skill", name: "preview-skill", slug: "preview-skill", snapshotId: "preview-snapshot", contentHash: "preview-content", action: "install" }], publishDeferred: true, requestedTargetAgents: [] } as T;
+    case "lifecycle_text_file_save": {
+      const input = args?.input as { skillId: string; relativePath: string };
+      return { skillId: input.skillId, relativePath: input.relativePath, beforeHash: "preview-before", afterHash: "preview-after", recoverySnapshotId: "preview-recovery", recoveryPointCreated: true, outdatedMappingCount: 0 } as T;
+    }
+    case "lifecycle_staging_recover": return { recovered: [], cleaned: [], errors: [] } as T;
+    case "trash_plan_create": {
+      const skillId = args?.skillId as string;
+      const skill = centralSkills.find((item) => item.id === skillId) ?? centralSkills[0];
+      return { id: "preview-delete-plan", skillId, displayName: skill.name, originalPath: skill.storagePath, sourceHash: skill.activeContentHash ?? "preview-hash", fileCount: 1, totalBytes: 512, mappings: mapping(skillId), sourcesJson: "[]", planHash: "preview-delete-hash", createdAt: now, expiresAt: now + 300_000 } as T;
+    }
+    case "trash_move_execute": return trash[0] as T;
     case "trash_list": return trash as T;
-    case "trash_restore_plan": return { id: "preview-restore-plan", trashEntryId: (args?.input as {trashEntryId:string}).trashEntryId, skillId: "preview-skill", displayName: "preview", targetName: "preview", targetSlug: "preview", targetPath: "preview/restored", sourceHash: "preview-hash", mappingsWillBeRepublished: false, planHash: "preview-restore-hash", createdAt: now, expiresAt: now + 300_000 } as T;
-    case "trash_restore_execute": { const id = "trash-1"; const entry = trash.find((item) => item.id === id) ?? trash[0]; trash = trash.filter((item) => item.id !== entry.id); return entry as T; }
+    case "trash_restore_plan": {
+      const input = args?.input as { trashEntryId: string; mode: string; newName?: string };
+      restorePlanEntryId = input.trashEntryId;
+      const entry = trash.find((item) => item.id === input.trashEntryId) ?? trash[0];
+      const name = input.mode === "new_name" && input.newName ? input.newName : entry.displayName;
+      return { id: "preview-restore-plan", trashEntryId: entry.id, skillId: entry.entityId, displayName: entry.displayName, targetName: name, targetSlug: name, targetPath: input.mode === "new_name" ? `preview/skills/${name}` : entry.originalPath, sourceHash: entry.contentHash, mappingsWillBeRepublished: false, planHash: "preview-restore-hash", createdAt: now, expiresAt: now + 300_000 } as T;
+    }
+    case "trash_restore_execute": { const entry = trash.find((item) => item.id === restorePlanEntryId) ?? trash[0]; trash = trash.filter((item) => item.id !== entry.id); restorePlanEntryId = undefined; return { ...entry, status: "restored", restoredAt: now } as T; }
     case "trash_purge_confirmation_create": return { trashEntryId: args?.trashEntryId, confirmationToken: "preview-confirmation", expiresAt: now + 60_000 } as T;
     case "trash_purge_execute": { const id = (args?.input as {trashEntryId:string}).trashEntryId; trash = trash.filter((item) => item.id !== id); return undefined as T; }
     case "operation_list": return operations as T;
@@ -213,6 +245,12 @@ export async function invokeBrowserPreviewProCommand<T>(command: string, args?: 
     case "ai_provider_test": return { providerId: args?.providerId, status: "success", model: { providerId: args?.providerId, modelId: providers.find((item)=>item.providerId===args?.providerId)?.defaultModel ?? "preview" }, testedAt: now } as T;
     case "ai_task_route_list": return routes as T;
     case "ai_task_route_save": { const input = args?.input as AiTaskRoute; routes = routes.map((route) => route.taskType === input.taskType ? { ...input, updatedAt: now } : route); return routes.find((route) => route.taskType === input.taskType) as T; }
+    case "ai_artifact_generate": {
+      const input = args?.input as { taskType: AiTaskRoute["taskType"]; skillId?: string; instanceId?: string };
+      const route = routes.find((item) => item.taskType === input.taskType) ?? routes[0];
+      return { id: "preview-artifact", skillId: input.skillId, instanceId: input.instanceId, taskType: route.taskType, providerId: route.providerId, modelId: route.modelId, modelDisplayName: route.modelId, responsibility: route.responsibility, promptVersion: route.promptVersion, inputHash: "preview-input-hash", content: { summary: "preview" }, status: "success", staleAt: null, createdAt: now } as T;
+    }
+    case "ai_artifact_cancel": return true as T;
     case "ai_artifact_list": return [] as T;
     default: throw new Error(`浏览器 Pro 预览暂未实现命令: ${command}`);
   }

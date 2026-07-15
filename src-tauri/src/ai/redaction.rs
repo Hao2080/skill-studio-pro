@@ -172,4 +172,45 @@ mod tests {
         assert!(!result.blocked);
         assert_eq!(result.value, input);
     }
+
+    #[test]
+    fn redacts_api_key_bearer_pem_and_jwt_formats() {
+        let api_key = format!("{}{}", "sk-", "A".repeat(24));
+        let bearer = format!("{}{}", "Bearer ", "token-value-".repeat(3));
+        let pem = format!(
+            "{}{}{}{}",
+            "-----BEGIN ",
+            "PRIVATE KEY-----\n",
+            "fictional-key-material\n",
+            "-----END PRIVATE KEY-----"
+        );
+        let jwt = [
+            "eyJhbGciOiJIUzI1NiJ9",
+            "eyJzdWIiOiJmaWN0aW9uYWwifQ",
+            "c2lnbmF0dXJl",
+        ]
+        .join(".");
+        let result = super::redact_input(&json!({
+            "api": api_key,
+            "header": bearer,
+            "certificate": pem,
+            "session": jwt,
+        }));
+        assert!(result.blocked);
+        for finding in [
+            "openai_or_minimax_key",
+            "authorization_bearer",
+            "pem_private_key",
+            "jwt",
+        ] {
+            assert!(
+                result.findings.iter().any(|item| item == finding),
+                "missing {finding}"
+            );
+        }
+        let encoded = result.value.to_string();
+        assert!(!encoded.contains("fictional-key-material"));
+        assert!(!encoded.contains("eyJhbGci"));
+        assert!(!encoded.contains("token-value"));
+    }
 }

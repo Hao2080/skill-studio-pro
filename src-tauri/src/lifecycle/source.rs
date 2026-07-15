@@ -476,7 +476,10 @@ fn safe_remove_repository(repository: &Path, staging: &Path) -> Result<(), Strin
 
 #[cfg(test)]
 mod tests {
-    use super::{sanitize_git_url, validate_git_argument, validate_git_source};
+    use super::{
+        enforce_limits, sanitize_git_url, validate_git_argument, validate_git_source, MAX_FILES,
+        MAX_SINGLE_FILE, MAX_TOTAL_BYTES,
+    };
 
     #[test]
     fn rejects_git_option_injection() {
@@ -493,5 +496,18 @@ mod tests {
             sanitize_git_url("https://user:secret@example.test/repo.git"),
             "https://example.test/repo.git"
         );
+    }
+
+    #[test]
+    fn enforces_file_count_single_file_and_total_import_limits() {
+        assert!(enforce_limits(MAX_FILES + 1, 1, 1)
+            .unwrap_err()
+            .contains("文件数量"));
+        assert!(enforce_limits(1, MAX_SINGLE_FILE + 1, MAX_SINGLE_FILE + 1)
+            .unwrap_err()
+            .contains("单文件"));
+        assert!(enforce_limits(2, 1, MAX_TOTAL_BYTES + 1)
+            .unwrap_err()
+            .contains("总解压/复制"));
     }
 }

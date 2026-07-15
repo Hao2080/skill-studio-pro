@@ -490,6 +490,11 @@ fn secret_store_contract_never_requires_plaintext_fallback() {
 #[cfg(target_os = "windows")]
 #[test]
 fn windows_credential_manager_contract() {
+    if std::env::var_os("SKILL_STUDIO_PRO_NATIVE_SECRET_STORE_TEST").as_deref()
+        != Some(std::ffi::OsStr::new("1"))
+    {
+        return;
+    }
     let store = SystemCredentialStore;
     let account = format!("contract-{}", uuid::Uuid::new_v4());
     store

@@ -217,6 +217,16 @@ mod tests {
 
     #[test]
     fn automatic_score_caps_at_99_and_conflicts_subtract() {
+        let capped = resolve(
+            "i",
+            &[
+                item("app_install_record", 80, false),
+                item("git_repository", 35, false),
+            ],
+            1,
+        );
+        assert_eq!(capped.confidence, 99);
+        assert!(!capped.user_confirmed);
         let resolution = resolve(
             "i",
             &[

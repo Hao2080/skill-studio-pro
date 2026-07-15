@@ -27,7 +27,7 @@ vi.mock("@/app/providers/I18nContext", () => ({
 }));
 
 describe("Skill Studio Pro application shell", () => {
-  afterEach(() => { cleanup(); window.history.replaceState({}, "", "/"); localStorage.clear(); });
+  afterEach(() => { cleanup(); window.history.replaceState({}, "", "/"); localStorage.clear(); Object.defineProperty(window, "innerWidth", { configurable: true, value: 1280 }); });
 
   it("renders the first-generation navigation and hides team spaces", () => {
     render(<App />);
@@ -64,5 +64,24 @@ describe("Skill Studio Pro application shell", () => {
     render(<App />);
     fireEvent.keyDown(window, { key: "k", ctrlKey: true });
     expect(document.activeElement).toBe(screen.getByRole("textbox", { name: "全局搜索 Skill" }));
+  });
+
+  it("keeps primary keyboard targets focusable without hover-only access", () => {
+    render(<App />);
+    const targets = Array.from(document.querySelectorAll<HTMLElement>('a[href], button, input'));
+    expect(targets.length).toBeGreaterThan(8);
+    expect(targets.every((target) => target.tabIndex >= 0)).toBe(true);
+    expect(screen.getByRole("textbox", { name: "全局搜索 Skill" }).tabIndex).toBe(0);
+    expect(screen.getByRole("link", { name: "本机 Skill" }).tabIndex).toBe(0);
+  });
+
+  it("uses compact navigation at 900px and expanded navigation at 1280px", () => {
+    Object.defineProperty(window, "innerWidth", { configurable: true, value: 900 });
+    render(<App />);
+    expect(screen.getByRole("button", { name: "展开导航" })).toBeTruthy();
+    cleanup();
+    Object.defineProperty(window, "innerWidth", { configurable: true, value: 1280 });
+    render(<App />);
+    expect(screen.getByRole("button", { name: "折叠导航" })).toBeTruthy();
   });
 });

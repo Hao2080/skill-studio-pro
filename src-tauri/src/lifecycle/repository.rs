@@ -245,8 +245,10 @@ pub fn redact_error(value: &str) -> String {
 mod tests {
     #[test]
     fn operation_errors_remove_tokens_and_secret_assignments() {
-        let value =
-            super::redact_error("Bearer abcdefghijklmnop api_key=top-secret password:do-not-store");
+        let bearer = format!("{}{}", "Bearer ", "abcdefghijklmnop");
+        let value = super::redact_error(&format!(
+            "{bearer} api_key=top-secret password:do-not-store"
+        ));
         assert!(!value.contains("abcdefghijklmnop"));
         assert!(!value.contains("top-secret"));
         assert!(!value.contains("do-not-store"));

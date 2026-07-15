@@ -7,7 +7,7 @@ use crate::lifecycle::model::{
 use crate::services::trash_service::TrashService;
 
 fn service() -> Result<TrashService, String> {
-    let home = dirs::home_dir().ok_or_else(|| "无法解析用户主目录".to_string())?;
+    let home = crate::workspace::home_dir()?;
     TrashService::new(crate::workspace::workspace_root()?, home)
 }
 
