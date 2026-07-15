@@ -174,6 +174,7 @@ export interface InstanceListInput {
 export interface InstanceListResult {
   items: SkillInstance[];
   total: number;
+  resolutions?: Record<string, SourceResolution>;
 }
 
 export interface OriginConfirmInput {

@@ -203,6 +203,12 @@ fn full_and_incremental_scans_are_read_only_and_isolate_skill_errors() {
         .unwrap();
     assert!(good.has_scripts);
     assert_eq!(good.short_description.as_deref(), Some("Short"));
+    let preview = inventory::service::read_instance_text_file(&conn, &good.id, "SKILL.md")
+        .expect("indexed SKILL.md should be readable by stable instance id");
+    assert!(preview.contains("name: Good"));
+    let traversal = inventory::service::read_instance_text_file(&conn, &good.id, "../SKILL.md")
+        .expect_err("parent traversal must be rejected");
+    assert!(traversal.contains("相对文件路径"));
     let same = list
         .items
         .iter()

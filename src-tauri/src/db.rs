@@ -63,3 +63,33 @@ fn configure_connection(conn: &Connection) -> Result<(), String> {
     )
     .map_err(|e| format!("初始化数据库连接失败: {}", e))
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn integration_migrations_are_monotonic_and_do_not_lower_newer_databases() {
+        let data_dir = std::env::temp_dir()
+            .join("skill-studio-pro-tests")
+            .join(format!("migration-order-{}", uuid::Uuid::new_v4()));
+        let conn = init_db_at_path(&data_dir).expect("fresh integration database should migrate");
+        let versions = conn
+            .prepare("SELECT version FROM schema_migrations ORDER BY version")
+            .and_then(|mut statement| {
+                statement
+                    .query_map([], |row| row.get::<_, i64>(0))?
+                    .collect::<Result<Vec<_>, _>>()
+            })
+            .expect("migration versions should be readable");
+        assert_eq!(versions, vec![1, 2, 3, 4]);
+        assert_eq!(get_schema_version(&conn).unwrap(), CURRENT_SCHEMA_VERSION);
+        conn.pragma_update(None, "user_version", 99).unwrap();
+        drop(conn);
+
+        let reopened = init_db_at_path(&data_dir).expect("newer database should remain compatible");
+        assert_eq!(get_schema_version(&reopened).unwrap(), 99);
+        drop(reopened);
+        std::fs::remove_dir_all(data_dir).unwrap();
+    }
+}

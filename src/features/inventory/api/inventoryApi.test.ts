@@ -9,6 +9,7 @@ describe("inventoryApi contract", () => {
     await api.startScan();
     await api.cancelScan("run-1");
     await api.listInstances({ search: "demo" });
+    await api.readInstanceFile("instance-1", "SKILL.md");
     await api.recalculateOrigin("instance-1");
 
     expect(invoke).toHaveBeenNthCalledWith(1, "inventory_scan_start", {
@@ -20,7 +21,11 @@ describe("inventoryApi contract", () => {
     expect(invoke).toHaveBeenNthCalledWith(3, "inventory_instance_list", {
       input: { search: "demo" },
     });
-    expect(invoke).toHaveBeenNthCalledWith(4, "origin_resolution_recalculate", {
+    expect(invoke).toHaveBeenNthCalledWith(4, "inventory_instance_file_read", {
+      instanceId: "instance-1",
+      relativePath: "SKILL.md",
+    });
+    expect(invoke).toHaveBeenNthCalledWith(5, "origin_resolution_recalculate", {
       input: { instanceId: "instance-1" },
     });
   });

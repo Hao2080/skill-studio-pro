@@ -67,6 +67,7 @@ macro_rules! command_handlers {
             crate::commands::inventory::inventory_scan_cancel,
             crate::commands::inventory::inventory_instance_list,
             crate::commands::inventory::inventory_instance_get,
+            crate::commands::inventory::inventory_instance_file_read,
             crate::commands::origin::origin_resolution_get,
             crate::commands::origin::origin_resolution_confirm,
             crate::commands::origin::origin_resolution_recalculate,
@@ -202,5 +203,30 @@ mod tests {
     #[test]
     fn accepts_present_optional_id() {
         super::validate_optional_id("snapshotId", Some("snap-1")).expect("非空可选 ID 应通过校验");
+    }
+
+    #[test]
+    fn integration_commands_remain_registered_with_the_tauri_handler() {
+        let source = include_str!("commands.rs");
+        for command in [
+            "inventory_instance_file_read",
+            "inventory_scan_start",
+            "library_skill_publish_plan",
+            "library_skill_publish_execute",
+            "import_plan_create",
+            "import_plan_execute",
+            "trash_restore_plan",
+            "trash_purge_confirmation_create",
+            "trash_purge_execute",
+            "operation_list",
+            "ai_provider_save",
+            "ai_provider_test",
+            "ai_task_route_save",
+        ] {
+            assert!(
+                source.contains(command),
+                "missing Tauri command registration: {command}"
+            );
+        }
     }
 }

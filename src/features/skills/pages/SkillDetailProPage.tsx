@@ -1,10 +1,21 @@
-import { useMemo, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { AlertTriangle, ArrowLeft, Boxes, CheckCircle2, Clock3, Code2, ExternalLink, FileCode2, FileText, FolderTree, GitBranch, History, MapPin, PackageCheck, RotateCcw, Send, ShieldCheck } from "lucide-react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { AlertTriangle, ArrowLeft, Boxes, CheckCircle2, Clock3, Code2, FileCode2, FileText, FolderTree, GitBranch, History, LoaderCircle, MapPin, PackageCheck, RotateCcw, Send, ShieldCheck } from "lucide-react";
 import { ModelAttribution } from "@/shared/model-attribution/ModelAttribution";
 import { SourceConfidence } from "@/shared/components/SourceConfidence";
 import { PageHeader, StatusBadge } from "@/shared/components/pro";
-import { mockActivities, mockFileTree, mockSkillMarkdown, mockSkills } from "@/shared/mock/proMockData";
+import type { ModelAttributionData, SourceConfidenceData } from "@/shared/model/proTypes";
+import { inventoryApi, type InventoryApi } from "@/features/inventory/api/inventoryApi";
+import type { SkillInstanceDetail } from "@/features/inventory/model";
+import { libraryApi, type LibraryApi } from "@/features/library/api/libraryApi";
+import type { CentralSkill, MappingState, PublishPlan } from "@/features/library/model";
+import { aiApi, type AiApi } from "@/features/ai-settings/api/aiApi";
+import type { AiArtifact } from "@/features/ai-settings/model";
+import { activityApi, type ActivityApi } from "@/features/activity/api/activityApi";
+import type { OperationLog } from "@/features/activity/model";
+import { listSkillFiles, readSkillFile } from "@/features/skills/api/skillsApi";
+import { listSnapshots } from "@/features/snapshots/api/snapshotsApi";
+import type { SkillFileNode, SkillSnapshot } from "@/types/skill";
 import "../styles/pro-detail.css";
 
 const tabs = [
@@ -19,89 +30,263 @@ const tabs = [
 
 type TabId = typeof tabs[number]["id"];
 
-export function SkillDetailProPage() {
-  const { skillId = "skill-visual-profile" } = useParams();
+export interface SkillDetailDependencies {
+  inventory: InventoryApi;
+  library: LibraryApi;
+  ai: AiApi;
+  activity: ActivityApi;
+  readCentralFile(skillId: string, relativePath: string): Promise<string>;
+  listCentralFiles(skillId: string): Promise<SkillFileNode>;
+  listSnapshots(skillId: string): Promise<SkillSnapshot[]>;
+}
+
+const defaultDependencies: SkillDetailDependencies = {
+  inventory: inventoryApi,
+  library: libraryApi,
+  ai: aiApi,
+  activity: activityApi,
+  readCentralFile: readSkillFile,
+  listCentralFiles: listSkillFiles,
+  listSnapshots,
+};
+
+interface DetailView {
+  id: string;
+  name: string;
+  description: string;
+  path: string;
+  platforms: string[];
+  parseStatus: string;
+  hasScripts?: boolean;
+  fileCount: number;
+  contentHash?: string;
+  updatedAt: number;
+  source: SourceConfidenceData;
+  evidence: string[];
+}
+
+function inventoryView(detail: SkillInstanceDetail): DetailView {
+  const { instance, resolution } = detail;
+  const evidence = detail.evidence.map((item) => item.evidenceValue ?? item.evidenceKey);
+  return {
+    id: instance.id,
+    name: instance.parsedName ?? instance.folderName,
+    description: instance.shortDescription ?? instance.description ?? "暂无说明；请查看 SKILL.md 原文。",
+    path: instance.absolutePath,
+    platforms: [instance.platformName ?? instance.scopeType],
+    parseStatus: instance.parseStatus,
+    hasScripts: instance.hasScripts || instance.hasExecutables,
+    fileCount: instance.fileCount,
+    contentHash: instance.contentHash,
+    updatedAt: instance.lastModifiedAt ?? instance.lastSeenAt,
+    source: resolution ? {
+      label: resolution.sourceLabel,
+      type: resolution.sourceType,
+      score: resolution.confidence,
+      status: resolution.resolutionStatus,
+      rationale: resolution.rationale,
+      evidence,
+    } : {
+      label: "未知来源", type: "unknown", score: 0, status: "unknown",
+      rationale: "当前没有足够的可验证来源证据", evidence,
+    },
+    evidence,
+  };
+}
+
+function libraryView(skill: CentralSkill, mappings: MappingState[]): DetailView {
+  return {
+    id: skill.id,
+    name: skill.name,
+    description: skill.description ?? "中央库主副本",
+    path: skill.storagePath,
+    platforms: mappings.map((mapping) => mapping.platformName),
+    parseStatus: skill.lifecycleState,
+    fileCount: 0,
+    contentHash: skill.activeContentHash,
+    updatedAt: skill.updatedAt,
+    source: {
+      label: "Skill Studio Pro 中央库", type: "central_library", score: 100, status: "confirmed",
+      rationale: `应用管理的稳定 UUID：${skill.id}`,
+      evidence: ["中央库数据库记录", `稳定存储路径：${skill.storageRelPath}`],
+    },
+    evidence: ["中央库数据库记录", `稳定存储路径：${skill.storageRelPath}`],
+  };
+}
+
+function flattenTree(node: SkillFileNode): Array<{ path: string; type: string }> {
+  const current = node.path ? [{ path: node.path, type: node.isDir ? "目录" : "文件" }] : [];
+  return [...current, ...node.children.flatMap(flattenTree)];
+}
+
+function artifactAttribution(artifact?: AiArtifact): ModelAttributionData | undefined {
+  if (!artifact) return undefined;
+  return {
+    provider: artifact.providerId,
+    modelId: artifact.modelId,
+    responsibility: artifact.responsibility,
+    generatedAt: new Date(artifact.createdAt).toLocaleString(),
+    state: artifact.status === "failed" ? "failed" : artifact.staleAt ? "stale" : "fresh",
+  };
+}
+
+export function SkillDetailProPage({ dependencies = defaultDependencies }: { dependencies?: SkillDetailDependencies }) {
+  const { skillId = "" } = useParams();
+  const location = useLocation();
   const navigate = useNavigate();
+  const isLibrary = location.pathname.startsWith("/library");
   const [activeTab, setActiveTab] = useState<TabId>("overview");
-  const skill = useMemo(() => mockSkills.find((item) => item.id === skillId) ?? mockSkills[0], [skillId]);
-  const parentRoute = window.location.pathname.startsWith("/library") ? "/library" : "/inventory";
+  const [detail, setDetail] = useState<DetailView | null>(null);
+  const [instanceDetail, setInstanceDetail] = useState<SkillInstanceDetail | null>(null);
+  const [markdown, setMarkdown] = useState("");
+  const [files, setFiles] = useState<Array<{ path: string; type: string; size?: number }>>([]);
+  const [mappings, setMappings] = useState<MappingState[]>([]);
+  const [snapshots, setSnapshots] = useState<SkillSnapshot[]>([]);
+  const [activities, setActivities] = useState<OperationLog[]>([]);
+  const [artifact, setArtifact] = useState<AiArtifact | undefined>();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [partial, setPartial] = useState("");
+  const [registerPlan, setRegisterPlan] = useState<{ id: string; planHash: string; targetPath: string } | null>(null);
+  const [publishPlan, setPublishPlan] = useState<PublishPlan | null>(null);
+  const [publishTarget, setPublishTarget] = useState("codex");
+  const [notice, setNotice] = useState("");
+
+  const load = useCallback(async () => {
+    if (!skillId) return;
+    setLoading(true);
+    setError("");
+    setPartial("");
+    try {
+      if (isLibrary) {
+        const [skill, mappingResult, markdownResult, fileResult, snapshotResult, activityResult, artifactResult] = await Promise.allSettled([
+          dependencies.library.get(skillId),
+          dependencies.library.detectDrift(skillId),
+          dependencies.readCentralFile(skillId, "SKILL.md"),
+          dependencies.listCentralFiles(skillId),
+          dependencies.listSnapshots(skillId),
+          dependencies.activity.list({ entityId: skillId, limit: 100, offset: 0 }),
+          dependencies.ai.listArtifacts({ skillId, includeStale: true }),
+        ]);
+        if (skill.status === "rejected") throw skill.reason;
+        const nextMappings = mappingResult.status === "fulfilled" ? mappingResult.value : [];
+        setDetail(libraryView(skill.value, nextMappings));
+        setMappings(nextMappings);
+        setMarkdown(markdownResult.status === "fulfilled" ? markdownResult.value : "");
+        setFiles(fileResult.status === "fulfilled" ? flattenTree(fileResult.value).filter((item) => item.type === "文件") : []);
+        setSnapshots(snapshotResult.status === "fulfilled" ? snapshotResult.value : []);
+        setActivities(activityResult.status === "fulfilled" ? activityResult.value : []);
+        setArtifact(artifactResult.status === "fulfilled" ? artifactResult.value[0] : undefined);
+        const failed = [mappingResult, markdownResult, fileResult, snapshotResult, activityResult, artifactResult].filter((item) => item.status === "rejected").length;
+        if (failed) setPartial(`${failed} 个详情分区加载失败，中央主副本信息仍可用。`);
+      } else {
+        const base = await dependencies.inventory.getInstance(skillId);
+        setInstanceDetail(base);
+        setDetail(inventoryView(base));
+        setFiles(base.files.map((file) => ({ path: file.relativePath, type: file.fileType, size: file.sizeBytes })));
+        const [markdownResult, activityResult, artifactResult] = await Promise.allSettled([
+          dependencies.inventory.readInstanceFile(skillId, "SKILL.md"),
+          dependencies.activity.list({ entityId: skillId, limit: 100, offset: 0 }),
+          dependencies.ai.listArtifacts({ instanceId: skillId, includeStale: true }),
+        ]);
+        setMarkdown(markdownResult.status === "fulfilled" ? markdownResult.value : "");
+        setActivities(activityResult.status === "fulfilled" ? activityResult.value : []);
+        setArtifact(artifactResult.status === "fulfilled" ? artifactResult.value[0] : undefined);
+        const failed = [markdownResult, activityResult, artifactResult].filter((item) => item.status === "rejected").length;
+        if (failed) setPartial(`${failed} 个详情分区加载失败，本地索引与来源证据仍可用。`);
+      }
+    } catch (reason) {
+      setError(reason instanceof Error ? reason.message : String(reason));
+      setDetail(null);
+    } finally {
+      setLoading(false);
+    }
+  }, [dependencies, isLibrary, skillId]);
+
+  useEffect(() => { void load(); }, [load]);
+
+  async function recalculate() {
+    if (!skillId || isLibrary) return;
+    try {
+      await dependencies.inventory.recalculateOrigin(skillId);
+      await load();
+      setNotice("来源证据已按确定性规则重新计算。");
+    } catch (reason) { setError(reason instanceof Error ? reason.message : String(reason)); }
+  }
+
+  async function createRegisterPlan() {
+    try {
+      const plan = await dependencies.library.createRegisterPlan({ instanceId: skillId });
+      setRegisterPlan({ id: plan.id, planHash: plan.planHash, targetPath: plan.targetPath });
+    } catch (reason) { setError(reason instanceof Error ? reason.message : String(reason)); }
+  }
+
+  async function executeRegisterPlan() {
+    if (!registerPlan) return;
+    try {
+      const skill = await dependencies.library.executeRegisterPlan({ planId: registerPlan.id, planHash: registerPlan.planHash });
+      setNotice(`已创建中央主副本 ${skill.name}；外部实例未移动。`);
+      setRegisterPlan(null);
+    } catch (reason) { setError(reason instanceof Error ? reason.message : String(reason)); }
+  }
+
+  async function createPublishPlan() {
+    const snapshot = snapshots.find((item) => item.isActive) ?? snapshots.find((item) => item.isCurrent) ?? snapshots[0];
+    if (!snapshot) { setError("没有可发布快照，请先创建快照。"); return; }
+    try {
+      setPublishPlan(await dependencies.library.createPublishPlan({ skillId, snapshotId: snapshot.id, targets: [{ platformName: publishTarget, syncMode: "copy", driftPolicy: "abort" }] }));
+    } catch (reason) { setError(reason instanceof Error ? reason.message : String(reason)); }
+  }
+
+  async function executePublishPlan() {
+    if (!publishPlan) return;
+    try {
+      const result = await dependencies.library.executePublishPlan({ planId: publishPlan.id, planHash: publishPlan.planHash });
+      setNotice(`发布结果：${result.status}；${result.targets.filter((item) => item.status === "success").length}/${result.targets.length} 个目标成功。`);
+      setPublishPlan(null);
+      await load();
+    } catch (reason) { setError(reason instanceof Error ? reason.message : String(reason)); }
+  }
+
+  const model = useMemo(() => artifactAttribution(artifact), [artifact]);
+  const parentRoute = isLibrary ? "/library" : "/inventory";
+
+  if (loading) return <div className="pro-page"><div className="pro-page__inner"><div className="pro-empty glass-panel" role="status"><div><LoaderCircle size={28}/><strong>正在加载 Skill 详情</strong></div></div></div></div>;
+  if (error && !detail) return <div className="pro-page"><div className="pro-page__inner"><div className="pro-empty glass-panel" role="alert"><div><AlertTriangle size={28}/><strong>Skill 详情加载失败</strong><p>{error}</p><button className="pro-button" type="button" onClick={load}>重试</button></div></div></div></div>;
+  if (!detail) return null;
 
   return (
-    <div className="pro-page skill-detail-pro">
-      <div className="pro-page__inner">
-        <button type="button" className="skill-detail-pro__back" onClick={() => navigate(parentRoute)}><ArrowLeft size={14} />返回{parentRoute === "/library" ? "中央库" : "本机 Skill"}</button>
-        <PageHeader
-          eyebrow="SKILL ASSET"
-          title={skill.name}
-          subtitle={skill.description}
-          actions={<><button type="button" className="pro-button"><RotateCcw size={15} />重新解析</button><button type="button" className="pro-button pro-button--primary"><Send size={15} />纳入中央库</button></>}
-        />
-
-        <div className="skill-detail-pro__identity glass-panel">
-          <span className="skill-card__glyph">HF</span>
-          <div className="skill-detail-pro__path"><span>当前实例</span><code>{skill.path}</code></div>
-          <div className="skill-detail-pro__badges"><StatusBadge label="解析正常" tone="success" /><StatusBadge label={skill.hasScripts ? "包含脚本" : "纯内容"} tone={skill.hasScripts ? "warning" : "neutral"} />{skill.platforms.map((platform) => <StatusBadge key={platform} label={platform} tone="info" />)}</div>
-        </div>
-
-        <nav className="skill-detail-tabs glass-panel" aria-label="Skill 详情标签页" role="tablist">
-          {tabs.map(({ id, label, icon: Icon }) => <button key={id} type="button" role="tab" aria-selected={activeTab === id} onClick={() => setActiveTab(id)}><Icon size={14} />{label}</button>)}
-        </nav>
-
-        <div className="skill-detail-pro__content" role="tabpanel">
-          {activeTab === "overview" ? <OverviewTab skill={skill} /> : null}
-          {activeTab === "markdown" ? <MarkdownTab /> : null}
-          {activeTab === "files" ? <FilesTab /> : null}
-          {activeTab === "source" ? <SourceTab skill={skill} /> : null}
-          {activeTab === "locations" ? <LocationsTab platforms={skill.platforms} /> : null}
-          {activeTab === "versions" ? <VersionsTab /> : null}
-          {activeTab === "activity" ? <ActivityTab /> : null}
-        </div>
+    <div className="pro-page skill-detail-pro"><div className="pro-page__inner">
+      <button type="button" className="skill-detail-pro__back" onClick={() => navigate(parentRoute)}><ArrowLeft size={14}/>返回{isLibrary ? "中央库" : "本机 Skill"}</button>
+      <PageHeader eyebrow={isLibrary ? "CENTRAL SKILL" : "LOCAL INSTANCE"} title={detail.name} subtitle={detail.description} actions={isLibrary ? <button type="button" className="pro-button pro-button--primary" onClick={createPublishPlan}><Send size={15}/>创建发布计划</button> : <><button type="button" className="pro-button" onClick={recalculate}><RotateCcw size={15}/>重算来源</button><button type="button" className="pro-button pro-button--primary" onClick={createRegisterPlan} disabled={Boolean(instanceDetail?.instance.centralSkillId)}><Send size={15}/>纳入中央库</button></>} />
+      {error ? <div className="trash-notice glass-panel" role="alert"><StatusBadge label="操作失败" tone="danger"/><span>{error}</span></div> : null}
+      {partial ? <div className="trash-notice glass-panel" role="status"><StatusBadge label="部分加载" tone="warning"/><span>{partial}</span></div> : null}
+      {notice ? <div className="trash-notice glass-panel" role="status"><StatusBadge label="操作完成" tone="success"/><span>{notice}</span></div> : null}
+      {registerPlan ? <section className="glass-panel panel-padding"><h2>纳管计划已就绪</h2><p>中央目标：<code>{registerPlan.targetPath}</code>。执行只复制到中央库，原实例保持不动。</p><button className="pro-button" type="button" onClick={()=>setRegisterPlan(null)}>取消</button><button className="pro-button pro-button--primary" type="button" onClick={executeRegisterPlan}>确认纳管</button></section> : null}
+      {publishPlan ? <section className="glass-panel panel-padding"><h2>发布计划已就绪</h2>{publishPlan.targets.map((target)=><p key={target.platformName}>{target.displayName} · {target.syncMode} · {target.driftStatus} · {target.status}</p>)}<button className="pro-button" type="button" onClick={()=>setPublishPlan(null)}>取消</button><button className="pro-button pro-button--primary" type="button" disabled={publishPlan.targets.some((target)=>target.status==="blocked")} onClick={executePublishPlan}>执行发布</button></section> : null}
+      {isLibrary ? <section className="glass-panel panel-padding"><label>发布目标 <select value={publishTarget} onChange={(event)=>setPublishTarget(event.target.value)}><option value="codex">Codex</option><option value="claude">Claude Code</option><option value="cursor">Cursor</option><option value="windsurf">Windsurf</option><option value="gemini">Gemini CLI</option></select></label><span>默认复制；漂移策略为停止覆盖。</span></section> : null}
+      <div className="skill-detail-pro__identity glass-panel"><span className="skill-card__glyph">{detail.name.slice(0,2).toUpperCase()}</span><div className="skill-detail-pro__path"><span>{isLibrary ? "中央主副本" : "当前实例"}</span><code>{detail.path}</code></div><div className="skill-detail-pro__badges"><StatusBadge label={detail.parseStatus} tone={detail.parseStatus === "error" ? "danger" : "success"}/>{detail.hasScripts == null ? null : <StatusBadge label={detail.hasScripts ? "包含脚本" : "纯内容"} tone={detail.hasScripts ? "warning" : "neutral"}/>} {detail.platforms.map((platform)=><StatusBadge key={platform} label={platform} tone="info"/>)}</div></div>
+      <nav className="skill-detail-tabs glass-panel" aria-label="Skill 详情标签页" role="tablist">{tabs.map(({id,label,icon:Icon})=><button key={id} type="button" role="tab" aria-selected={activeTab===id} onClick={()=>setActiveTab(id)}><Icon size={14}/>{label}</button>)}</nav>
+      <div className="skill-detail-pro__content" role="tabpanel">
+        {activeTab === "overview" ? <OverviewTab detail={detail} model={model}/> : null}
+        {activeTab === "markdown" ? <MarkdownTab markdown={markdown}/> : null}
+        {activeTab === "files" ? <FilesTab files={files}/> : null}
+        {activeTab === "source" ? <SourceTab detail={detail}/> : null}
+        {activeTab === "locations" ? <LocationsTab mappings={mappings} platforms={detail.platforms}/> : null}
+        {activeTab === "versions" ? <VersionsTab snapshots={snapshots}/> : null}
+        {activeTab === "activity" ? <ActivityTab activities={activities}/> : null}
       </div>
-    </div>
+    </div></div>
   );
 }
 
-function OverviewTab({ skill }: { skill: (typeof mockSkills)[number] }) {
-  return (
-    <div className="skill-overview-grid">
-      <section className="glass-panel panel-padding skill-summary-panel">
-        <div className="skill-detail-section-head"><div><h2>快速理解</h2><p>原文优先；以下说明便于快速浏览。</p></div><StatusBadge label={skill.model?.state === "fresh" ? "摘要最新" : "本地解析"} tone={skill.model?.state === "fresh" ? "success" : "neutral"} /></div>
-        <div className="skill-summary-panel__lead"><span><FileCode2 size={17} /></span><p>{skill.description}</p></div>
-        <h3>使用建议</h3>
-        <ul><li>输入一位历史人物姓名，必要时补充朝代或视觉风格。</li><li>输出包含严格八段经历与八段画面描述。</li><li>画面描述可继续交给图像生成工作流使用。</li></ul>
-        {skill.model ? <ModelAttribution {...skill.model} onRegenerate={() => undefined} /> : <div className="local-attribution"><Code2 size={14} />当前只显示本地确定性解析结果</div>}
-      </section>
-      <aside className="skill-overview-side">
-        <SourceConfidence source={skill.source} />
-        <section className="glass-panel panel-padding skill-meta-panel">
-          <h2>本地元数据</h2>
-          <dl><div><dt>文件数量</dt><dd>{skill.fileCount}</dd></div><div><dt>内容哈希</dt><dd><code>9f08…c4a1</code></dd></div><div><dt>最近修改</dt><dd>{skill.updatedAt}</dd></div><div><dt>解析状态</dt><dd>正常</dd></div></dl>
-        </section>
-      </aside>
-    </div>
-  );
+function OverviewTab({ detail, model }: { detail: DetailView; model?: ModelAttributionData }) {
+  return <div className="skill-overview-grid"><section className="glass-panel panel-padding skill-summary-panel"><div className="skill-detail-section-head"><div><h2>快速理解</h2><p>原文优先；AI 只显示已有缓存，不自动调用模型。</p></div><StatusBadge label={model ? "已有模型产物" : "本地解析"} tone={model ? "success" : "neutral"}/></div><div className="skill-summary-panel__lead"><span><FileCode2 size={17}/></span><p>{detail.description}</p></div>{model ? <ModelAttribution {...model}/> : <div className="local-attribution"><Code2 size={14}/>当前只显示本地确定性解析结果</div>}</section><aside className="skill-overview-side"><SourceConfidence source={detail.source}/><section className="glass-panel panel-padding skill-meta-panel"><h2>本地元数据</h2><dl><div><dt>文件数量</dt><dd>{detail.fileCount || "按需加载"}</dd></div><div><dt>内容哈希</dt><dd><code>{detail.contentHash ? `${detail.contentHash.slice(0,10)}…` : "未记录"}</code></dd></div><div><dt>最近修改</dt><dd>{new Date(detail.updatedAt).toLocaleString()}</dd></div><div><dt>状态</dt><dd>{detail.parseStatus}</dd></div></dl></section></aside></div>;
 }
 
-function MarkdownTab() {
-  return <section className="glass-panel markdown-view"><header><div><h2>SKILL.md</h2><span>只读预览</span></div><button type="button" className="pro-button"><ExternalLink size={13} />在外部编辑器打开</button></header><pre>{mockSkillMarkdown}</pre></section>;
-}
-
-function FilesTab() {
-  return <section className="glass-panel panel-padding"><div className="skill-detail-section-head"><div><h2>完整文件树</h2><p>正文按需读取，列表只保留摘要。</p></div><StatusBadge label={`${mockFileTree.length} 个已索引文件`} tone="info" /></div><div className="pro-file-list">{mockFileTree.map((file) => <button key={file.path} type="button"><FileText size={14} /><span><strong>{file.path}</strong><small>{file.type}</small></span><em>{file.size}</em></button>)}</div></section>;
-}
-
-function SourceTab({ skill }: { skill: (typeof mockSkills)[number] }) {
-  return <div className="pro-grid-2"><SourceConfidence source={skill.source} /><section className="glass-panel panel-padding evidence-panel"><h2>证据解释</h2><p>结论由本地确定性规则生成。人工确认优先于后续自动推断，同时保留原始证据。</p>{skill.source.evidence.map((item, index) => <article key={item}><span>{index + 1}</span><div><strong>{item}</strong><small>{index === 0 ? "+50 强证据" : "+15 辅助证据"}</small></div><CheckCircle2 size={15} /></article>)}<button type="button" className="pro-button">纠正来源</button></section></div>;
-}
-
-function LocationsTab({ platforms }: { platforms: string[] }) {
-  return <section className="glass-panel panel-padding"><div className="skill-detail-section-head"><div><h2>安装位置</h2><p>从单个平台移除不会删除中央主副本。</p></div><button className="pro-button pro-button--primary" type="button"><Send size={14} />发布到 Agent</button></div><div className="location-list">{[...platforms, "Cursor"].map((platform, index) => <article key={`${platform}-${index}`}><span className="platform-monogram">{platform.slice(0,2).toUpperCase()}</span><div><strong>{platform}</strong><code>~/.{platform.toLowerCase().replace(" ", "-")}/skills/historical-figure-visual-profile</code></div><StatusBadge label={index === 2 ? "未发布" : "已同步"} tone={index === 2 ? "neutral" : "success"} /><button type="button">管理</button></article>)}</div></section>;
-}
-
-function VersionsTab() {
-  return <section className="glass-panel panel-padding"><div className="skill-detail-section-head"><div><h2>版本与恢复点</h2><p>编辑、覆盖发布与删除前都会保留恢复路径。</p></div><button type="button" className="pro-button">创建快照</button></div><div className="version-timeline">{[{v:"v1.4",t:"当前版本",d:"更新历史画面构图规范"},{v:"v1.3",t:"系统恢复点",d:"发布到 Codex 前自动创建"},{v:"v1.2",t:"初始纳管",d:"从外部实例创建中央副本"}].map((item,index)=><article key={item.v}><span>{index===0?<PackageCheck size={15}/>:<Clock3 size={15}/>}</span><div><strong>{item.v} · {item.t}</strong><p>{item.d}</p></div><time>{index===0?"今天 14:32":index===1?"7 月 14 日":"7 月 10 日"}</time></article>)}</div></section>;
-}
-
-function ActivityTab() {
-  return <section className="glass-panel panel-padding"><div className="skill-detail-section-head"><div><h2>操作记录</h2><p>只显示与此 Skill 有关的可读审计记录。</p></div></div><div className="detail-activity-list">{mockActivities.slice(0,4).map((item)=><article key={item.id}><span className={`is-${item.status}`}>{item.status === "warning" ? <AlertTriangle size={14}/>:<CheckCircle2 size={14}/>}</span><div><strong>{item.title}</strong><p>{item.detail}</p></div><time>{item.time}</time></article>)}</div></section>;
-}
+function MarkdownTab({ markdown }: { markdown: string }) { return <section className="glass-panel markdown-view"><header><div><h2>SKILL.md</h2><span>只读预览</span></div></header>{markdown ? <pre>{markdown}</pre> : <div className="pro-empty"><p>原文分区加载失败或文件不存在。</p></div>}</section>; }
+function FilesTab({ files }: { files: Array<{path:string;type:string;size?:number}> }) { return <section className="glass-panel panel-padding"><div className="skill-detail-section-head"><div><h2>完整文件树</h2><p>正文按需读取，列表只保留摘要。</p></div><StatusBadge label={`${files.length} 个已索引文件`} tone="info"/></div><div className="pro-file-list">{files.map((file)=><button key={file.path} type="button"><FileText size={14}/><span><strong>{file.path}</strong><small>{file.type}</small></span><em>{file.size == null ? "" : `${file.size} B`}</em></button>)}</div></section>; }
+function SourceTab({ detail }: { detail: DetailView }) { return <div className="pro-grid-2"><SourceConfidence source={detail.source}/><section className="glass-panel panel-padding evidence-panel"><h2>证据解释</h2><p>结论由本地确定性规则生成；可信度不是安全评分。</p>{detail.evidence.map((item,index)=><article key={`${item}-${index}`}><span>{index+1}</span><div><strong>{item}</strong></div><CheckCircle2 size={15}/></article>)}</section></div>; }
+function LocationsTab({ mappings, platforms }: { mappings: MappingState[]; platforms: string[] }) { const shown = mappings.length ? mappings : platforms.map((platform)=>({platformName:platform,driftStatus:"external",targetPath:"外部扫描实例",syncMode:"copy" as const})); return <section className="glass-panel panel-padding"><div className="skill-detail-section-head"><div><h2>安装位置与发布状态</h2><p>中央映射使用复制模式为默认，漂移不会静默覆盖。</p></div></div><div className="location-list">{shown.map((mapping)=><article key={mapping.platformName}><span className="platform-monogram">{mapping.platformName.slice(0,2).toUpperCase()}</span><div><strong>{mapping.platformName}</strong><code>{mapping.targetPath}</code></div><StatusBadge label={mapping.driftStatus} tone={mapping.driftStatus==="in_sync"?"success":mapping.driftStatus==="drifted"?"warning":"neutral"}/><span>{mapping.syncMode}</span></article>)}</div></section>; }
+function VersionsTab({ snapshots }: { snapshots: SkillSnapshot[] }) { return <section className="glass-panel panel-padding"><div className="skill-detail-section-head"><div><h2>版本与恢复点</h2><p>编辑、覆盖发布与删除前都会保留恢复路径。</p></div></div><div className="version-timeline">{snapshots.map((item,index)=><article key={item.id}><span>{index===0?<PackageCheck size={15}/>:<Clock3 size={15}/>}</span><div><strong>v{item.snapshotNumber} · {item.isActive?"生效版本":item.source}</strong><p>{item.changeSummary ?? "无变更摘要"}</p></div><time>{new Date(item.createdAt).toLocaleString()}</time></article>)}{!snapshots.length?<p>外部实例没有中央快照。</p>:null}</div></section>; }
+function ActivityTab({ activities }: { activities: OperationLog[] }) { return <section className="glass-panel panel-padding"><div className="skill-detail-section-head"><div><h2>操作记录</h2><p>只显示与此 Skill ID 相关的审计记录。</p></div></div><div className="detail-activity-list">{activities.map((item)=><article key={item.id}><span className={`is-${item.status}`}>{item.status==="failed"?<AlertTriangle size={14}/>:<CheckCircle2 size={14}/>}</span><div><strong>{item.operationType}</strong><p>{item.errorSummary ?? item.targetLabel}</p></div><time>{new Date(item.createdAt).toLocaleString()}</time></article>)}{!activities.length?<p>尚无相关操作记录。</p>:null}</div></section>; }

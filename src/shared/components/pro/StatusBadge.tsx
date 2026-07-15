@@ -1,4 +1,4 @@
-import type { StatusTone } from "@/shared/mock/proMockData";
+import type { StatusTone } from "@/shared/model/proTypes";
 
 interface StatusBadgeProps {
   label: string;

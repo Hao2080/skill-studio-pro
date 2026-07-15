@@ -27,6 +27,7 @@ export interface InventoryApi {
   cancelScan(runId: string): Promise<boolean>;
   listInstances(input?: InstanceListInput): Promise<InstanceListResult>;
   getInstance(instanceId: string): Promise<SkillInstanceDetail>;
+  readInstanceFile(instanceId: string, relativePath: string): Promise<string>;
   getOriginResolution(instanceId: string): Promise<SourceResolution>;
   confirmOrigin(input: OriginConfirmInput): Promise<SourceResolution>;
   recalculateOrigin(instanceId: string): Promise<SourceResolution>;
@@ -43,6 +44,8 @@ export function createInventoryApi(invoke: InventoryInvoker = invokeCommand): In
     cancelScan: (runId) => invoke<boolean>("inventory_scan_cancel", { input: { runId } }),
     listInstances: (input = {}) => invoke<InstanceListResult>("inventory_instance_list", { input }),
     getInstance: (instanceId) => invoke<SkillInstanceDetail>("inventory_instance_get", { instanceId }),
+    readInstanceFile: (instanceId, relativePath) =>
+      invoke<string>("inventory_instance_file_read", { instanceId, relativePath }),
     getOriginResolution: (instanceId) =>
       invoke<SourceResolution>("origin_resolution_get", { instanceId }),
     confirmOrigin: (input) => invoke<SourceResolution>("origin_resolution_confirm", { input }),

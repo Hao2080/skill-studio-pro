@@ -1,5 +1,5 @@
 import { BadgeCheck, CircleHelp, GitBranch, ShieldCheck } from "lucide-react";
-import type { SourceConfidenceData } from "@/shared/mock/proMockData";
+import type { SourceConfidenceData } from "@/shared/model/proTypes";
 import { StatusBadge } from "./pro";
 import "./source-confidence.css";
 

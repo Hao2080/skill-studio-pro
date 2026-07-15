@@ -3,11 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { AlertTriangle, Boxes, Filter, Grid2X2, List, Search, ShieldCheck, TerminalSquare } from "lucide-react";
 import { SourceConfidence } from "@/shared/components/SourceConfidence";
 import { StatusBadge } from "@/shared/components/pro";
-import type { MockSkill } from "@/shared/mock/proMockData";
+import type { CatalogSkill } from "@/shared/model/proTypes";
 
 interface SkillCatalogProps {
-  skills: MockSkill[];
+  skills: CatalogSkill[];
   mode?: "inventory" | "library";
+  statusLabel?: string;
 }
 
 type ViewMode = "grid" | "list";
@@ -18,7 +19,7 @@ const libraryStatus = {
   drifted: { label: "存在漂移", tone: "warning" as const },
 };
 
-export function SkillCatalog({ skills, mode = "inventory" }: SkillCatalogProps) {
+export function SkillCatalog({ skills, mode = "inventory", statusLabel = "筛选在本地完成" }: SkillCatalogProps) {
   const navigate = useNavigate();
   const [query, setQuery] = useState("");
   const [platform, setPlatform] = useState("all");
@@ -58,7 +59,7 @@ export function SkillCatalog({ skills, mode = "inventory" }: SkillCatalogProps) 
         </div>
       </div>
 
-      <div className="skill-catalog__summary"><span>显示 <strong>{filtered.length}</strong> 个 Skill</span><span>筛选在本地完成 · Mock 索引</span></div>
+      <div className="skill-catalog__summary"><span>显示 <strong>{filtered.length}</strong> 个 Skill</span><span>{statusLabel}</span></div>
 
       {filtered.length ? (
         <div className={`skill-catalog__items is-${view}`}>
@@ -71,7 +72,7 @@ export function SkillCatalog({ skills, mode = "inventory" }: SkillCatalogProps) 
   );
 }
 
-function SkillCatalogItem({ skill, view, onOpen }: { skill: MockSkill; view: ViewMode; onOpen: () => void }) {
+function SkillCatalogItem({ skill, view, onOpen }: { skill: CatalogSkill; view: ViewMode; onOpen: () => void }) {
   const state = libraryStatus[skill.libraryState];
   return (
     <article className={`skill-card glass-panel is-${view}`}>
@@ -84,8 +85,8 @@ function SkillCatalogItem({ skill, view, onOpen }: { skill: MockSkill; view: Vie
       <p className="skill-card__description">{skill.description}</p>
       <div className="skill-card__tags">{skill.tags.map((tag) => <span key={tag}>{tag}</span>)}</div>
       <div className="skill-card__signals">
-        {skill.hasScripts ? <span className="is-warning"><TerminalSquare size={12} />含脚本</span> : <span><ShieldCheck size={12} />纯内容</span>}
-        {skill.duplicateState !== "clean" ? <span className="is-warning"><AlertTriangle size={12} />{skill.duplicateState === "conflict" ? "内容冲突" : "发现重复"}</span> : <span>{skill.fileCount} 个文件</span>}
+        {skill.hasScripts === true ? <span className="is-warning"><TerminalSquare size={12} />含脚本</span> : skill.hasScripts === false ? <span><ShieldCheck size={12} />纯内容</span> : <span>风险摘要待索引</span>}
+        {skill.duplicateState !== "clean" ? <span className="is-warning"><AlertTriangle size={12} />{skill.duplicateState === "conflict" ? "内容冲突" : "发现重复"}</span> : <span>{skill.fileCount == null ? "文件数待加载" : `${skill.fileCount} 个文件`}</span>}
         <span>{skill.updatedAt}</span>
       </div>
       <div className="skill-card__source"><SourceConfidence source={skill.source} compact /></div>

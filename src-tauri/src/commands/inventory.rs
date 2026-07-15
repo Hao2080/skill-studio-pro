@@ -91,3 +91,15 @@ pub fn inventory_instance_get(
     let conn = store::get_conn(&app)?;
     service::instance_get(&conn, &instance_id)
 }
+
+#[tauri::command]
+pub fn inventory_instance_file_read(
+    app: AppHandle,
+    instance_id: String,
+    relative_path: String,
+) -> Result<String, String> {
+    super::validate_required_id("instanceId", &instance_id)?;
+    super::validate_required_id("relativePath", &relative_path)?;
+    let conn = store::get_conn(&app)?;
+    service::read_instance_text_file(&conn, &instance_id, &relative_path)
+}

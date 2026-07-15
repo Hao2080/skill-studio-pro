@@ -17,6 +17,7 @@ import type { BrowserPreviewState } from "./browserPreviewStateMocks";
 import { createBrowserPreviewState } from "./browserPreviewStateMocks";
 import { invokeBrowserPreviewPlatformCommand } from "./browserPreviewPlatformCommands";
 import { invokeBrowserPreviewTeamCommand } from "./browserPreviewTeamCommands";
+import { invokeBrowserPreviewProCommand } from "./browserPreviewProCommands";
 
 const SYSTEM_SNAPSHOT_SOURCE = "system";
 
@@ -324,7 +325,7 @@ export function shouldUseBrowserPreviewMocks() {
     window.location.hostname === "127.0.0.1" ||
     window.location.hostname === "";
 
-  return isLocalHost && params.get("preview") === "skill-detail";
+  return isLocalHost && ["skill-detail", "pro"].includes(params.get("preview") ?? "");
 }
 
 
@@ -502,6 +503,6 @@ export async function invokeBrowserPreviewCommand<T>(command: string, args?: Rec
         isSystemSnapshot,
       }) as T;
     default:
-      throw new Error(`浏览器预览暂未实现命令: ${command}`);
+      return invokeBrowserPreviewProCommand<T>(command, args);
   }
 }

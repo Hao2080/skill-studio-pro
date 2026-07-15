@@ -1,5 +1,5 @@
 use std::collections::HashMap;
-use std::path::{Path, PathBuf};
+use std::path::{Component, Path, PathBuf};
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::{Arc, Mutex, OnceLock};
 
@@ -272,6 +272,63 @@ pub fn instance_list(
 
 pub fn instance_get(conn: &Connection, instance_id: &str) -> Result<SkillInstanceDetail, String> {
     repository::get_instance(conn, instance_id)
+}
+
+pub fn read_instance_text_file(
+    conn: &Connection,
+    instance_id: &str,
+    relative_path: &str,
+) -> Result<String, String> {
+    const MAX_PREVIEW_BYTES: u64 = 2 * 1024 * 1024;
+
+    let relative = Path::new(relative_path);
+    if relative.as_os_str().is_empty()
+        || relative.is_absolute()
+        || relative
+            .components()
+            .any(|component| !matches!(component, Component::Normal(_)))
+    {
+        return Err("relativePath 必须是实例根目录内的普通相对文件路径".to_string());
+    }
+
+    let detail = repository::get_instance(conn, instance_id)?;
+    if detail.instance.missing_at.is_some() {
+        return Err("Skill 实例已不存在，请重新扫描".to_string());
+    }
+    let root = PathBuf::from(&detail.instance.absolute_path)
+        .canonicalize()
+        .map_err(|error| format!("解析 Skill 实例目录失败: {error}"))?;
+    let mut candidate = root.clone();
+    for component in relative.components() {
+        let Component::Normal(segment) = component else {
+            return Err("relativePath 包含非法路径分量".to_string());
+        };
+        candidate.push(segment);
+        let metadata = std::fs::symlink_metadata(&candidate)
+            .map_err(|error| format!("读取实例文件元数据失败: {error}"))?;
+        if metadata.file_type().is_symlink() {
+            return Err("只读预览不跟随符号链接".to_string());
+        }
+    }
+
+    let canonical = candidate
+        .canonicalize()
+        .map_err(|error| format!("解析实例文件失败: {error}"))?;
+    if !canonical.starts_with(&root) {
+        return Err("实例文件路径越出 Skill 根目录".to_string());
+    }
+    let metadata = canonical
+        .metadata()
+        .map_err(|error| format!("读取实例文件信息失败: {error}"))?;
+    if !metadata.is_file() {
+        return Err("只读预览目标不是普通文件".to_string());
+    }
+    if metadata.len() > MAX_PREVIEW_BYTES {
+        return Err("实例文件超过 2 MiB 只读预览上限".to_string());
+    }
+
+    let bytes = std::fs::read(&canonical).map_err(|error| format!("读取实例文件失败: {error}"))?;
+    String::from_utf8(bytes).map_err(|_| "实例文件不是有效 UTF-8 文本".to_string())
 }
 
 pub fn run_scan_at_path(

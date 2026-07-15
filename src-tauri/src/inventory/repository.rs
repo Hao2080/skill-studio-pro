@@ -1,3 +1,4 @@
+use std::collections::BTreeMap;
 use std::path::Path;
 
 use rusqlite::{Connection, OptionalExtension, Row};
@@ -528,7 +529,17 @@ pub fn list_instances(
         .map_err(|e| format!("查询实例列表失败: {e}"))?
         .collect::<Result<Vec<_>, _>>()
         .map_err(|e| format!("读取实例列表失败: {e}"))?;
-    Ok(InstanceListResult { items, total })
+    let mut resolutions = BTreeMap::new();
+    for item in &items {
+        if let Some(resolution) = crate::origin::repository::get_resolution(conn, &item.id)? {
+            resolutions.insert(item.id.clone(), resolution);
+        }
+    }
+    Ok(InstanceListResult {
+        items,
+        total,
+        resolutions,
+    })
 }
 
 pub fn get_instance(conn: &Connection, instance_id: &str) -> Result<SkillInstanceDetail, String> {

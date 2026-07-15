@@ -1,39 +1,14 @@
-export type StatusTone = "success" | "warning" | "danger" | "info" | "neutral";
+import type { CatalogSkill } from "@/shared/model/proTypes";
 
-export type SourceResolutionStatus = "confirmed" | "inferred" | "unknown";
+export type {
+  CatalogSkill,
+  ModelAttributionData,
+  SourceConfidenceData,
+  SourceResolutionStatus,
+  StatusTone,
+} from "@/shared/model/proTypes";
 
-export interface SourceConfidenceData {
-  label: string;
-  type: "system" | "plugin" | "git_repository" | "marketplace" | "local_import" | "platform_scan" | "unknown";
-  score: number;
-  status: SourceResolutionStatus;
-  rationale: string;
-  evidence: string[];
-}
-
-export interface ModelAttributionData {
-  provider: "OpenAI" | "MiniMax";
-  modelId: string;
-  responsibility: string;
-  generatedAt: string;
-  state: "fresh" | "stale" | "failed" | "disabled";
-}
-
-export interface MockSkill {
-  id: string;
-  name: string;
-  description: string;
-  tags: string[];
-  platforms: string[];
-  path: string;
-  source: SourceConfidenceData;
-  libraryState: "managed" | "external" | "drifted";
-  updatedAt: string;
-  hasScripts: boolean;
-  duplicateState: "clean" | "duplicate" | "conflict";
-  fileCount: number;
-  model?: ModelAttributionData;
-}
+export type MockSkill = CatalogSkill;
 
 export interface MockPlatform {
   id: string;

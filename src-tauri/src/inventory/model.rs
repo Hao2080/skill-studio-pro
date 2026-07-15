@@ -1,4 +1,5 @@
 use serde::{Deserialize, Serialize};
+use std::collections::BTreeMap;
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
@@ -175,6 +176,7 @@ pub struct InstanceListInput {
 pub struct InstanceListResult {
     pub items: Vec<SkillInstance>,
     pub total: i64,
+    pub resolutions: BTreeMap<String, crate::origin::model::SourceResolution>,
 }
 
 #[derive(Debug, Clone)]

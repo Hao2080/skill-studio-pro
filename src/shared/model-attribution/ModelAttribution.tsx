@@ -1,5 +1,5 @@
 import { Bot, Clock3, RotateCcw, Sparkles } from "lucide-react";
-import type { ModelAttributionData } from "@/shared/mock/proMockData";
+import type { ModelAttributionData } from "@/shared/model/proTypes";
 import { StatusBadge } from "@/shared/components/pro";
 import "./styles.css";
 
