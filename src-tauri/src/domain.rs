@@ -479,6 +479,12 @@ pub struct PlatformReleaseTarget {
     pub snapshot_id: String,
     pub snapshot_number: i64,
     pub change_summary: Option<String>,
+    pub target_path: Option<String>,
+    pub sync_mode: String,
+    pub published_content_hash: Option<String>,
+    pub observed_target_hash: Option<String>,
+    pub drift_status: String,
+    pub last_checked_at: Option<i64>,
     pub released_at: i64,
 }
 
@@ -493,6 +499,12 @@ pub struct PlatformReleaseRecord {
     pub change_summary: Option<String>,
     pub action: String,
     pub status: String,
+    pub target_path: Option<String>,
+    pub sync_mode: Option<String>,
+    pub before_hash: Option<String>,
+    pub after_hash: Option<String>,
+    pub plan_id: Option<String>,
+    pub detail_message: Option<String>,
     pub error_message: Option<String>,
     pub created_at: i64,
 }

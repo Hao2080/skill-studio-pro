@@ -21,10 +21,10 @@ pub fn create_snapshot<R: Runtime>(
         )
         .map_err(|e: rusqlite::Error| e.to_string())?;
 
-    let skill_source_dir = super::skill_source_dir(app, &skill.slug);
+    let skill_source_dir = super::skill_source_dir(app, &skill.id)?;
     let revision_hash = compute_directory_revision(&skill_source_dir)?;
 
-    let target = snapshot_dir(app, &skill.slug, next_num);
+    let target = snapshot_dir(app, &skill.id, next_num);
     if target.exists() {
         std::fs::remove_dir_all(&target).map_err(|e| format!("清理快照目录失败: {}", e))?;
     }

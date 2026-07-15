@@ -31,7 +31,101 @@ pub fn apply(conn: &Connection) -> Result<(), String> {
     ensure_team_submission_base_columns(conn)?;
     ensure_project_tables(conn)?;
     record_inventory_index_migration(conn)?;
+    apply_library_mapping_v2(conn)?;
     Ok(())
+}
+
+fn apply_library_mapping_v2(conn: &Connection) -> Result<(), String> {
+    let tx = conn
+        .unchecked_transaction()
+        .map_err(|e| format!("开启中央库迁移失败: {e}"))?;
+    for (table, column, definition) in [
+        ("skills", "storage_rel_path", "TEXT"),
+        ("skills", "canonical_name", "TEXT"),
+        ("skills", "active_content_hash", "TEXT"),
+        (
+            "skills",
+            "lifecycle_state",
+            "TEXT NOT NULL DEFAULT 'active'",
+        ),
+        ("skills", "trashed_at", "INTEGER"),
+        ("platform_release_targets", "target_path", "TEXT"),
+        (
+            "platform_release_targets",
+            "sync_mode",
+            "TEXT NOT NULL DEFAULT 'copy'",
+        ),
+        ("platform_release_targets", "published_content_hash", "TEXT"),
+        ("platform_release_targets", "observed_target_hash", "TEXT"),
+        (
+            "platform_release_targets",
+            "drift_status",
+            "TEXT NOT NULL DEFAULT 'unknown'",
+        ),
+        ("platform_release_targets", "last_checked_at", "INTEGER"),
+        ("platform_release_targets", "ownership_token", "TEXT"),
+        ("sync_logs", "target_path", "TEXT"),
+        ("sync_logs", "sync_mode", "TEXT"),
+        ("sync_logs", "before_hash", "TEXT"),
+        ("sync_logs", "after_hash", "TEXT"),
+        ("sync_logs", "plan_id", "TEXT"),
+        ("sync_logs", "detail_message", "TEXT"),
+    ] {
+        if !has_column(&tx, table, column)? {
+            tx.execute_batch(&format!(
+                "ALTER TABLE {table} ADD COLUMN {column} {definition}"
+            ))
+            .map_err(|e| format!("新增 {table}.{column} 失败: {e}"))?;
+        }
+    }
+    tx.execute_batch(
+        "UPDATE skills SET canonical_name = lower(trim(name))
+           WHERE canonical_name IS NULL OR trim(canonical_name) = '';
+         UPDATE skills SET lifecycle_state = 'active'
+           WHERE lifecycle_state IS NULL OR trim(lifecycle_state) = '';
+         UPDATE platform_release_targets SET sync_mode = 'copy'
+           WHERE sync_mode IS NULL OR trim(sync_mode) = '';
+         UPDATE platform_release_targets SET drift_status = 'unknown'
+           WHERE drift_status IS NULL OR trim(drift_status) = '';
+         CREATE TABLE IF NOT EXISTS library_operation_plans (
+            id TEXT PRIMARY KEY, operation_type TEXT NOT NULL, entity_id TEXT,
+            plan_hash TEXT NOT NULL, payload_json TEXT NOT NULL, source_hash TEXT,
+            status TEXT NOT NULL DEFAULT 'planned', created_at INTEGER NOT NULL,
+            expires_at INTEGER NOT NULL, executed_at INTEGER
+         );
+         CREATE TABLE IF NOT EXISTS operation_locks (
+            resource_key TEXT PRIMARY KEY, operation_id TEXT NOT NULL,
+            acquired_at INTEGER NOT NULL, expires_at INTEGER NOT NULL
+         );
+         CREATE TABLE IF NOT EXISTS operation_logs (
+            id TEXT PRIMARY KEY, operation_type TEXT NOT NULL, entity_type TEXT NOT NULL,
+            entity_id TEXT, target_label TEXT NOT NULL, plan_json TEXT,
+            before_hash TEXT, after_hash TEXT, snapshot_id TEXT, status TEXT NOT NULL,
+            error_code TEXT, error_summary TEXT, created_at INTEGER NOT NULL,
+            completed_at INTEGER
+         );
+         CREATE INDEX IF NOT EXISTS idx_library_operation_plans_status_expiry
+           ON library_operation_plans(status, expires_at);
+         CREATE INDEX IF NOT EXISTS idx_operation_locks_expiry
+           ON operation_locks(expires_at);
+         CREATE INDEX IF NOT EXISTS idx_operation_logs_entity_created_at
+           ON operation_logs(entity_type, entity_id, created_at DESC);",
+    )
+    .map_err(|e| format!("创建中央库迁移对象失败: {e}"))?;
+    tx.execute(
+        "INSERT OR IGNORE INTO schema_migrations (version, name, applied_at)
+         VALUES (2, 'library_mapping_v2', strftime('%s','now') * 1000)",
+        [],
+    )
+    .map_err(|e| format!("记录中央库迁移失败: {e}"))?;
+    let current: i64 = tx
+        .pragma_query_value(None, "user_version", |row| row.get(0))
+        .map_err(|e| format!("读取 schema version 失败: {e}"))?;
+    if current < 2 {
+        tx.pragma_update(None, "user_version", 2)
+            .map_err(|e| format!("更新 schema version 失败: {e}"))?;
+    }
+    tx.commit().map_err(|e| format!("提交中央库迁移失败: {e}"))
 }
 
 fn record_inventory_index_migration(conn: &Connection) -> Result<(), String> {
@@ -44,8 +138,8 @@ fn record_inventory_index_migration(conn: &Connection) -> Result<(), String> {
     let current: i64 = conn
         .pragma_query_value(None, "user_version", |row| row.get(0))
         .map_err(|e| format!("读取 schema version 失败: {}", e))?;
-    if current < super::CURRENT_SCHEMA_VERSION {
-        conn.pragma_update(None, "user_version", super::CURRENT_SCHEMA_VERSION)
+    if current < 1 {
+        conn.pragma_update(None, "user_version", 1)
             .map_err(|e| format!("更新 schema version 失败: {}", e))?;
     }
     Ok(())

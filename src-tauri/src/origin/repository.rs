@@ -70,7 +70,8 @@ pub fn replace_automatic_evidence(
 ) -> Result<(), String> {
     conn.execute(
         "DELETE FROM source_evidence
-         WHERE instance_id = ?1 AND evidence_type <> 'user_confirmed'",
+         WHERE instance_id = ?1
+           AND evidence_type NOT IN ('user_confirmed', 'app_install_record')",
         rusqlite::params![instance_id],
     )
     .map_err(|e| format!("清理旧来源证据失败: {e}"))?;

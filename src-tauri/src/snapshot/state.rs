@@ -18,7 +18,7 @@ pub fn restore_snapshot<R: Runtime>(
         .map_err(|_| format!("快照不存在: {}", snapshot_id))?;
 
     let skill = super::load_skill(app, &snapshot.skill_id)?;
-    let skill_source_dir = super::skill_source_dir(app, &skill.slug);
+    let skill_source_dir = super::skill_source_dir(app, &skill.id)?;
     let bak_dir = {
         let mut path = skill_source_dir.clone().into_os_string();
         path.push(".bak-restore");

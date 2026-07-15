@@ -8,6 +8,8 @@ pub mod domain;
 pub mod inventory;
 pub mod market;
 pub mod origin;
+pub mod platform;
+pub mod services;
 pub mod snapshot;
 pub mod store;
 pub mod team;

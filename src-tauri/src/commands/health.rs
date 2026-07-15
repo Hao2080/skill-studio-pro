@@ -23,16 +23,7 @@ pub fn db_health_check(app: AppHandle) -> Result<DbHealthResponse, String> {
 #[tauri::command]
 pub fn open_skill_folder(app: AppHandle, skill_id: String) -> Result<String, String> {
     crate::commands::validate_required_id("skillId", &skill_id)?;
-    let conn = store::get_conn(&app)?;
-    let slug: String = conn
-        .query_row(
-            "SELECT slug FROM skills WHERE id = ?1",
-            rusqlite::params![skill_id],
-            |row| row.get(0),
-        )
-        .map_err(|_| format!("skill 不存在: {}", skill_id))?;
-
-    let skill_dir = workspace::skill_dir(&slug)?;
+    let skill_dir = store::skill_storage_dir(&app, &skill_id)?;
     if !skill_dir.exists() {
         std::fs::create_dir_all(&skill_dir).map_err(|e| format!("创建目录失败: {}", e))?;
     }
@@ -45,15 +36,6 @@ pub fn open_skill_folder(app: AppHandle, skill_id: String) -> Result<String, Str
 #[tauri::command]
 pub fn get_skill_folder_path(app: AppHandle, skill_id: String) -> Result<String, String> {
     crate::commands::validate_required_id("skillId", &skill_id)?;
-    let conn = store::get_conn(&app)?;
-    let slug: String = conn
-        .query_row(
-            "SELECT slug FROM skills WHERE id = ?1",
-            rusqlite::params![skill_id],
-            |row| row.get(0),
-        )
-        .map_err(|_| format!("skill 不存在: {}", skill_id))?;
-
-    let skill_dir = workspace::skill_dir(&slug)?;
+    let skill_dir = store::skill_storage_dir(&app, &skill_id)?;
     Ok(skill_dir.to_string_lossy().to_string())
 }

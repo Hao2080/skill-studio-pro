@@ -782,14 +782,6 @@ pub fn detect_changes<R: tauri::Runtime>(
 ) -> Result<ChangeStatus, String> {
     let conn = get_conn(app)?;
 
-    let slug: String = conn
-        .query_row(
-            "SELECT slug FROM skills WHERE id = ?1",
-            rusqlite::params![skill_id],
-            |row| row.get(0),
-        )
-        .map_err(|_| format!("skill 不存在: {}", skill_id))?;
-
     let latest_snapshot_path: Option<String> = conn
         .query_row(
             "SELECT snapshot_path FROM skill_snapshots
@@ -799,7 +791,7 @@ pub fn detect_changes<R: tauri::Runtime>(
         )
         .ok();
 
-    let work_dir = super::skill_dir(app, &slug);
+    let work_dir = super::skill_storage_dir(app, skill_id)?;
     if !work_dir.exists() {
         return Ok(ChangeStatus {
             has_changes: false,
@@ -1516,6 +1508,12 @@ fn insert_release_log(
         change_summary: change_summary.map(str::to_string),
         action: action.to_string(),
         status: status.to_string(),
+        target_path: None,
+        sync_mode: None,
+        before_hash: None,
+        after_hash: None,
+        plan_id: None,
+        detail_message: None,
         error_message,
         created_at,
     })
@@ -1528,7 +1526,9 @@ fn load_release_targets(
     let mut stmt = conn
         .prepare(
             "SELECT prt.platform_name, pc.display_name, prt.snapshot_id, ss.snapshot_number,
-                    ss.change_summary, prt.released_at
+                    ss.change_summary, prt.target_path, prt.sync_mode,
+                    prt.published_content_hash, prt.observed_target_hash, prt.drift_status,
+                    prt.last_checked_at, prt.released_at
              FROM platform_release_targets prt
              INNER JOIN skill_snapshots ss ON ss.id = prt.snapshot_id
              LEFT JOIN platform_connections pc ON pc.platform_name = prt.platform_name
@@ -1544,7 +1544,13 @@ fn load_release_targets(
                 snapshot_id: row.get(2)?,
                 snapshot_number: row.get(3)?,
                 change_summary: row.get(4)?,
-                released_at: row.get(5)?,
+                target_path: row.get(5)?,
+                sync_mode: row.get(6)?,
+                published_content_hash: row.get(7)?,
+                observed_target_hash: row.get(8)?,
+                drift_status: row.get(9)?,
+                last_checked_at: row.get(10)?,
+                released_at: row.get(11)?,
             })
         })
         .map_err(|e| e.to_string())?
@@ -1596,7 +1602,9 @@ fn load_recent_release_records(
     let mut stmt = conn
         .prepare(
             "SELECT sl.id, sl.platform_name, pc.display_name, sl.snapshot_id, ss.snapshot_number,
-                    ss.change_summary, sl.action, sl.status, sl.error_message, sl.synced_at
+                    ss.change_summary, sl.action, sl.status, sl.target_path, sl.sync_mode,
+                    sl.before_hash, sl.after_hash, sl.plan_id, sl.detail_message,
+                    sl.error_message, sl.synced_at
              FROM sync_logs sl
              LEFT JOIN skill_snapshots ss ON ss.id = sl.snapshot_id
              LEFT JOIN platform_connections pc ON pc.platform_name = sl.platform_name
@@ -1617,8 +1625,14 @@ fn load_recent_release_records(
                 change_summary: row.get(5)?,
                 action: row.get(6)?,
                 status: row.get(7)?,
-                error_message: row.get(8)?,
-                created_at: row.get(9)?,
+                target_path: row.get(8)?,
+                sync_mode: row.get(9)?,
+                before_hash: row.get(10)?,
+                after_hash: row.get(11)?,
+                plan_id: row.get(12)?,
+                detail_message: row.get(13)?,
+                error_message: row.get(14)?,
+                created_at: row.get(15)?,
             })
         })
         .map_err(|e| e.to_string())?;

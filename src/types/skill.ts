@@ -275,6 +275,12 @@ export interface PlatformReleaseTarget {
   snapshotId: string;
   snapshotNumber: number;
   changeSummary?: string;
+  targetPath?: string;
+  syncMode?: 'copy' | 'symlink' | string;
+  publishedContentHash?: string;
+  observedTargetHash?: string;
+  driftStatus?: 'in_sync' | 'drifted' | 'missing' | 'unknown' | 'ownership_mismatch' | string;
+  lastCheckedAt?: number;
   releasedAt: number;
 }
 
@@ -287,6 +293,12 @@ export interface PlatformReleaseRecord {
   changeSummary?: string;
   action: 'publish' | 'republish' | 'switch' | 'remove' | 'sync' | string;
   status: 'success' | 'failed';
+  targetPath?: string;
+  syncMode?: 'copy' | 'symlink' | string;
+  beforeHash?: string;
+  afterHash?: string;
+  planId?: string;
+  detailMessage?: string;
   errorMessage?: string;
   createdAt: number;
 }

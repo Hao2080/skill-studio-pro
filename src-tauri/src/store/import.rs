@@ -8,7 +8,7 @@ use crate::domain::{ImportSkillInput, MarketCatalogItem, Skill, SkillImportRecor
 use crate::market::{clawhub_api, skillssh_repo};
 use crate::workspace;
 
-use super::{copy_dir_recursive, get_conn, now_ms, skill_dir, slugify};
+use super::{copy_dir_recursive, get_conn, now_ms, slugify};
 
 pub(crate) struct SkillSourceSeed {
     pub(crate) source_type: String,
@@ -925,6 +925,7 @@ pub fn import_skill<R: tauri::Runtime>(
         let slug = slugify(name);
         let now = now_ms();
         let id = Uuid::new_v4().to_string();
+        let storage_rel_path = format!("{id}/{slug}");
         let description = prepared.description.clone();
         let conn = get_conn(app)?;
 
@@ -942,12 +943,14 @@ pub fn import_skill<R: tauri::Runtime>(
         }
 
         conn.execute(
-            "INSERT INTO skills (id, name, slug, description, source_type, source_path, created_at, updated_at, is_archived)
-             VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, 0)",
+            "INSERT INTO skills (id, name, slug, storage_rel_path, canonical_name, lifecycle_state,
+                                 description, source_type, source_path, created_at, updated_at, is_archived)
+             VALUES (?1, ?2, ?3, ?4, lower(trim(?2)), 'active', ?5, ?6, ?7, ?8, ?9, 0)",
             rusqlite::params![
                 id,
                 name,
                 slug,
+                storage_rel_path,
                 description.as_deref(),
                 prepared.source_seed.source_type.as_str(),
                 prepared.source_seed.source_path.as_deref(),
@@ -961,7 +964,7 @@ pub fn import_skill<R: tauri::Runtime>(
             let _ = conn.execute("DELETE FROM skills WHERE id = ?1", rusqlite::params![id]);
         })?;
 
-        let target = skill_dir(app, &slug);
+        let target = workspace::skill_storage_dir(&storage_rel_path)?;
         if target.exists() {
             fs::remove_dir_all(&target).map_err(|e| {
                 let _ = conn.execute(

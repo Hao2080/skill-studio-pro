@@ -52,15 +52,19 @@ pub use project::{
 };
 pub use settings::{get_app_settings, save_app_settings};
 
-/// 获取 skill 源文件存储目录
-fn skills_storage_dir<R: tauri::Runtime>(app: &tauri::AppHandle<R>) -> PathBuf {
-    let _ = app;
-    workspace::skills_root().expect("无法获取技能工作区目录")
-}
-
-/// 获取 skill 的源文件目录（按 slug 组织）
-fn skill_dir<R: tauri::Runtime>(app: &tauri::AppHandle<R>, slug: &str) -> PathBuf {
-    skills_storage_dir(app).join(slug)
+pub fn skill_storage_dir<R: tauri::Runtime>(
+    app: &tauri::AppHandle<R>,
+    skill_id: &str,
+) -> Result<PathBuf, String> {
+    let conn = get_conn(app)?;
+    let storage_rel_path: String = conn
+        .query_row(
+            "SELECT COALESCE(storage_rel_path, slug) FROM skills WHERE id = ?1",
+            rusqlite::params![skill_id],
+            |row| row.get(0),
+        )
+        .map_err(|_| format!("skill 不存在: {skill_id}"))?;
+    workspace::skill_storage_dir(&storage_rel_path)
 }
 
 fn hydrate_skill_description<R: tauri::Runtime>(
@@ -78,7 +82,7 @@ fn hydrate_skill_description<R: tauri::Runtime>(
         return Ok(());
     }
 
-    let description = match read_skill_description_from_dir(&skill_dir(app, &skill.slug)) {
+    let description = match read_skill_description_from_dir(&skill_storage_dir(app, &skill.id)?) {
         Some(value) => value,
         None => return Ok(()),
     };
@@ -249,13 +253,16 @@ pub fn create_skill<R: tauri::Runtime>(
         return Err(format!("slug '{}' 已存在", slug));
     }
 
+    let storage_rel_path = format!("{id}/{slug}");
     conn.execute(
-        "INSERT INTO skills (id, name, slug, description, source_type, source_path, created_at, updated_at, is_archived)
-         VALUES (?1, ?2, ?3, ?4, ?5, NULL, ?6, ?7, 0)",
+        "INSERT INTO skills (id, name, slug, storage_rel_path, canonical_name, lifecycle_state,
+                             description, source_type, source_path, created_at, updated_at, is_archived)
+         VALUES (?1, ?2, ?3, ?4, lower(trim(?2)), 'active', ?5, ?6, NULL, ?7, ?8, 0)",
         rusqlite::params![
             id,
             name,
             slug,
+            storage_rel_path,
             input.description.as_deref().map(str::trim).filter(|value| !value.is_empty()),
             "manual",
             now,
@@ -264,7 +271,7 @@ pub fn create_skill<R: tauri::Runtime>(
     )
     .map_err(|e| format!("创建 skill 失败: {}", e))?;
 
-    let target = skill_dir(app, &slug);
+    let target = workspace::skill_storage_dir(&storage_rel_path)?;
     fs::create_dir_all(&target).map_err(|e| format!("创建 skill 目录失败: {}", e))?;
 
     let entry_file = target.join("skill.md");
@@ -406,7 +413,7 @@ pub fn delete_skill<R: tauri::Runtime>(
     let submission_ids = delete_skill_records(&mut conn, skill_id)?;
 
     // 删除源文件目录（容错）
-    let skill_target = skill_dir(app, &skill.slug);
+    let skill_target = skill_storage_dir(app, &skill.id)?;
     if skill_target.exists() {
         if let Err(e) = fs::remove_dir_all(&skill_target) {
             log_cleanup_warning("删除 skill 源文件失败", &e);

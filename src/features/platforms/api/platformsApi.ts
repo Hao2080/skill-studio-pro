@@ -8,6 +8,15 @@ import type {
   SavePlatformConnectionInput,
   TestPlatformPathResult,
 } from "@/types/skill";
+import type {
+  ExecutePlanInput,
+  MappingState,
+  PublishPlan,
+  PublishPlanInput,
+  PublishResult,
+  PublishTargetResult,
+  RemoveMappingInput,
+} from "@/features/library/model";
 
 interface PlatformConnectionsResponse {
   platforms: PlatformConnection[];
@@ -52,4 +61,22 @@ export async function pickPlatformDirectory(): Promise<string | null> {
   }
 
   return folderPath;
+}
+
+export async function previewPlatformPublish(input: PublishPlanInput): Promise<PublishPlan> {
+  return invokeCommand<PublishPlan>("library_skill_publish_plan", { input });
+}
+
+export async function executePlatformPublish(input: ExecutePlanInput): Promise<PublishResult> {
+  return invokeCommand<PublishResult>("library_skill_publish_execute", { input });
+}
+
+export async function removeManagedPlatformMapping(
+  input: RemoveMappingInput,
+): Promise<PublishTargetResult> {
+  return invokeCommand<PublishTargetResult>("library_skill_remove_mapping", { input });
+}
+
+export async function checkPlatformMappingDrift(skillId: string): Promise<MappingState[]> {
+  return invokeCommand<MappingState[]>("library_skill_drift_check", { skillId });
 }

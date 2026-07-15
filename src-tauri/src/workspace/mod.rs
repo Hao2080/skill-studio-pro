@@ -144,6 +144,18 @@ pub fn skill_dir(slug: &str) -> Result<PathBuf, String> {
     Ok(skills_root()?.join(slug))
 }
 
+pub fn skill_storage_dir(storage_rel_path: &str) -> Result<PathBuf, String> {
+    let relative = PathBuf::from(storage_rel_path);
+    if relative.is_absolute()
+        || relative
+            .components()
+            .any(|component| matches!(component, std::path::Component::ParentDir))
+    {
+        return Err("中央 Skill 存储路径无效".to_string());
+    }
+    Ok(skills_root()?.join(relative))
+}
+
 pub fn snapshots_root() -> Result<PathBuf, String> {
     Ok(workspace_root()?.join("snapshots"))
 }

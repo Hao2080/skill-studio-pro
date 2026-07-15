@@ -2,7 +2,6 @@ use tauri::Runtime;
 
 use crate::domain::{PullTeamVersionInput, SkillFileNode, TeamSkillVersion};
 use crate::store::{copy_dir_recursive, get_conn};
-use crate::workspace;
 
 pub fn pull_team_version<R: Runtime>(
     app: &tauri::AppHandle<R>,
@@ -68,16 +67,7 @@ pub fn pull_team_version<R: Runtime>(
                 return Err("目标 Skill 当前有未快照改动，请先创建快照".to_string());
             }
 
-            let slug: String = conn
-                .query_row(
-                    "SELECT slug FROM skills WHERE id = ?1",
-                    rusqlite::params![target_skill_id],
-                    |row| row.get(0),
-                )
-                .map_err(|_| "目标 Skill 不存在".to_string())?;
-
-            let _ = app;
-            let work_dir = workspace::skill_dir(&slug)?;
+            let work_dir = crate::store::skill_storage_dir(app, target_skill_id)?;
 
             if work_dir.exists() {
                 std::fs::remove_dir_all(&work_dir).map_err(|e| format!("清理工作区失败: {}", e))?;

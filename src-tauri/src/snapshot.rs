@@ -11,15 +11,16 @@ mod state;
 
 use crate::domain::{Skill, SkillSnapshot};
 use crate::store::get_conn;
-use crate::workspace;
 
 pub use create::create_snapshot;
 pub use query::list_snapshots;
 pub use state::{delete_snapshot, restore_snapshot, set_active_snapshot, update_snapshot_summary};
 
-fn skill_source_dir<R: Runtime>(app: &tauri::AppHandle<R>, slug: &str) -> PathBuf {
-    let _ = app;
-    workspace::skill_dir(slug).expect("无法获取技能工作区目录")
+fn skill_source_dir<R: Runtime>(
+    app: &tauri::AppHandle<R>,
+    skill_id: &str,
+) -> Result<PathBuf, String> {
+    crate::store::skill_storage_dir(app, skill_id)
 }
 
 fn load_skill<R: Runtime>(app: &tauri::AppHandle<R>, skill_id: &str) -> Result<Skill, String> {

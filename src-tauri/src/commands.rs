@@ -4,6 +4,8 @@ pub mod files;
 pub mod health;
 #[path = "commands/inventory.rs"]
 pub mod inventory;
+#[path = "commands/library.rs"]
+pub mod library;
 #[path = "commands/market.rs"]
 pub mod market;
 #[path = "commands/organization.rs"]
@@ -52,6 +54,14 @@ macro_rules! command_handlers {
             crate::commands::origin::origin_resolution_get,
             crate::commands::origin::origin_resolution_confirm,
             crate::commands::origin::origin_resolution_recalculate,
+            crate::commands::library::library_skill_list,
+            crate::commands::library::library_skill_get,
+            crate::commands::library::library_instance_register_plan,
+            crate::commands::library::library_instance_register_execute,
+            crate::commands::library::library_skill_publish_plan,
+            crate::commands::library::library_skill_publish_execute,
+            crate::commands::library::library_skill_remove_mapping,
+            crate::commands::library::library_skill_drift_check,
             crate::commands::skills::skill_list,
             crate::commands::skills::skill_get,
             crate::commands::skills::skill_source_list,

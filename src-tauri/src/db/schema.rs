@@ -134,6 +134,11 @@ fn create_skill_tables(conn: &Connection) -> Result<(), String> {
             id              TEXT PRIMARY KEY,
             name            TEXT NOT NULL UNIQUE,
             slug            TEXT NOT NULL UNIQUE,
+            storage_rel_path TEXT,
+            canonical_name  TEXT,
+            active_content_hash TEXT,
+            lifecycle_state TEXT NOT NULL DEFAULT 'active',
+            trashed_at      INTEGER,
             description     TEXT,
             source_type     TEXT DEFAULT 'local',
             source_path     TEXT,
@@ -284,6 +289,12 @@ fn create_skill_tables(conn: &Connection) -> Result<(), String> {
             snapshot_id     TEXT,
             action          TEXT NOT NULL DEFAULT 'sync',
             status          TEXT NOT NULL,
+            target_path     TEXT,
+            sync_mode       TEXT,
+            before_hash     TEXT,
+            after_hash      TEXT,
+            plan_id         TEXT,
+            detail_message  TEXT,
             error_message   TEXT,
             synced_at       INTEGER NOT NULL
         )",
@@ -297,6 +308,13 @@ fn create_skill_tables(conn: &Connection) -> Result<(), String> {
             skill_id        TEXT NOT NULL,
             platform_name   TEXT NOT NULL,
             snapshot_id     TEXT NOT NULL,
+            target_path     TEXT,
+            sync_mode       TEXT NOT NULL DEFAULT 'copy',
+            published_content_hash TEXT,
+            observed_target_hash TEXT,
+            drift_status    TEXT NOT NULL DEFAULT 'unknown',
+            last_checked_at INTEGER,
+            ownership_token TEXT,
             released_at     INTEGER NOT NULL,
             created_at      INTEGER NOT NULL,
             updated_at      INTEGER NOT NULL,
@@ -307,6 +325,44 @@ fn create_skill_tables(conn: &Connection) -> Result<(), String> {
         [],
     )
     .map_err(|e| format!("创建 platform_release_targets 表失败: {}", e))?;
+
+    conn.execute_batch(
+        "CREATE TABLE IF NOT EXISTS library_operation_plans (
+            id              TEXT PRIMARY KEY,
+            operation_type  TEXT NOT NULL,
+            entity_id       TEXT,
+            plan_hash       TEXT NOT NULL,
+            payload_json    TEXT NOT NULL,
+            source_hash     TEXT,
+            status          TEXT NOT NULL DEFAULT 'planned',
+            created_at      INTEGER NOT NULL,
+            expires_at      INTEGER NOT NULL,
+            executed_at     INTEGER
+        );
+        CREATE TABLE IF NOT EXISTS operation_locks (
+            resource_key    TEXT PRIMARY KEY,
+            operation_id    TEXT NOT NULL,
+            acquired_at     INTEGER NOT NULL,
+            expires_at      INTEGER NOT NULL
+        );
+        CREATE TABLE IF NOT EXISTS operation_logs (
+            id              TEXT PRIMARY KEY,
+            operation_type  TEXT NOT NULL,
+            entity_type     TEXT NOT NULL,
+            entity_id       TEXT,
+            target_label    TEXT NOT NULL,
+            plan_json       TEXT,
+            before_hash     TEXT,
+            after_hash      TEXT,
+            snapshot_id     TEXT,
+            status          TEXT NOT NULL,
+            error_code      TEXT,
+            error_summary   TEXT,
+            created_at      INTEGER NOT NULL,
+            completed_at    INTEGER
+        );",
+    )
+    .map_err(|e| format!("创建中央库事务表失败: {}", e))?;
 
     Ok(())
 }
@@ -664,6 +720,21 @@ fn create_indexes(conn: &Connection) -> Result<(), String> {
             "idx_platform_release_targets_snapshot_id",
             "CREATE INDEX IF NOT EXISTS idx_platform_release_targets_snapshot_id
              ON platform_release_targets(snapshot_id)",
+        ),
+        (
+            "idx_library_operation_plans_status_expiry",
+            "CREATE INDEX IF NOT EXISTS idx_library_operation_plans_status_expiry
+             ON library_operation_plans(status, expires_at)",
+        ),
+        (
+            "idx_operation_locks_expiry",
+            "CREATE INDEX IF NOT EXISTS idx_operation_locks_expiry
+             ON operation_locks(expires_at)",
+        ),
+        (
+            "idx_operation_logs_entity_created_at",
+            "CREATE INDEX IF NOT EXISTS idx_operation_logs_entity_created_at
+             ON operation_logs(entity_type, entity_id, created_at DESC)",
         ),
         (
             "idx_teams_status_updated_at",

@@ -1,20 +1,9 @@
 use std::path::Path;
 
-use crate::{domain::SkillFileNode, workspace};
-
-use super::get_conn;
+use crate::domain::SkillFileNode;
 
 pub fn list_skill_files(app: &tauri::AppHandle, skill_id: &str) -> Result<SkillFileNode, String> {
-    let conn = get_conn(app)?;
-    let slug: String = conn
-        .query_row(
-            "SELECT slug FROM skills WHERE id = ?1",
-            rusqlite::params![skill_id],
-            |row| row.get(0),
-        )
-        .map_err(|_| format!("skill 不存在: {}", skill_id))?;
-
-    let root_dir = workspace::skill_dir(&slug)?;
+    let root_dir = super::skill_storage_dir(app, skill_id)?;
     if !root_dir.exists() {
         return Err(format!("skill 目录不存在: {}", root_dir.display()));
     }
@@ -146,17 +135,7 @@ fn skill_root_for_skill_id(
     app: &tauri::AppHandle,
     skill_id: &str,
 ) -> Result<std::path::PathBuf, String> {
-    let conn = get_conn(app)?;
-    let slug: String = conn
-        .query_row(
-            "SELECT slug FROM skills WHERE id = ?1",
-            rusqlite::params![skill_id],
-            |row| row.get(0),
-        )
-        .map_err(|_| format!("skill 不存在: {}", skill_id))?;
-
-    let _ = app;
-    workspace::skill_dir(&slug)
+    super::skill_storage_dir(app, skill_id)
 }
 
 fn resolve_existing_skill_path(

@@ -251,6 +251,9 @@ fn walk_entries(root: &Path) -> Result<Vec<WalkEntry>, String> {
             .map_err(|e| format!("无法遍历 Skill 目录 {}: {e}", directory.display()))?;
         for item in read_dir {
             let item = item.map_err(|e| format!("读取 Skill 目录项失败: {e}"))?;
+            if item.file_name() == super::super::services::library_service::MANAGED_MARKER {
+                continue;
+            }
             let metadata = fs::symlink_metadata(item.path())
                 .map_err(|e| format!("读取文件元数据失败 {}: {e}", item.path().display()))?;
             if metadata.is_dir() && !metadata.file_type().is_symlink() {

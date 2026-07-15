@@ -8,7 +8,6 @@ use similar::TextDiff;
 
 use crate::domain::{CompareSnapshotsInput, SnapshotDiffResult, TextDiffEntry};
 use crate::store::get_conn;
-use crate::workspace;
 
 use rusqlite::Row;
 
@@ -254,15 +253,6 @@ pub fn diff_working_directory(
 ) -> Result<SnapshotDiffResult, String> {
     let conn = get_conn(app)?;
 
-    // 获取 skill 的 slug
-    let slug: String = conn
-        .query_row(
-            "SELECT slug FROM skills WHERE id = ?1",
-            rusqlite::params![skill_id],
-            |row: &Row| row.get(0),
-        )
-        .map_err(|_| format!("skill 不存在: {}", skill_id))?;
-
     // 获取最新快照路径
     let latest_snapshot_path: String = conn
         .query_row(
@@ -274,8 +264,7 @@ pub fn diff_working_directory(
         .map_err(|_| format!("skill '{}' 没有快照", skill_id))?;
 
     let dir_a = Path::new(&latest_snapshot_path); // 最新快照（旧）
-    let _ = app;
-    let work_dir = workspace::skill_dir(&slug)?; // 工作目录（新）
+    let work_dir = crate::store::skill_storage_dir(app, skill_id)?; // 工作目录（新）
     let dir_b = work_dir.as_path();
 
     diff_directories(dir_a, dir_b)

@@ -69,30 +69,33 @@ pub fn batch_import_platform_skills(
 
 #[tauri::command]
 pub fn sync_skill_to_platforms(
-    app: AppHandle,
+    _app: AppHandle,
     skill_id: String,
 ) -> Result<Vec<SyncResult>, String> {
     super::validate_required_id("skillId", &skill_id)?;
-    store::sync_skill_to_platforms(&app, &skill_id)
+    Err(
+        "SAFE_PUBLISH_PLAN_REQUIRED: 请先调用 library_skill_publish_plan，再携带 planHash 执行"
+            .to_string(),
+    )
 }
 
 #[tauri::command]
 pub fn publish_snapshot_to_platforms(
-    app: AppHandle,
+    _app: AppHandle,
     input: PublishSnapshotToPlatformsInput,
 ) -> Result<Vec<PlatformReleaseRecord>, String> {
     super::validate_required_id("skillId", &input.skill_id)?;
     super::validate_required_id("snapshotId", &input.snapshot_id)?;
-    store::publish_snapshot_to_platforms(&app, &input)
+    Err("SAFE_PUBLISH_PLAN_REQUIRED: 旧发布接口不再允许绕过漂移预览".to_string())
 }
 
 #[tauri::command]
 pub fn remove_skill_from_platforms(
-    app: AppHandle,
+    _app: AppHandle,
     input: RemoveSkillFromPlatformsInput,
 ) -> Result<Vec<PlatformReleaseRecord>, String> {
     super::validate_required_id("skillId", &input.skill_id)?;
-    store::remove_skill_from_platforms(&app, &input)
+    Err("SAFE_REMOVE_MAPPING_REQUIRED: 请逐目标调用 library_skill_remove_mapping".to_string())
 }
 
 #[tauri::command]
@@ -105,8 +108,8 @@ pub fn get_skill_platform_releases(
 }
 
 #[tauri::command]
-pub fn sync_all_to_platforms(app: AppHandle) -> Result<Vec<SkillSyncResult>, String> {
-    store::sync_all_to_platforms(&app)
+pub fn sync_all_to_platforms(_app: AppHandle) -> Result<Vec<SkillSyncResult>, String> {
+    Err("SAFE_PUBLISH_PLAN_REQUIRED: 批量同步必须逐 Skill 创建可验证发布计划".to_string())
 }
 
 #[tauri::command]
