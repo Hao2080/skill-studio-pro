@@ -32,7 +32,73 @@ pub fn apply(conn: &Connection) -> Result<(), String> {
     ensure_project_tables(conn)?;
     record_inventory_index_migration(conn)?;
     apply_library_mapping_v2(conn)?;
+    apply_ai_routing_v3(conn)?;
     Ok(())
+}
+
+fn apply_ai_routing_v3(conn: &Connection) -> Result<(), String> {
+    let tx = conn
+        .unchecked_transaction()
+        .map_err(|error| format!("开启 AI 路由迁移失败: {error}"))?;
+    let now = chrono::Utc::now().timestamp_millis();
+    for provider in crate::ai::defaults::PROVIDERS {
+        tx.execute(
+            "INSERT OR IGNORE INTO ai_provider_configs (
+                provider_id, provider_type, display_name, base_url, default_model,
+                enabled, timeout_ms, max_concurrency, retry_count, updated_at
+             ) VALUES (?1, ?2, ?3, ?4, ?5, 0, ?6, ?7, ?8, ?9)",
+            rusqlite::params![
+                provider.id,
+                provider.provider_type.as_str(),
+                provider.display_name,
+                provider.base_url,
+                provider.model,
+                crate::ai::defaults::DEFAULT_TIMEOUT_MS as i64,
+                crate::ai::defaults::DEFAULT_MAX_CONCURRENCY as i64,
+                crate::ai::defaults::DEFAULT_RETRY_COUNT as i64,
+                now,
+            ],
+        )
+        .map_err(|error| format!("写入默认 AI Provider 失败: {error}"))?;
+    }
+    for route in crate::ai::defaults::routes(now) {
+        tx.execute(
+            "INSERT OR IGNORE INTO ai_task_routes (
+                task_type, provider_id, model_id, prompt_version, responsibility, enabled, updated_at
+             ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)",
+            rusqlite::params![
+                route.task_type.as_str(), route.provider_id, route.model_id,
+                route.prompt_version, route.responsibility, i64::from(route.enabled), route.updated_at,
+            ],
+        )
+        .map_err(|error| format!("写入默认 AI 任务路由失败: {error}"))?;
+    }
+    tx.execute_batch(
+        "CREATE INDEX IF NOT EXISTS idx_ai_task_routes_provider
+           ON ai_task_routes(provider_id, enabled, task_type);
+         CREATE INDEX IF NOT EXISTS idx_ai_artifacts_cache
+           ON ai_artifacts(task_type, provider_id, model_id, prompt_version, input_hash, stale_at);
+         CREATE INDEX IF NOT EXISTS idx_ai_artifacts_subject
+           ON ai_artifacts(skill_id, instance_id, created_at DESC);
+         CREATE INDEX IF NOT EXISTS idx_ai_call_logs_started
+           ON ai_call_logs(provider_id, task_type, started_at DESC);",
+    )
+    .map_err(|error| format!("创建 AI 索引失败: {error}"))?;
+    tx.execute(
+        "INSERT OR IGNORE INTO schema_migrations (version, name, applied_at)
+         VALUES (3, 'ai_routing_v3', ?1)",
+        rusqlite::params![now],
+    )
+    .map_err(|error| format!("记录 AI migration 失败: {error}"))?;
+    let current: i64 = tx
+        .pragma_query_value(None, "user_version", |row| row.get(0))
+        .map_err(|error| format!("读取 schema version 失败: {error}"))?;
+    if current < super::CURRENT_SCHEMA_VERSION {
+        tx.pragma_update(None, "user_version", super::CURRENT_SCHEMA_VERSION)
+            .map_err(|error| format!("更新 schema version 失败: {error}"))?;
+    }
+    tx.commit()
+        .map_err(|error| format!("提交 AI 路由迁移失败: {error}"))
 }
 
 fn apply_library_mapping_v2(conn: &Connection) -> Result<(), String> {

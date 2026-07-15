@@ -1,3 +1,5 @@
+#[path = "commands/ai.rs"]
+pub mod ai;
 #[path = "commands/files.rs"]
 pub mod files;
 #[path = "commands/health.rs"]
@@ -44,6 +46,14 @@ pub(crate) fn validate_optional_id(field: &str, value: Option<&str>) -> Result<(
 macro_rules! command_handlers {
     () => {
         tauri::generate_handler![
+            crate::commands::ai::ai_provider_list,
+            crate::commands::ai::ai_provider_save,
+            crate::commands::ai::ai_provider_test,
+            crate::commands::ai::ai_task_route_list,
+            crate::commands::ai::ai_task_route_save,
+            crate::commands::ai::ai_artifact_generate,
+            crate::commands::ai::ai_artifact_cancel,
+            crate::commands::ai::ai_artifact_list,
             crate::commands::health::db_health_check,
             crate::commands::inventory::inventory_root_list,
             crate::commands::inventory::inventory_root_upsert,

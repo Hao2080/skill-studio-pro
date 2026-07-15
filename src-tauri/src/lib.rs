@@ -1,7 +1,9 @@
 #![cfg_attr(test, allow(dead_code, unused_imports, unused_macros))]
 
+pub mod ai;
 mod bootstrap;
 mod commands;
+pub mod credentials;
 pub mod db;
 pub mod diff;
 pub mod domain;

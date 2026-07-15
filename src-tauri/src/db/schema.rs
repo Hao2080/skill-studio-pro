@@ -3,9 +3,47 @@ use rusqlite::Connection;
 pub fn ensure_tables(conn: &Connection) -> Result<(), String> {
     create_skill_tables(conn)?;
     create_inventory_tables(conn)?;
+    create_ai_tables(conn)?;
     create_team_tables(conn)?;
     create_project_tables(conn)?;
     Ok(())
+}
+
+fn create_ai_tables(conn: &Connection) -> Result<(), String> {
+    conn.execute_batch(
+        "CREATE TABLE IF NOT EXISTS ai_provider_configs (
+            provider_id TEXT PRIMARY KEY, provider_type TEXT NOT NULL,
+            display_name TEXT NOT NULL, base_url TEXT NOT NULL, default_model TEXT NOT NULL,
+            secret_ref TEXT, secret_tail TEXT, enabled INTEGER NOT NULL DEFAULT 0,
+            timeout_ms INTEGER NOT NULL DEFAULT 60000,
+            max_concurrency INTEGER NOT NULL DEFAULT 4, retry_count INTEGER NOT NULL DEFAULT 2,
+            last_test_status TEXT, last_test_at INTEGER, updated_at INTEGER NOT NULL
+         );
+         CREATE TABLE IF NOT EXISTS ai_task_routes (
+            task_type TEXT PRIMARY KEY, provider_id TEXT NOT NULL, model_id TEXT NOT NULL,
+            prompt_version TEXT NOT NULL, responsibility TEXT NOT NULL,
+            enabled INTEGER NOT NULL DEFAULT 1, updated_at INTEGER NOT NULL,
+            FOREIGN KEY (provider_id) REFERENCES ai_provider_configs(provider_id)
+         );
+         CREATE TABLE IF NOT EXISTS ai_artifacts (
+            id TEXT PRIMARY KEY, skill_id TEXT, instance_id TEXT, task_type TEXT NOT NULL,
+            provider_id TEXT NOT NULL, model_id TEXT NOT NULL, model_display_name TEXT,
+            responsibility TEXT NOT NULL, prompt_version TEXT NOT NULL, input_hash TEXT NOT NULL,
+            content_json TEXT NOT NULL, status TEXT NOT NULL, input_tokens INTEGER,
+            output_tokens INTEGER, stale_at INTEGER, created_at INTEGER NOT NULL,
+            FOREIGN KEY (skill_id) REFERENCES skills(id),
+            FOREIGN KEY (instance_id) REFERENCES skill_instances(id) ON DELETE CASCADE,
+            FOREIGN KEY (provider_id) REFERENCES ai_provider_configs(provider_id)
+         );
+         CREATE TABLE IF NOT EXISTS ai_call_logs (
+            id TEXT PRIMARY KEY, artifact_id TEXT, provider_id TEXT NOT NULL,
+            model_id TEXT NOT NULL, task_type TEXT NOT NULL, status TEXT NOT NULL,
+            latency_ms INTEGER, input_tokens INTEGER, output_tokens INTEGER,
+            error_code TEXT, error_summary TEXT, started_at INTEGER NOT NULL, completed_at INTEGER,
+            FOREIGN KEY (artifact_id) REFERENCES ai_artifacts(id)
+         );",
+    )
+    .map_err(|error| format!("创建 AI 表失败: {error}"))
 }
 
 fn create_inventory_tables(conn: &Connection) -> Result<(), String> {
