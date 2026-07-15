@@ -1,0 +1,19 @@
+.activity-toolbar { display: flex; align-items: center; gap: 8px; padding: 9px; }
+.activity-toolbar label, .activity-toolbar > div { min-height: 34px; display: flex; align-items: center; gap: 7px; padding: 0 10px; border: 1px solid var(--pro-border-soft); border-radius: 10px; color: var(--pro-text-muted); background: rgba(4,21,36,.35); }
+.activity-toolbar label { min-width: 220px; flex: 1; }
+.activity-toolbar input, .activity-toolbar select { min-width: 0; border: 0; outline: 0; background: transparent; color: var(--pro-text-secondary); font-size: 10px; }
+.activity-toolbar select option { background: var(--bg-surface); }
+.activity-toolbar > span { color: var(--pro-text-muted); font-size: 9px; }
+.activity-timeline article { display: grid; grid-template-columns: auto minmax(0,1fr) auto; gap: 11px; padding: 14px 0; border-top: 1px solid var(--pro-border-soft); }
+.activity-timeline article:first-child { border-top: 0; padding-top: 0; }
+.activity-timeline__icon { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 11px; color: var(--pro-text-muted); background: rgba(98,135,160,.1); }
+.activity-timeline__icon.is-success { color: var(--pro-success); background: rgba(84,214,179,.1); }
+.activity-timeline__icon.is-warning { color: var(--pro-warning); background: rgba(241,187,105,.1); }
+.activity-timeline article > div > div { display: flex; gap: 8px; align-items: center; }
+.activity-timeline strong { color: var(--pro-text-primary); font-size: 11px; }
+.activity-timeline h2 { margin: 5px 0 0; color: var(--pro-text-secondary); font-size: 10px; }
+.activity-timeline p { margin: 4px 0 0; color: var(--pro-text-muted); font-size: 9px; line-height: 1.45; }
+.activity-timeline time { color: var(--pro-text-muted); font-size: 9px; }
+.activity-timeline article > button { grid-column: 2; width: fit-content; display: inline-flex; align-items: center; gap: 5px; padding: 0; border: 0; background: transparent; color: var(--pro-accent); font-size: 9px; cursor: pointer; }
+.activity-timeline__spacer { grid-column: 2; }
+@media (max-width: 600px) { .activity-toolbar { align-items: stretch; flex-direction: column; } .activity-toolbar label { min-width: 0; } .activity-timeline article { grid-template-columns: auto 1fr; } .activity-timeline article > time { grid-column: 2; } }

@@ -1,0 +1,22 @@
+.platform-summary { display: flex; align-items: center; gap: 20px; padding: 12px 15px; flex-wrap: wrap; }
+.platform-summary > div { display: flex; align-items: center; gap: 7px; color: var(--pro-accent); font-size: 10px; }
+.platform-summary strong { color: var(--pro-text-primary); }
+.platform-summary > .status-badge { margin-left: auto; }
+.platform-card-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 11px; }
+.platform-pro-card { padding: 15px; }
+.platform-pro-card__head { display: grid; grid-template-columns: auto minmax(0,1fr) auto; gap: 10px; align-items: center; }
+.platform-pro-card__head > span { display: grid; place-items: center; width: 40px; height: 40px; border: 1px solid rgba(88,199,255,.2); border-radius: 13px; color: var(--pro-accent); background: linear-gradient(145deg,rgba(63,164,220,.18),rgba(73,93,174,.12)); font-size: 10px; font-weight: 800; }
+.platform-pro-card__head h2 { margin: 0; color: var(--pro-text-primary); font-size: 12px; }
+.platform-pro-card__head p { margin: 4px 0 0; color: var(--pro-text-muted); font-size: 9px; }
+.platform-pro-card dl { display: grid; gap: 8px; margin: 16px 0 13px; }
+.platform-pro-card dl div { display: flex; justify-content: space-between; gap: 12px; padding-top: 8px; border-top: 1px solid var(--pro-border-soft); font-size: 9px; }
+.platform-pro-card dt { color: var(--pro-text-muted); }
+.platform-pro-card dd { min-width: 0; margin: 0; overflow: hidden; color: var(--pro-text-secondary); text-overflow: ellipsis; white-space: nowrap; }
+.platform-pro-card footer { display: flex; gap: 6px; }
+.platform-pro-card footer button { flex: 1; min-height: 31px; display: inline-flex; justify-content: center; align-items: center; gap: 5px; border: 1px solid var(--pro-border-soft); border-radius: 9px; background: rgba(10,32,52,.46); color: var(--pro-text-secondary); font-size: 9px; cursor: pointer; }
+.platform-pro-card footer button:disabled { opacity: .4; cursor: not-allowed; }
+.platform-pro-card.is-attention { border-color: rgba(241,187,105,.24); }
+.platform-pro-card.is-offline { opacity: .72; }
+.platform-footnote { margin: 0 2px; color: var(--pro-text-muted); font-size: 9px; }
+@media (max-width: 1160px) { .platform-card-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } }
+@media (max-width: 720px) { .platform-card-grid { grid-template-columns: 1fr; } }

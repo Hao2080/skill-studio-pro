@@ -1,0 +1,24 @@
+.settings-pro-layout { display: grid; grid-template-columns: 180px minmax(0,1fr); gap: 11px; align-items: start; }
+.settings-pro-nav { display: grid; gap: 3px; padding: 6px; position: sticky; top: 0; }
+.settings-pro-nav button { min-height: 35px; display: flex; align-items: center; gap: 8px; padding: 0 10px; border: 0; border-radius: 10px; background: transparent; color: var(--pro-text-muted); font-size: 10px; cursor: pointer; text-align: left; }
+.settings-pro-nav button:hover { color: var(--pro-text-primary); background: rgba(88,199,255,.07); }
+.settings-pro-nav button.is-active { color: var(--pro-accent); background: rgba(88,199,255,.12); }
+.settings-pro-content { display: grid; gap: 11px; }
+.settings-pro-section { padding: 16px; }
+.settings-pro-section > header { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+.settings-pro-section > header > span { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 11px; color: var(--pro-accent); background: rgba(88,199,255,.1); }
+.settings-pro-section h2 { margin: 0; color: var(--pro-text-primary); font-size: 13px; }
+.settings-pro-section header p { margin: 4px 0 0; color: var(--pro-text-muted); font-size: 9px; }
+.settings-pro-row { display: grid; grid-template-columns: auto minmax(0,1fr) auto; align-items: center; gap: 10px; min-height: 54px; border-top: 1px solid var(--pro-border-soft); }
+.settings-pro-row > span { color: var(--pro-text-muted); }
+.settings-pro-row strong { color: var(--pro-text-secondary); font-size: 10px; }
+.settings-pro-row p { margin: 3px 0 0; color: var(--pro-text-muted); font-size: 8px; }
+.settings-pro-row__control select { min-height: 31px; padding: 0 8px; border: 1px solid var(--pro-border-soft); border-radius: 9px; outline: 0; background: rgba(5,25,42,.46); color: var(--pro-text-secondary); font-size: 9px; }
+.settings-pro-row__control option { background: var(--bg-surface); }
+.settings-pro-row__control code { color: var(--pro-text-secondary); font-size: 9px; }
+.about-pro dl { display: grid; gap: 8px; margin: 10px 0 0; }
+.about-pro dl div { display: flex; justify-content: space-between; gap: 12px; padding-top: 8px; border-top: 1px solid var(--pro-border-soft); font-size: 9px; }
+.about-pro dt { color: var(--pro-text-muted); }
+.about-pro dd { margin: 0; color: var(--pro-text-secondary); text-align: right; }
+@media (max-width: 760px) { .settings-pro-layout { grid-template-columns: 1fr; } .settings-pro-nav { display: flex; overflow-x: auto; position: static; } .settings-pro-nav button { flex: 0 0 auto; } }
+@media (max-width: 520px) { .settings-pro-row { grid-template-columns: auto 1fr; padding-block: 10px; } .settings-pro-row__control { grid-column: 2; } }

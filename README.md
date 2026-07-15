@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./public/assets/brand/skill-studio-pro-wordmark-placeholder.svg" alt="Skill Studio Pro" width="900" />
+  <img src="./public/assets/brand/skill-studio-pro-wordmark.svg" alt="Skill Studio Pro" width="900" />
 </p>
 
 <p align="center">
@@ -13,9 +13,9 @@
 
 # Skill Studio Pro
 
-Skill Studio Pro 是一个本地优先、跨平台的 AI Agent Skill 资产管理桌面应用。本仓库当前处于 Wave 0 项目基线阶段：保留并验证上游已有的工作区、Skill 管理、快照、市场、平台、项目和团队兼容能力，同时建立 Pro 独立命名、数据目录、品牌占位、更新隔离和跨平台 CI。
+Skill Studio Pro 是一个本地优先、跨平台的 AI Agent Skill 资产管理桌面应用。本仓库保留并验证上游已有的工作区、Skill 管理、快照、市场、平台、项目和团队兼容能力，同时建立 Pro 独立命名、数据目录、品牌、更新隔离和跨平台 CI。
 
-Wave 0 不实现扫描索引、AI、中央映射、安装计划或回收站等 Pro 新业务功能；这些能力将由后续模块在本基线上开发。
+Wave 1 已提供 Pro UI Shell、类型化 Mock 页面、来源可信度、模型归属、安装预览与回收站交互；扫描、AI、中央映射和文件事务仍由后续后端模块接入。
 
 ## 与上游 Skill Studio 的关系
 
@@ -42,7 +42,7 @@ Skill Studio Pro 基于开源项目 [liu673/skill-studio](https://github.com/liu
 
 ## 品牌与更新
 
-Wave 0 使用 `public/assets/brand/` 中的独立 Pro 占位资产，不将上游 Logo 作为正式 Pro 品牌。占位资产将在后续品牌工作流中替换。
+Pro 界面使用 `public/assets/brand/` 中的独立品牌资产，不将上游 Logo 作为正式 Pro 品牌。浏览器、应用壳与桌面安装图标使用同一 Pro 标志。
 
 自动更新当前明确停用：仓库不包含上游更新端点、公钥或 updater capability，也不生成 updater artifacts。在建立独立 Pro 发布仓库、签名密钥和更新源之前，请勿启用自动更新。上游 Release 安装包不是 Skill Studio Pro 安装包。
 

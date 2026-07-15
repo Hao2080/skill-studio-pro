@@ -5,6 +5,7 @@ import { AppProviders } from "./app/AppProviders";
 import { AppShell } from "./app/AppShell";
 import { useI18n } from "@/app/providers/I18nContext";
 import "./styles/tokens.css";
+import "./styles/pro-theme.css";
 import "./styles/layout.css";
 
 function AppFrame() {
@@ -29,11 +30,11 @@ function AppFrame() {
           colorBorderSecondary: "var(--border-subtle)",
           colorFillSecondary: "var(--bg-surface-2)",
           colorFillTertiary: "var(--bg-hover)",
-          borderRadius: 10,
-          borderRadiusLG: 14,
+          borderRadius: 12,
+          borderRadiusLG: 18,
           controlHeight: 32,
           fontSize: 13,
-          fontFamily: "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+          fontFamily: "var(--font-sans)",
           boxShadow: "var(--shadow-soft)",
           boxShadowSecondary: "var(--shadow-soft)",
         },
