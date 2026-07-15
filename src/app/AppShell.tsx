@@ -48,7 +48,7 @@ export function AppShell() {
 
   const primaryNavItems = getPrimaryNavigationItems(t);
   const systemNavItems = getSystemNavigationItems(t);
-  const brandMarkSrc = "/assets/logo/logo-master.png";
+  const brandMarkSrc = "/assets/brand/skill-studio-pro-placeholder.svg";
 
   return (
     <div className="app-shell">
@@ -57,14 +57,14 @@ export function AppShell() {
           <div
             className={`app-sidebar__logo${collapsed ? " app-sidebar__logo--compact" : ""}`}
             role="img"
-            aria-label="Skill Studio"
+            aria-label="Skill Studio Pro"
           >
             <span className="app-sidebar__logo-mark" aria-hidden="true">
               <img src={brandMarkSrc} alt="" className="app-sidebar__logo-mark-image" />
             </span>
             {!collapsed ? (
               <span className="app-sidebar__brand-copy">
-                <span className="app-sidebar__brand-title">Skill Studio</span>
+                <span className="app-sidebar__brand-title">Skill Studio Pro</span>
               </span>
             ) : null}
           </div>

@@ -170,7 +170,7 @@ describe("FileExplorerPanel", () => {
 
   it("restores the last session file context when no file is selected", async () => {
     window.sessionStorage.setItem(
-      "skill-studio.file-workspace.session",
+      "skill-studio-pro.file-workspace.session",
       JSON.stringify({
         "skill-1": {
           selectedFile: "README.md",

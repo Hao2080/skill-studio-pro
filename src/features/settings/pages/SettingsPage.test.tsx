@@ -5,7 +5,6 @@ import { SettingsPage } from "@/features/settings/pages/SettingsPage";
 
 const invokeMock = vi.fn();
 const checkAndInstallUpdateMock = vi.fn();
-const relaunchAppMock = vi.fn();
 
 vi.mock("@tauri-apps/api/core", () => ({
   invoke: (...args: unknown[]) => invokeMock(...args),
@@ -13,7 +12,6 @@ vi.mock("@tauri-apps/api/core", () => ({
 
 vi.mock("@/features/settings/api/updateApi", () => ({
   checkAndInstallUpdate: (...args: unknown[]) => checkAndInstallUpdateMock(...args),
-  relaunchApp: () => relaunchAppMock(),
 }));
 
 const messageApi = {
@@ -87,13 +85,14 @@ vi.mock("@/features/settings/state/I18nContext", () => ({
         "settings.field.copyFailed": "复制失败",
         "settings.update.title": "应用更新",
         "settings.update.hint": "检查 GitHub Releases 中的新版安装包，下载并验证签名后安装。",
-        "settings.update.action": "检查更新",
+        "settings.update.action": "查看更新状态",
         "settings.update.checking": "检查中...",
         "settings.update.installing": "安装中...",
         "settings.update.progress": "已下载 {progress}",
         "settings.update.none": "当前已是最新版本。",
         "settings.update.installed": "已安装 {version}，正在重启应用。",
         "settings.update.failed": "更新检查失败，请稍后重试或从 Releases 页面手动下载。",
+        "settings.update.disabled": "Skill Studio Pro 自动更新尚未配置。",
         "settings.theme.light": "浅色",
         "settings.theme.dark": "深色",
         "settings.theme.system": "跟随系统",
@@ -122,7 +121,6 @@ describe("SettingsPage platform settings", () => {
   beforeEach(() => {
     invokeMock.mockReset();
     checkAndInstallUpdateMock.mockReset();
-    relaunchAppMock.mockReset();
     messageApi.success.mockClear();
     messageApi.error.mockClear();
     messageApi.warning.mockClear();
@@ -164,11 +162,11 @@ describe("SettingsPage platform settings", () => {
     expect(screen.getByText("D:/SkillStudio/projects")).toBeTruthy();
     expect(screen.getByText("D:/SkillStudio/snapshots")).toBeTruthy();
     expect(screen.getByText("D:/SkillStudio/metadata.db")).toBeTruthy();
-    expect(screen.getByRole("button", { name: "检查更新" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "查看更新状态" })).toBeTruthy();
     expect(screen.queryByText("平台中心")).toBeNull();
   });
 
-  it("checks for updates from the about section", async () => {
+  it("reports that Pro automatic updates are disabled", async () => {
     invokeMock.mockImplementation((command: string) => {
       if (command === "db_health_check") {
         return Promise.resolve({
@@ -184,17 +182,16 @@ describe("SettingsPage platform settings", () => {
 
       return Promise.resolve(undefined);
     });
-    checkAndInstallUpdateMock.mockResolvedValue({ status: "current" });
+    checkAndInstallUpdateMock.mockResolvedValue({ status: "disabled" });
 
     render(<SettingsPage />);
 
-    fireEvent.click(screen.getByRole("button", { name: "检查更新" }));
+    fireEvent.click(screen.getByRole("button", { name: "查看更新状态" }));
 
     await waitFor(() => {
       expect(checkAndInstallUpdateMock).toHaveBeenCalledTimes(1);
     });
-    expect(messageApi.success).toHaveBeenCalledWith("当前已是最新版本。");
-    expect(relaunchAppMock).not.toHaveBeenCalled();
+    expect(messageApi.warning).toHaveBeenCalledWith("Skill Studio Pro 自动更新尚未配置。");
   });
 
   it.skip("shows manual directory input and latest sync result for each platform — UI simplified in current SettingsPage", async () => {

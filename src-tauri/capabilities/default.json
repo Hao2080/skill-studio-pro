@@ -1,19 +1,17 @@
 {
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "default",
-  "description": "Default capability for Skill Studio",
+  "description": "Default capability for Skill Studio Pro",
   "windows": ["main"],
   "permissions": [
     "core:default",
     "dialog:default",
     "dialog:allow-open",
     "opener:default",
-    "process:default",
-    "updater:default",
     {
       "identifier": "fs:allow-read",
       "allow": [
-        { "path": "$HOME/.skill-studio/**" },
+        { "path": "$HOME/.skill-studio-pro/**" },
         { "path": "$APPCONFIG/**" },
         { "path": "$APPDATA/**" },
         { "path": "$APPLOCALDATA/**" }
@@ -22,7 +20,7 @@
     {
       "identifier": "fs:allow-write",
       "allow": [
-        { "path": "$HOME/.skill-studio/**" },
+        { "path": "$HOME/.skill-studio-pro/**" },
         { "path": "$APPCONFIG/**" },
         { "path": "$APPDATA/**" },
         { "path": "$APPLOCALDATA/**" }
@@ -31,7 +29,7 @@
     {
       "identifier": "fs:allow-exists",
       "allow": [
-        { "path": "$HOME/.skill-studio/**" },
+        { "path": "$HOME/.skill-studio-pro/**" },
         { "path": "$APPCONFIG/**" },
         { "path": "$APPDATA/**" },
         { "path": "$APPLOCALDATA/**" }
@@ -40,7 +38,7 @@
     {
       "identifier": "fs:allow-mkdir",
       "allow": [
-        { "path": "$HOME/.skill-studio/**" },
+        { "path": "$HOME/.skill-studio-pro/**" },
         { "path": "$APPCONFIG/**" },
         { "path": "$APPDATA/**" },
         { "path": "$APPLOCALDATA/**" }
@@ -49,7 +47,7 @@
     {
       "identifier": "fs:allow-remove",
       "allow": [
-        { "path": "$HOME/.skill-studio/**" },
+        { "path": "$HOME/.skill-studio-pro/**" },
         { "path": "$APPCONFIG/**" },
         { "path": "$APPDATA/**" },
         { "path": "$APPLOCALDATA/**" }
@@ -58,7 +56,7 @@
     {
       "identifier": "fs:allow-rename",
       "allow": [
-        { "path": "$HOME/.skill-studio/**" },
+        { "path": "$HOME/.skill-studio-pro/**" },
         { "path": "$APPCONFIG/**" },
         { "path": "$APPDATA/**" },
         { "path": "$APPLOCALDATA/**" }
@@ -67,7 +65,7 @@
     {
       "identifier": "fs:allow-copy-file",
       "allow": [
-        { "path": "$HOME/.skill-studio/**" },
+        { "path": "$HOME/.skill-studio-pro/**" },
         { "path": "$APPCONFIG/**" },
         { "path": "$APPDATA/**" },
         { "path": "$APPLOCALDATA/**" }

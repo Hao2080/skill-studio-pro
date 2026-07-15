@@ -1,5 +1,5 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 fn main() {
-    skill_studio_lib::run()
+    skill_studio_pro_lib::run()
 }

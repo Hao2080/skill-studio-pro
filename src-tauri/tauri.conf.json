@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "Skill Studio",
+  "productName": "Skill Studio Pro",
   "version": "0.1.0",
-  "identifier": "app.skillstudio",
+  "identifier": "app.skillstudiopro",
   "build": {
     "beforeDevCommand": "npm run dev",
     "devUrl": "http://localhost:1420",
@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "Skill Studio",
+        "title": "Skill Studio Pro",
         "width": 1280,
         "height": 800,
         "minWidth": 900,
@@ -26,23 +26,12 @@
   "bundle": {
     "active": true,
     "targets": "all",
-    "createUpdaterArtifacts": true,
+    "createUpdaterArtifacts": false,
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",
       "icons/icon.icns",
       "icons/icon.ico"
     ]
-  },
-  "plugins": {
-    "updater": {
-      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEY2Q0RBRDIxQkEyNDMyQkUKUldTK01pUzZJYTNOOWdRMGc5SVhvclNIbnlOM05sVnowQmNNV29NUnFRZTJsK1U2cWUxSUFjWC8K",
-      "endpoints": [
-        "https://github.com/liu673/skill-studio/releases/latest/download/latest.json"
-      ],
-      "windows": {
-        "installMode": "passive"
-      }
-    }
   }
 }

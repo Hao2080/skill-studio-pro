@@ -1,4 +1,4 @@
-use skill_studio_lib::store::extract_skill_description;
+use skill_studio_pro_lib::store::extract_skill_description;
 
 #[test]
 fn extracts_description_from_frontmatter() {

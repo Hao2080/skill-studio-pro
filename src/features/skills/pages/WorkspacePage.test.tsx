@@ -241,7 +241,7 @@ describe("WorkspacePage", () => {
   });
 
   function setStoredAssignments(assignments: Record<string, string | null>) {
-    window.localStorage.setItem("skill-studio.my-skills.category-assignments", JSON.stringify(assignments));
+    window.localStorage.setItem("skill-studio-pro.my-skills.category-assignments", JSON.stringify(assignments));
   }
 
   it("opens action menu from skill card", () => {
@@ -312,9 +312,9 @@ describe("WorkspacePage", () => {
   });
 
   it("keeps the tag area stable and collapses overflow tags on cards", () => {
-    window.localStorage.setItem("skill-studio.my-skills.tags", JSON.stringify(["Automation", "Writing", "Ops"]));
+    window.localStorage.setItem("skill-studio-pro.my-skills.tags", JSON.stringify(["Automation", "Writing", "Ops"]));
     window.localStorage.setItem(
-      "skill-studio.my-skills.tag-assignments",
+      "skill-studio-pro.my-skills.tag-assignments",
       JSON.stringify({
         "skill-1": ["Automation", "Writing", "Ops"],
       }),
@@ -466,7 +466,7 @@ describe("WorkspacePage", () => {
     fireEvent.click(screen.getByRole("button", { name: "创建分类" }));
 
     expect(screen.getByRole("tab", { name: /Research/ })).toBeTruthy();
-    expect(JSON.parse(window.localStorage.getItem("skill-studio.my-skills.categories") ?? "[]")).toContain("Research");
+    expect(JSON.parse(window.localStorage.getItem("skill-studio-pro.my-skills.categories") ?? "[]")).toContain("Research");
   });
 
   it("opens category manager from header action", () => {
@@ -500,7 +500,7 @@ describe("WorkspacePage", () => {
   });
 
   it("renames a custom category from category manager", () => {
-    window.localStorage.setItem("skill-studio.my-skills.categories", JSON.stringify(["Research"]));
+    window.localStorage.setItem("skill-studio-pro.my-skills.categories", JSON.stringify(["Research"]));
 
     renderPage();
 
@@ -509,7 +509,7 @@ describe("WorkspacePage", () => {
     fireEvent.change(screen.getByRole("textbox", { name: "编辑分类 Research" }), { target: { value: "Strategy" } });
     fireEvent.click(screen.getByRole("button", { name: "保存" }));
 
-    expect(JSON.parse(window.localStorage.getItem("skill-studio.my-skills.categories") ?? "[]")).toContain("Strategy");
+    expect(JSON.parse(window.localStorage.getItem("skill-studio-pro.my-skills.categories") ?? "[]")).toContain("Strategy");
     expect(screen.getByRole("tab", { name: /Strategy/ })).toBeTruthy();
     expect(screen.queryByRole("tab", { name: /Research/ })).toBeNull();
   }, 15000);
@@ -522,21 +522,21 @@ describe("WorkspacePage", () => {
     fireEvent.change(screen.getByPlaceholderText("输入新标签名称"), { target: { value: "Automation" } });
     fireEvent.click(screen.getByRole("button", { name: "新增标签" }));
 
-    expect(JSON.parse(window.localStorage.getItem("skill-studio.my-skills.tags") ?? "[]")).toContain("Automation");
+    expect(JSON.parse(window.localStorage.getItem("skill-studio-pro.my-skills.tags") ?? "[]")).toContain("Automation");
     expect(screen.getByText("已关联 0 个技能")).toBeTruthy();
 
     fireEvent.click(screen.getByRole("button", { name: "重命名" }));
     fireEvent.change(screen.getByRole("textbox", { name: "编辑标签 Automation" }), { target: { value: "Ops" } });
     fireEvent.click(screen.getByRole("button", { name: "保存" }));
 
-    expect(JSON.parse(window.localStorage.getItem("skill-studio.my-skills.tags") ?? "[]")).toContain("Ops");
-    expect(JSON.parse(window.localStorage.getItem("skill-studio.my-skills.tags") ?? "[]")).not.toContain("Automation");
+    expect(JSON.parse(window.localStorage.getItem("skill-studio-pro.my-skills.tags") ?? "[]")).toContain("Ops");
+    expect(JSON.parse(window.localStorage.getItem("skill-studio-pro.my-skills.tags") ?? "[]")).not.toContain("Automation");
   }, 30_000);
 
   it("removes local tags and clears tag assignments from skills", async () => {
-    window.localStorage.setItem("skill-studio.my-skills.tags", JSON.stringify(["Automation"]));
+    window.localStorage.setItem("skill-studio-pro.my-skills.tags", JSON.stringify(["Automation"]));
     window.localStorage.setItem(
-      "skill-studio.my-skills.tag-assignments",
+      "skill-studio-pro.my-skills.tag-assignments",
       JSON.stringify({
         "skill-1": ["Automation"],
       }),
@@ -552,10 +552,10 @@ describe("WorkspacePage", () => {
     fireEvent.click(screen.getByRole("button", { name: "删除" }));
 
     await waitFor(() => {
-      expect(JSON.parse(window.localStorage.getItem("skill-studio.my-skills.tags") ?? "[]")).not.toContain("Automation");
+      expect(JSON.parse(window.localStorage.getItem("skill-studio-pro.my-skills.tags") ?? "[]")).not.toContain("Automation");
     });
 
-    expect(JSON.parse(window.localStorage.getItem("skill-studio.my-skills.tag-assignments") ?? "{}")).toEqual({
+    expect(JSON.parse(window.localStorage.getItem("skill-studio-pro.my-skills.tag-assignments") ?? "{}")).toEqual({
       "skill-1": [],
     });
   });
@@ -605,7 +605,7 @@ describe("WorkspacePage", () => {
         },
       ],
     });
-    window.localStorage.setItem("skill-studio.my-skills.categories", JSON.stringify(["Research", "Design", "Ops", "Prompt"]));
+    window.localStorage.setItem("skill-studio-pro.my-skills.categories", JSON.stringify(["Research", "Design", "Ops", "Prompt"]));
     setStoredAssignments({
       "skill-1": "Research",
       "skill-2": "Design",
@@ -680,7 +680,7 @@ describe("WorkspacePage", () => {
         },
       ],
     });
-    window.localStorage.setItem("skill-studio.my-skills.categories", JSON.stringify(["Research", "Design", "Ops", "Prompt", "Archive"]));
+    window.localStorage.setItem("skill-studio-pro.my-skills.categories", JSON.stringify(["Research", "Design", "Ops", "Prompt", "Archive"]));
     setStoredAssignments({
       "skill-1": "Research",
       "skill-2": "Design",
@@ -782,7 +782,7 @@ describe("WorkspacePage", () => {
         },
       ],
     });
-    window.localStorage.setItem("skill-studio.my-skills.categories", JSON.stringify(["Research", "Design", "Ops", "Prompt", "Archive"]));
+    window.localStorage.setItem("skill-studio-pro.my-skills.categories", JSON.stringify(["Research", "Design", "Ops", "Prompt", "Archive"]));
     setStoredAssignments({
       "skill-1": "Research",
       "skill-2": "Design",
@@ -803,7 +803,7 @@ describe("WorkspacePage", () => {
     fireEvent.click(within(row as HTMLElement).getByRole("button", { name: "删除" }));
 
     await waitFor(() => {
-      expect(JSON.parse(window.localStorage.getItem("skill-studio.my-skills.categories") ?? "[]")).not.toContain("Archive");
+      expect(JSON.parse(window.localStorage.getItem("skill-studio-pro.my-skills.categories") ?? "[]")).not.toContain("Archive");
     });
 
     expect(screen.queryByRole("menuitem", { name: "Archive" })).toBeNull();
@@ -911,9 +911,9 @@ describe("WorkspacePage", () => {
   });
 
   it("includes tags in keyword search results", () => {
-    window.localStorage.setItem("skill-studio.my-skills.tags", JSON.stringify(["Automation"]));
+    window.localStorage.setItem("skill-studio-pro.my-skills.tags", JSON.stringify(["Automation"]));
     window.localStorage.setItem(
-      "skill-studio.my-skills.tag-assignments",
+      "skill-studio-pro.my-skills.tag-assignments",
       JSON.stringify({
         "skill-1": ["Automation"],
       }),
@@ -929,7 +929,7 @@ describe("WorkspacePage", () => {
   });
 
   it("shows return-all action for empty categories", () => {
-    window.localStorage.setItem("skill-studio.my-skills.categories", JSON.stringify(["Research"]));
+    window.localStorage.setItem("skill-studio-pro.my-skills.categories", JSON.stringify(["Research"]));
 
     const { container } = renderPage();
 

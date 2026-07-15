@@ -1,7 +1,7 @@
 use std::path::{Component, Path, PathBuf};
 
-const WORKSPACE_DIR_NAME: &str = ".skill-studio";
-const CONFIG_APP_DIR_NAME: &str = "skill-studio";
+const WORKSPACE_DIR_NAME: &str = ".skill-studio-pro";
+const CONFIG_APP_DIR_NAME: &str = "skill-studio-pro";
 
 pub fn default_workspace_root_path() -> Result<PathBuf, String> {
     dirs::home_dir()

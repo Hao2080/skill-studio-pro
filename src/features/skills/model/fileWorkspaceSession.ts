@@ -5,7 +5,7 @@ interface StoredFileWorkspaceContext {
 
 type StoredFileWorkspaceMap = Record<string, StoredFileWorkspaceContext>;
 
-const FILE_WORKSPACE_SESSION_KEY = "skill-studio.file-workspace.session";
+const FILE_WORKSPACE_SESSION_KEY = "skill-studio-pro.file-workspace.session";
 
 function getBrowserSessionStorage() {
   return typeof window === "undefined" ? null : window.sessionStorage;

@@ -53,7 +53,7 @@ pub fn build_http_client() -> Result<reqwest::blocking::Client, String> {
     HTTP_CLIENT
         .get_or_init(|| {
             reqwest::blocking::Client::builder()
-                .user_agent("skill-studio")
+                .user_agent("skill-studio-pro")
                 .timeout(std::time::Duration::from_secs(20))
                 .build()
                 .map_err(|error| format!("创建网络客户端失败: {}", error))

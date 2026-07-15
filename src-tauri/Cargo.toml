@@ -1,20 +1,18 @@
 [package]
-name = "skill-studio"
+name = "skill-studio-pro"
 version = "0.1.0"
-description = "Skill workspace and collaboration desktop app"
-authors = ["Jensen"]
+description = "Skill Studio Pro local-first desktop workspace"
+authors = ["Jensen", "Skill Studio Pro contributors"]
 edition = "2021"
 license = "Apache-2.0"
-repository = "https://github.com/liu673/skill-studio"
-homepage = "https://github.com/liu673/skill-studio"
 
 [lib]
-name = "skill_studio_lib"
+name = "skill_studio_pro_lib"
 crate-type = ["rlib"]
-test = false
+test = true
 
 [[bin]]
-name = "skill-studio"
+name = "skill-studio-pro"
 path = "src/main.rs"
 test = false
 
@@ -38,7 +36,3 @@ open = "5"
 tokio = { version = "1", features = ["time"] }
 regex = "1"
 reqwest = { version = "0.12", default-features = false, features = ["blocking", "json", "rustls-tls"] }
-tauri-plugin-process = "2"
-
-[target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
-tauri-plugin-updater = "2"

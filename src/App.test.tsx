@@ -60,7 +60,7 @@ describe("App navigation structure", () => {
 
   it("renders localized sidebar navigation structure", () => {
     render(<App />);
-    expect(screen.getByLabelText("Skill Studio")).toBeTruthy();
+    expect(screen.getByLabelText("Skill Studio Pro")).toBeTruthy();
     expect(screen.queryByText("技能资产管理平台")).toBeNull();
     expect(screen.getByText("总览")).toBeTruthy();
     expect(screen.getByText("技能资产")).toBeTruthy();

@@ -97,7 +97,7 @@ export function getProjectCopy(language: UiLanguage) {
     projectBinding: en ? "Project Binding" : "项目绑定",
     projectBindings: en ? "Project Bindings" : "项目绑定",
     projectDirectory: en ? "Project Platform Directory" : "项目平台目录",
-    projectFormNamePlaceholder: en ? "For example, Skill Studio" : "例如 Skill Studio",
+    projectFormNamePlaceholder: en ? "For example, Skill Studio Pro" : "例如 Skill Studio Pro",
     projectName: en ? "Project Name" : "项目名称",
     projectNotFound: en ? "Project Not Found" : "项目不存在",
     projectRemoveImpact: en

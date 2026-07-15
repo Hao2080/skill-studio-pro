@@ -4,11 +4,11 @@ import type { ChangeStatus, Skill, SkillOrganizationSnapshot } from "@/types/ski
 type UiLanguage = "zh-CN" | "en-US";
 
 export const DEFAULT_CATEGORIES = ["All", "Unclassified"] as const;
-export const CATEGORY_STORAGE_KEY = "skill-studio.my-skills.categories";
-export const CATEGORY_ASSIGNMENT_STORAGE_KEY = "skill-studio.my-skills.category-assignments";
-export const TAG_STORAGE_KEY = "skill-studio.my-skills.tags";
-export const TAG_ASSIGNMENT_STORAGE_KEY = "skill-studio.my-skills.tag-assignments";
-export const ORGANIZATION_MIGRATION_STORAGE_KEY = "skill-studio.my-skills.organization-migrated";
+export const CATEGORY_STORAGE_KEY = "skill-studio-pro.my-skills.categories";
+export const CATEGORY_ASSIGNMENT_STORAGE_KEY = "skill-studio-pro.my-skills.category-assignments";
+export const TAG_STORAGE_KEY = "skill-studio-pro.my-skills.tags";
+export const TAG_ASSIGNMENT_STORAGE_KEY = "skill-studio-pro.my-skills.tag-assignments";
+export const ORGANIZATION_MIGRATION_STORAGE_KEY = "skill-studio-pro.my-skills.organization-migrated";
 
 export type SkillCategoryMap = Record<string, string | null>;
 export type SkillTagMap = Record<string, string[]>;

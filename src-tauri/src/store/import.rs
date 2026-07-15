@@ -433,7 +433,7 @@ fn market_catalog_items() -> Vec<MarketCatalogItem> {
             description: "适合需要在发布前做版本确认、平台承接检查和变更说明收口的团队。"
                 .to_string(),
             category: "发布治理".to_string(),
-            author: "Skill Studio".to_string(),
+            author: "Skill Studio Pro".to_string(),
             difficulty: "基础".to_string(),
             featured: true,
             accent_color: "#58a6ff".to_string(),
@@ -451,7 +451,7 @@ fn market_catalog_items() -> Vec<MarketCatalogItem> {
             description: "适合把个人技能提交给组织库、需要规范交付说明和评审动作的场景。"
                 .to_string(),
             category: "团队协作".to_string(),
-            author: "Skill Studio".to_string(),
+            author: "Skill Studio Pro".to_string(),
             difficulty: "基础".to_string(),
             featured: true,
             accent_color: "#3fb950".to_string(),
@@ -469,7 +469,7 @@ fn market_catalog_items() -> Vec<MarketCatalogItem> {
             description: "适合要把技能同步到多个智能体平台，并明确每个平台启用与切换策略的团队。"
                 .to_string(),
             category: "平台运维".to_string(),
-            author: "Skill Studio".to_string(),
+            author: "Skill Studio Pro".to_string(),
             difficulty: "中级".to_string(),
             featured: false,
             accent_color: "#d29922".to_string(),
@@ -487,7 +487,7 @@ fn market_catalog_items() -> Vec<MarketCatalogItem> {
             description: "适合要把一个技能整理成可复用资产并推向市场页、团队库或外部目录的场景。"
                 .to_string(),
             category: "资产包装".to_string(),
-            author: "Skill Studio".to_string(),
+            author: "Skill Studio Pro".to_string(),
             difficulty: "基础".to_string(),
             featured: false,
             accent_color: "#a371f7".to_string(),

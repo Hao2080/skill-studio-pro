@@ -1,5 +1,15 @@
+Skill Studio Pro
+Copyright 2026 Skill Studio Pro contributors
+
+This product is based on Skill Studio:
+  https://github.com/liu673/skill-studio
+  audited baseline cd0bb0af53865d4a9643968080bfc5a8137b72d9
+
 Skill Studio
 Copyright 2026 Skill Studio contributors
+
+The original authorship, contributor notices, and upstream attribution are
+preserved in this derivative work.
 
 This product is licensed under the Apache License, Version 2.0.
 See the LICENSE file for the full license text.
@@ -125,6 +135,10 @@ Asset Licenses
 Application icons and logos included in this repository are original works
 created for this project and licensed under the same Apache License 2.0,
 unless otherwise noted in the file header.
+
+Skill Studio Pro uses independent Wave 0 placeholder assets under
+public/assets/brand/. Upstream Skill Studio brand assets remain attributable
+to their original contributors and are not the formal Skill Studio Pro brand.
 
 If you redistribute this software or create derivative works that include
 visual assets from this project, please preserve the applicable copyright

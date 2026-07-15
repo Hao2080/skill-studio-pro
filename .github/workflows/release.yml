@@ -1,9 +1,6 @@
-name: Release
+name: Skill Studio Pro Release (manual baseline)
 
 on:
-  push:
-    tags:
-      - 'v*'
   workflow_dispatch:
 
 permissions:
@@ -49,23 +46,18 @@ jobs:
       - name: Build Tauri
         if: github.event_name == 'workflow_dispatch'
         uses: tauri-apps/tauri-action@v0
-        env:
-          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
-          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
 
       - name: Build Tauri and Upload Release Assets
         if: github.event_name != 'workflow_dispatch'
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
-          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
         with:
           tagName: ${{ github.ref_name }}
-          releaseName: Skill Studio ${{ github.ref_name }}
+          releaseName: Skill Studio Pro ${{ github.ref_name }}
           releaseDraft: false
           prerelease: true
-          includeUpdaterJson: true
+          includeUpdaterJson: false
 
       - name: Generate checksums
         shell: bash
@@ -111,24 +103,18 @@ jobs:
       - name: Build Tauri
         if: github.event_name == 'workflow_dispatch'
         uses: tauri-apps/tauri-action@v0
-        env:
-          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
-          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
 
       - name: Build Tauri and Upload Release Assets
         if: github.event_name != 'workflow_dispatch'
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
-          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
         with:
           tagName: ${{ github.ref_name }}
-          releaseName: Skill Studio ${{ github.ref_name }}
+          releaseName: Skill Studio Pro ${{ github.ref_name }}
           releaseDraft: false
           prerelease: true
-          includeUpdaterJson: true
-          updaterJsonPreferNsis: true
+          includeUpdaterJson: false
 
       - name: Generate checksums
         shell: bash
@@ -174,23 +160,18 @@ jobs:
       - name: Build Tauri
         if: github.event_name == 'workflow_dispatch'
         uses: tauri-apps/tauri-action@v0
-        env:
-          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
-          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
 
       - name: Build Tauri and Upload Release Assets
         if: github.event_name != 'workflow_dispatch'
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
-          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
         with:
           tagName: ${{ github.ref_name }}
-          releaseName: Skill Studio ${{ github.ref_name }}
+          releaseName: Skill Studio Pro ${{ github.ref_name }}
           releaseDraft: false
           prerelease: true
-          includeUpdaterJson: true
+          includeUpdaterJson: false
 
       - name: Generate checksums
         shell: bash

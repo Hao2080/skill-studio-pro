@@ -1964,7 +1964,7 @@ mod tests {
 
     fn temp_dir(name: &str) -> std::path::PathBuf {
         let dir = std::env::temp_dir()
-            .join("skill-studio-tests")
+            .join("skill-studio-pro-tests")
             .join(format!("{}-{}", name, uuid::Uuid::new_v4()));
         std::fs::create_dir_all(&dir).expect("创建测试目录失败");
         dir

@@ -16,7 +16,7 @@ import {
   RefreshCw,
   Sun,
 } from "lucide-react";
-import { checkAndInstallUpdate, relaunchApp, type UpdateProgress } from "@/features/settings/api/updateApi";
+import { checkAndInstallUpdate } from "@/features/settings/api/updateApi";
 import { AutoSnapshotSettings } from "@/features/settings/components/AutoSnapshotSettings";
 import { useI18n } from "@/features/settings/state/I18nContext";
 import { useTheme } from "@/features/settings/state/ThemeContext";
@@ -47,7 +47,6 @@ export function SettingsPage() {
   const [health, setHealth] = useState<DbHealthResponse | null>(null);
   const [activeSection, setActiveSection] = useState<SettingsSectionKey>("general");
   const [checkingUpdate, setCheckingUpdate] = useState(false);
-  const [updateProgress, setUpdateProgress] = useState<string | null>(null);
   const { theme, setTheme } = useTheme();
   const { language, setLanguage, t } = useI18n();
   const contentRef = useRef<HTMLDivElement | null>(null);
@@ -151,36 +150,16 @@ export function SettingsPage() {
     }
   };
 
-  const formatUpdateProgress = (progress: UpdateProgress) => {
-    if (!progress.total || progress.total <= 0) {
-      return `${Math.round(progress.downloaded / 1024 / 1024)} MB`;
-    }
-
-    const percent = Math.min(100, Math.round((progress.downloaded / progress.total) * 100));
-    return `${percent}%`;
-  };
-
   const handleCheckUpdate = async () => {
     setCheckingUpdate(true);
-    setUpdateProgress(null);
 
     try {
-      const result = await checkAndInstallUpdate((progress) => {
-        setUpdateProgress(formatUpdateProgress(progress));
-      });
-
-      if (result.status === "current") {
-        message.success?.(t("settings.update.none"));
-        return;
-      }
-
-      message.success?.(t("settings.update.installed").replace("{version}", result.version ?? ""));
-      await relaunchApp();
+      await checkAndInstallUpdate();
+      message.warning?.(t("settings.update.disabled"));
     } catch {
       message.error?.(t("settings.update.failed"));
     } finally {
       setCheckingUpdate(false);
-      setUpdateProgress(null);
     }
   };
 
@@ -299,18 +278,12 @@ export function SettingsPage() {
                   <div className="settings-page__field-meta">
                     <span className="settings-page__field-label">{t("settings.update.title")}</span>
                     <span className="settings-page__field-hint">
-                      {updateProgress
-                        ? t("settings.update.progress").replace("{progress}", updateProgress)
-                        : t("settings.update.hint")}
+                      {t("settings.update.hint")}
                     </span>
                   </div>
                   <div className="settings-page__field-control">
                     <Button icon={<RefreshCw size={14} />} loading={checkingUpdate} onClick={() => void handleCheckUpdate()}>
-                      {checkingUpdate
-                        ? updateProgress
-                          ? t("settings.update.installing")
-                          : t("settings.update.checking")
-                        : t("settings.update.action")}
+                      {checkingUpdate ? t("settings.update.checking") : t("settings.update.action")}
                     </Button>
                   </div>
                 </div>
