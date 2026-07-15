@@ -1,8 +1,9 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AlertTriangle, FolderPlus, LoaderCircle, Pause, Play, Radar, RefreshCw, Save } from "lucide-react";
 import { PageHeader, StatusBadge } from "@/shared/components/pro";
-import { inventoryApi, type InventoryApi } from "../api/inventoryApi";
-import type { ScanRoot, ScanRootType } from "../model";
+import { isTauriRuntime } from "@/shared/tauri/runtime";
+import { inventoryApi, listenInventoryScanProgress, type InventoryApi } from "../api/inventoryApi";
+import type { ScanProgressEvent, ScanRoot, ScanRootType } from "../model";
 import "../styles.css";
 
 interface ScanRootDraft {
@@ -17,6 +18,7 @@ interface ScanRootDraft {
 export interface ScanRootsPanelProps {
   api?: InventoryApi;
   pickDirectory?(): Promise<string | null>;
+  listenProgress?: typeof listenInventoryScanProgress;
 }
 
 const NEW_ROOT: ScanRootDraft = {
@@ -39,7 +41,7 @@ function draftFromRoot(root: ScanRoot): ScanRootDraft {
   };
 }
 
-export function ScanRootsPanel({ api = inventoryApi, pickDirectory }: ScanRootsPanelProps) {
+export function ScanRootsPanel({ api = inventoryApi, pickDirectory, listenProgress }: ScanRootsPanelProps) {
   const [roots, setRoots] = useState<ScanRoot[]>([]);
   const [drafts, setDrafts] = useState<Record<string, ScanRootDraft>>({});
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
@@ -51,6 +53,9 @@ export function ScanRootsPanel({ api = inventoryApi, pickDirectory }: ScanRootsP
   const [error, setError] = useState("");
   const [partialErrors, setPartialErrors] = useState<Record<string, string>>({});
   const [notice, setNotice] = useState("");
+  const activeRunId = useRef("");
+  const pendingProgress = useRef(new Map<string, ScanProgressEvent>());
+  const progressListener = listenProgress ?? (isTauriRuntime() ? listenInventoryScanProgress : undefined);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -68,6 +73,33 @@ export function ScanRootsPanel({ api = inventoryApi, pickDirectory }: ScanRootsP
   }, [api]);
 
   useEffect(() => { void load(); }, [load]);
+
+  const applyProgress = useCallback((progress: ScanProgressEvent) => {
+    pendingProgress.current.set(progress.runId, progress);
+    if (progress.runId !== activeRunId.current) return;
+    setNotice(`扫描 ${progress.status}：${progress.rootsCompleted}/${progress.rootsTotal} 个根，发现 ${progress.candidatesSeen} 个候选，${progress.errorCount} 个错误。`);
+    if (progress.status !== "running") {
+      activeRunId.current = "";
+      setScanning(false);
+      void load();
+    }
+  }, [load]);
+
+  useEffect(() => {
+    if (!progressListener) return;
+    let disposed = false;
+    let unlisten: (() => void) | undefined;
+    void progressListener((progress) => {
+      if (!disposed) applyProgress(progress);
+    }).then((stop) => {
+      if (disposed) stop();
+      else unlisten = stop;
+    });
+    return () => {
+      disposed = true;
+      unlisten?.();
+    };
+  }, [applyProgress, progressListener]);
 
   const activeCount = useMemo(() => roots.filter((root) => root.enabled).length, [roots]);
   const availableCount = useMemo(() => roots.filter((root) => root.available).length, [roots]);
@@ -147,11 +179,18 @@ export function ScanRootsPanel({ api = inventoryApi, pickDirectory }: ScanRootsP
     setError("");
     try {
       const run = await api.startScan({ mode, rootIds: [...selectedIds] });
+      activeRunId.current = run.id;
       setNotice(`扫描 ${run.status}：${run.rootsCompleted}/${run.rootsTotal} 个根，发现 ${run.candidatesSeen} 个候选，${run.errorCount} 个错误。`);
-      await load();
+      const progress = pendingProgress.current.get(run.id);
+      if (progress) applyProgress(progress);
+      else if (run.status !== "running") {
+        activeRunId.current = "";
+        setScanning(false);
+        await load();
+      }
     } catch (reason) {
       setError(reason instanceof Error ? reason.message : String(reason));
-    } finally {
+      activeRunId.current = "";
       setScanning(false);
     }
   }

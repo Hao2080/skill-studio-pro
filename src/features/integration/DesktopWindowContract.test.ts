@@ -7,6 +7,7 @@ const readStylesheet = (name: string) => readFileSync(resolve(process.cwd(), "sr
 const layoutCss = readStylesheet("layout.css");
 const proThemeCss = readStylesheet("pro-theme.css");
 const tokensCss = readStylesheet("tokens.css");
+const platformStore = readFileSync(resolve(process.cwd(), "src-tauri", "src", "store", "platform.rs"), "utf8");
 
 describe("desktop window and accessibility CSS contract", () => {
   it("keeps the supported and default desktop viewport sizes explicit", () => {
@@ -29,5 +30,10 @@ describe("desktop window and accessibility CSS contract", () => {
     expect(tokensCss).toContain(':root[data-reduce-motion="true"]');
     expect(tokensCss).toContain(':root[data-reduce-transparency="true"]');
     expect(tokensCss).toMatch(/--pro-blur-strength\s*:\s*0px/);
+  });
+
+  it("resolves platform paths through the isolated application home", () => {
+    expect(platformStore).not.toMatch(/\.path\(\)\s*\.home_dir\(\)/);
+    expect(platformStore.match(/workspace::home_dir\(\)/g)).toHaveLength(2);
   });
 });

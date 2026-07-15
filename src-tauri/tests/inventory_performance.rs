@@ -7,11 +7,33 @@ use skill_studio_pro_lib::inventory::model::{
 use skill_studio_pro_lib::{db, inventory};
 
 fn temp_dir(name: &str) -> PathBuf {
+    if let Some(retained) = retained_root() {
+        let path = retained.join(name);
+        std::fs::create_dir_all(&path).unwrap();
+        return path;
+    }
     let path = std::env::temp_dir()
         .join("skill-studio-pro-benchmarks")
         .join(format!("{name}-{}", uuid::Uuid::new_v4()));
     std::fs::create_dir_all(&path).unwrap();
     path
+}
+
+fn retained_root() -> Option<PathBuf> {
+    let value = std::env::var_os("SKILL_STUDIO_PRO_BENCHMARK_RETAIN_ROOT")?;
+    let path = PathBuf::from(value);
+    let parent_is_uat = path
+        .parent()
+        .and_then(Path::file_name)
+        .and_then(|name| name.to_str())
+        .is_some_and(|name| name.starts_with("Skill-Studio-Pro-Task2-UAT-"));
+    assert!(
+        path.is_absolute()
+            && path.file_name().and_then(|name| name.to_str()) == Some("performance-retained")
+            && parent_is_uat,
+        "retained benchmark output must be a performance-retained directory inside the Task 2 UAT root"
+    );
+    Some(path)
 }
 
 fn percentile_95(mut values: Vec<Duration>) -> Duration {
@@ -123,9 +145,13 @@ fn benchmark_inventory_1000_skills_100000_files() {
         percentile_95(searches).as_millis(),
         percentile_95(details).as_millis()
     );
-    cleanup_temp(&data);
-    cleanup_temp(&home);
-    cleanup_temp(&scan_root);
+    if let Some(retained) = retained_root() {
+        println!("inventory_benchmark retained_root={}", retained.display());
+    } else {
+        cleanup_temp(&data);
+        cleanup_temp(&home);
+        cleanup_temp(&scan_root);
+    }
 }
 
 fn cleanup_temp(path: &Path) {

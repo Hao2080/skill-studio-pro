@@ -389,6 +389,12 @@ impl LifecycleService {
                 rusqlite::params![input.skill_id, after_hash, now],
             )
             .map_err(|error| format!("更新中央 Skill 哈希失败: {error}"))?;
+            conn.execute(
+                "UPDATE ai_artifacts SET stale_at = ?2
+                 WHERE skill_id = ?1 AND stale_at IS NULL",
+                rusqlite::params![input.skill_id, now],
+            )
+            .map_err(|error| format!("标记 AI 产物过期失败: {error}"))?;
             repository::insert_operation(
                 &conn,
                 "edit_save",
@@ -715,6 +721,12 @@ impl LifecycleService {
                     rusqlite::params![skill_id, now],
                 )
                 .map_err(|error| format!("标记映射过期失败: {error}"))?;
+                conn.execute(
+                    "UPDATE ai_artifacts SET stale_at = ?2
+                     WHERE skill_id = ?1 AND stale_at IS NULL",
+                    rusqlite::params![skill_id, now],
+                )
+                .map_err(|error| format!("标记 AI 产物过期失败: {error}"))?;
                 create_snapshot_record(
                     conn,
                     &self.workspace_root,

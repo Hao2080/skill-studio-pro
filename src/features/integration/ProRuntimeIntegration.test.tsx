@@ -1,6 +1,6 @@
 /** @vitest-environment jsdom */
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { MemoryRouter } from "react-router-dom";
+import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import type { ActivityApi } from "@/features/activity/api/activityApi";
 import { ActivityPage } from "@/features/activity/pages/ActivityPage";
@@ -73,6 +73,21 @@ describe("Pro UI runtime integration states", () => {
     expect(await screen.findByText("1 个实例的来源详情加载失败，列表仍显示本地索引字段。")).toBeTruthy();
     expect(screen.getByText("demo-skill")).toBeTruthy();
     expect(screen.getByText("未知来源")).toBeTruthy();
+  });
+
+  it("opens the real platform and scan-root management page", async () => {
+    const client = inventory();
+    render(
+      <MemoryRouter initialEntries={["/inventory"]}>
+        <Routes>
+          <Route path="/inventory" element={<InventoryPage api={client}/>} />
+          <Route path="/platforms" element={<div>平台与扫描根管理已打开</div>} />
+        </Routes>
+      </MemoryRouter>,
+    );
+    await screen.findByText("没有匹配的 Skill");
+    fireEvent.click(screen.getByRole("button", { name: "管理扫描根" }));
+    expect(await screen.findByText("平台与扫描根管理已打开")).toBeTruthy();
   });
 
   it("renders a recoverable error state for operation history", async () => {

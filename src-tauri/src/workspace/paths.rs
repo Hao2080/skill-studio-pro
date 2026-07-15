@@ -25,10 +25,14 @@ pub fn home_dir_path() -> Result<PathBuf, String> {
 }
 
 pub fn default_workspace_root_path() -> Result<PathBuf, String> {
-    if let Some(path) = absolute_env_path(WORKSPACE_OVERRIDE_ENV)? {
+    if let Some(path) = workspace_override_path()? {
         return Ok(path);
     }
     home_dir_path().map(|home| home.join(WORKSPACE_DIR_NAME))
+}
+
+pub fn workspace_override_path() -> Result<Option<PathBuf>, String> {
+    absolute_env_path(WORKSPACE_OVERRIDE_ENV)
 }
 
 pub fn config_root_path() -> Result<PathBuf, String> {

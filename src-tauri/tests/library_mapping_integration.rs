@@ -5,6 +5,7 @@ use sha2::{Digest, Sha256};
 use skill_studio_pro_lib::inventory::model::{
     InstanceListInput, ScanMode, ScanRootUpsertInput, ScanStartInput,
 };
+use skill_studio_pro_lib::lifecycle::DeleteExecuteInput;
 use skill_studio_pro_lib::platform::{PlatformContext, PlatformRegistry, SymlinkCapability};
 use skill_studio_pro_lib::services::library_service::{
     ExecutePlanInput, LibraryService, RegisterInstancePlanInput,
@@ -12,6 +13,7 @@ use skill_studio_pro_lib::services::library_service::{
 use skill_studio_pro_lib::services::mapping_service::{
     MappingService, PublishFailurePoint, PublishPlanInput, PublishTargetInput, RemoveMappingInput,
 };
+use skill_studio_pro_lib::services::trash_service::TrashService;
 use skill_studio_pro_lib::{db, inventory};
 
 fn temp_dir(name: &str) -> PathBuf {
@@ -207,6 +209,47 @@ fn registration_copies_source_and_slug_change_does_not_change_storage_identity()
     assert_eq!(before.id, after.id);
     assert_eq!(before.storage_path, after.storage_path);
     assert!(Path::new(&after.storage_path).join("SKILL.md").is_file());
+}
+
+#[test]
+fn trash_with_managed_mapping_releases_mapping_without_reacquiring_skill_lock() {
+    let (workspace, home, _, skill_id, snapshot_id) = registered_fixture();
+    let target_root = home.join(".codex/skills");
+    std::fs::create_dir_all(&target_root).unwrap();
+    configure_platform(&workspace, "codex", &target_root);
+    let mapping = MappingService::new(workspace.clone(), home.clone()).unwrap();
+    let publish = mapping
+        .create_publish_plan(&PublishPlanInput {
+            skill_id: skill_id.clone(),
+            snapshot_id,
+            targets: vec![PublishTargetInput {
+                platform_name: "codex".to_string(),
+                sync_mode: Some("copy".to_string()),
+                drift_policy: "abort".to_string(),
+            }],
+        })
+        .unwrap();
+    let published = mapping
+        .execute_publish_plan(&ExecutePlanInput {
+            plan_id: publish.id,
+            plan_hash: publish.plan_hash,
+        })
+        .unwrap();
+    assert_eq!(published.status, "success");
+    let target = PathBuf::from(&published.targets[0].target_path);
+    assert!(target.exists());
+
+    let trash = TrashService::new(workspace.clone(), home).unwrap();
+    let plan = trash.create_delete_plan(&skill_id).unwrap();
+    assert_eq!(plan.mappings.len(), 1);
+    let entry = trash
+        .execute_delete(&DeleteExecuteInput {
+            plan_id: plan.id,
+            plan_hash: plan.plan_hash,
+        })
+        .unwrap();
+    assert!(!target.exists());
+    assert!(Path::new(&entry.trash_path).exists());
 }
 
 #[test]

@@ -11,6 +11,7 @@ import {
   Save,
   ShieldCheck,
 } from "lucide-react";
+import AntApp from "antd/es/app";
 import { StatusBadge } from "@/shared/components/pro";
 import type { SaveTextFileInput, SaveTextFileResult } from "@/features/lifecycle/model";
 import {
@@ -92,6 +93,7 @@ export function SkillEditorWorkspace({
   onExternalChange,
   onRequestRegister,
 }: SkillEditorWorkspaceProps) {
+  const { modal } = AntApp.useApp();
   const sourceId = useMemo(() => `editor:${skillId}`, [skillId]);
   const editSessionId = useMemo(createSessionId, [skillId]);
   const initialPath = files.some((file) => file.path === "SKILL.md")
@@ -174,13 +176,26 @@ export function SkillEditorWorkspace({
     return () => window.removeEventListener("focus", handleFocus);
   }, [loadFile]);
 
-  async function selectFile(path: string) {
+  function selectFile(path: string) {
     if (path === selectedPath) return;
-    if (dirty && !window.confirm("当前文件有未保存修改。切换文件会放弃修改，确定继续吗？")) return;
-    setSelectedPath(path);
-    setEditMode(false);
-    setNotice("");
-    await loadFile(path);
+    const proceed = async () => {
+      setSelectedPath(path);
+      setEditMode(false);
+      setNotice("");
+      await loadFile(path);
+    };
+    if (!dirty) {
+      void proceed();
+      return;
+    }
+    modal.confirm({
+      centered: true,
+      title: "放弃未保存修改？",
+      content: "切换文件会丢失当前草稿。",
+      okText: "放弃并切换",
+      cancelText: "继续编辑",
+      onOk: proceed,
+    });
   }
 
   function discard() {
@@ -217,18 +232,31 @@ export function SkillEditorWorkspace({
     }
   }
 
-  async function openInExternalEditor() {
+  function openInExternalEditor() {
     if (!openExternal) return;
-    if (dirty && !window.confirm("请先保存或放弃当前修改，再打开外部编辑器。要放弃当前修改吗？")) return;
-    if (dirty) discard();
-    setError("");
-    try {
-      await openExternal(selectedPath);
-      pendingExternalRefresh.current = true;
-      setNotice("已交给系统受控入口打开；返回应用窗口时会重新读取并检测变化。");
-    } catch (reason) {
-      setError(reason instanceof Error ? reason.message : String(reason));
+    const proceed = async () => {
+      if (dirty) discard();
+      setError("");
+      try {
+        await openExternal(selectedPath);
+        pendingExternalRefresh.current = true;
+        setNotice("已交给系统受控入口打开；返回应用窗口时会重新读取并检测变化。");
+      } catch (reason) {
+        setError(reason instanceof Error ? reason.message : String(reason));
+      }
+    };
+    if (!dirty) {
+      void proceed();
+      return;
     }
+    modal.confirm({
+      centered: true,
+      title: "放弃未保存修改？",
+      content: "请先保存或放弃当前草稿，再打开外部编辑器。",
+      okText: "放弃并打开",
+      cancelText: "继续编辑",
+      onOk: proceed,
+    });
   }
 
   return (

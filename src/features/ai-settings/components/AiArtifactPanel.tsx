@@ -91,6 +91,7 @@ export function AiArtifactPanel({
       ) : (
         <div className="ai-artifact-panel__actions">
           {!summary && !usage ? <button type="button" className="pro-button pro-button--primary" onClick={() => onGenerate(false)}><Sparkles size={14} />生成简介/用法</button> : null}
+          {summary || usage ? <button type="button" className="pro-button" onClick={() => onGenerate(false)}><Sparkles size={14} />刷新（优先缓存）</button> : null}
           {summary || usage ? <button type="button" className="pro-button" onClick={() => onGenerate(true)}><RotateCcw size={14} />{stale ? "重新生成过期内容" : "强制重新生成"}</button> : null}
           {cacheHit ? <span>本次命中现有缓存，没有重复计费。</span> : null}
         </div>

@@ -3,7 +3,6 @@ use std::fs;
 use std::path::{Path, PathBuf};
 
 use rusqlite::OptionalExtension;
-use tauri::Manager;
 use uuid::Uuid;
 
 use crate::domain::{
@@ -418,10 +417,7 @@ fn detect_path(skills_dir: Option<&str>) -> bool {
 pub fn detect_platforms<R: tauri::Runtime>(
     app: &tauri::AppHandle<R>,
 ) -> Result<PlatformScanResult, String> {
-    let home = app
-        .path()
-        .home_dir()
-        .map_err(|e| format!("获取主目录失败: {}", e))?;
+    let home = workspace::home_dir()?;
 
     let conn = get_conn(app)?;
     let defs = platform_definitions();
@@ -490,10 +486,7 @@ pub fn save_platform_connection<R: tauri::Runtime>(
     input: &SavePlatformConnectionInput,
 ) -> Result<PlatformConnection, String> {
     let mut conn = get_conn(app)?;
-    let home = app
-        .path()
-        .home_dir()
-        .map_err(|e| format!("获取主目录失败: {}", e))?;
+    let home = workspace::home_dir()?;
     let existing = load_platform_connection_row(&conn, &input.platform_name)?
         .ok_or_else(|| format!("平台不存在: {}", input.platform_name))?;
 

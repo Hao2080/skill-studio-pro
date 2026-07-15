@@ -50,6 +50,16 @@ fn current_timestamp_ms() -> i64 {
 }
 
 fn resolve_workspace_root(config: &WorkspaceBootstrapConfig) -> Result<PathBuf, String> {
+    resolve_workspace_root_with_override(config, paths::workspace_override_path()?)
+}
+
+fn resolve_workspace_root_with_override(
+    config: &WorkspaceBootstrapConfig,
+    workspace_override: Option<PathBuf>,
+) -> Result<PathBuf, String> {
+    if let Some(root) = workspace_override {
+        return Ok(root);
+    }
     match config.workspace_path.as_deref() {
         Some(raw) => match paths::normalize_workspace_path(raw) {
             Ok(path) => Ok(path),
@@ -256,7 +266,7 @@ pub fn remove_project_workspace(project_id: &str) -> Result<(), String> {
 
 #[cfg(test)]
 mod tests {
-    use super::paths;
+    use super::{paths, resolve_workspace_root_with_override, WorkspaceBootstrapConfig};
 
     #[test]
     fn normalize_workspace_path_rejects_relative_path() {
@@ -269,5 +279,19 @@ mod tests {
         let raw = std::path::PathBuf::from("C:\\Users\\demo\\.skill-studio\\..\\workspace");
         let normalized = paths::normalize_components(&raw);
         assert!(normalized.to_string_lossy().contains("workspace"));
+    }
+
+    #[test]
+    fn explicit_workspace_override_wins_over_persisted_bootstrap_path() {
+        let persisted = std::path::PathBuf::from(r"C:\persisted\workspace");
+        let isolated = std::path::PathBuf::from(r"E:\isolated\workspace");
+        let config = WorkspaceBootstrapConfig {
+            workspace_path: Some(persisted.to_string_lossy().to_string()),
+        };
+
+        let resolved = resolve_workspace_root_with_override(&config, Some(isolated.clone()))
+            .expect("resolve isolated workspace override");
+
+        assert_eq!(resolved, isolated);
     }
 }

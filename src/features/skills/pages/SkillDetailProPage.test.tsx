@@ -1,6 +1,7 @@
 /** @vitest-environment jsdom */
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
+import AntApp from "antd/es/app";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { SkillDetailProPage, type SkillDetailDependencies } from "./SkillDetailProPage";
 
@@ -68,7 +69,26 @@ describe("SkillDetailProPage V1 cross-layer editor closure", () => {
         detectDrift,
         createRegisterPlan: vi.fn(),
         executeRegisterPlan: vi.fn(),
-        createPublishPlan: vi.fn(),
+        createPublishPlan: vi.fn().mockResolvedValue({
+          id: "publish-plan-1",
+          skillId: "skill-1",
+          snapshotId: "snapshot-1",
+          sourcePath: "C:/isolated/workspace/snapshots/skill-1/1",
+          sourceHash: "after-hash",
+          targets: [{
+            platformName: "codex",
+            displayName: "Codex",
+            targetPath: "C:/isolated/.codex/skills/demo-skill",
+            syncMode: "symlink",
+            driftStatus: "in_sync",
+            driftPolicy: "abort",
+            status: "ready",
+            symlinkCapability: "supported",
+          }],
+          planHash: "publish-plan-hash",
+          createdAt: 1,
+          expiresAt: 2,
+        }),
         executePublishPlan: vi.fn(),
       },
       lifecycle: { saveTextFile },
@@ -80,6 +100,23 @@ describe("SkillDetailProPage V1 cross-layer editor closure", () => {
         cancelArtifact: vi.fn(),
       },
       activity: { list: listActivity },
+      trash: {
+        createDeletePlan: vi.fn().mockResolvedValue({
+          id: "delete-plan-1",
+          skillId: "skill-1",
+          displayName: "Demo Skill",
+          originalPath: "C:/isolated/workspace/skills/demo-skill",
+          sourceHash: "after-hash",
+          fileCount: 2,
+          totalBytes: 128,
+          mappings: [{ platformName: "codex", targetPath: "C:/isolated/.codex/skills/demo", syncMode: "copy", snapshotId: "snapshot-1", driftStatus: "in_sync" }],
+          sourcesJson: "[]",
+          planHash: "delete-plan-hash",
+          createdAt: 1,
+          expiresAt: 2,
+        }),
+        executeDelete: vi.fn().mockResolvedValue({ id: "trash-1" }),
+      },
       readCentralFile: vi.fn().mockResolvedValue("# Demo"),
       listCentralFiles: vi.fn().mockResolvedValue({
         name: "demo-skill",
@@ -91,14 +128,14 @@ describe("SkillDetailProPage V1 cross-layer editor closure", () => {
       diffWorkingDirectory,
       openCentralFile: vi.fn(),
     } as unknown as SkillDetailDependencies;
-    const confirm = vi.spyOn(window, "confirm").mockReturnValue(false);
-
     render(
-      <MemoryRouter initialEntries={["/library/skill-1"]}>
-        <Routes>
-          <Route path="/library/:skillId" element={<SkillDetailProPage dependencies={dependencies} />} />
-        </Routes>
-      </MemoryRouter>,
+      <AntApp>
+        <MemoryRouter initialEntries={["/library/skill-1"]}>
+          <Routes>
+            <Route path="/library/:skillId" element={<SkillDetailProPage dependencies={dependencies} />} />
+          </Routes>
+        </MemoryRouter>
+      </AntApp>,
     );
 
     expect(await screen.findByRole("heading", { name: "Demo Skill" })).toBeTruthy();
@@ -109,8 +146,9 @@ describe("SkillDetailProPage V1 cross-layer editor closure", () => {
     });
 
     fireEvent.click(screen.getByRole("tab", { name: "概览" }));
-    expect(confirm).toHaveBeenCalledTimes(1);
+    expect(await screen.findByText("当前文件有未保存修改。离开后这些修改会丢失。")).toBeTruthy();
     expect(screen.getByLabelText("SKILL.md 编辑器")).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: "继续编辑" }));
 
     fireEvent.click(screen.getByRole("button", { name: "保存" }));
     await waitFor(() => expect(saveTextFile).toHaveBeenCalledTimes(1));
@@ -120,11 +158,38 @@ describe("SkillDetailProPage V1 cross-layer editor closure", () => {
       content: "# Demo changed",
       editSessionId: expect.any(String),
     }));
+    expect(await screen.findByText("recovery-1")).toBeTruthy();
+    expect(screen.getByText("before-hash")).toBeTruthy();
+    expect(screen.getByText("after-hash")).toBeTruthy();
+    expect(screen.getByText("过期映射")).toBeTruthy();
     await waitFor(() => {
       expect(detectDrift.mock.calls.length).toBeGreaterThanOrEqual(2);
       expect(listSnapshots.mock.calls.length).toBeGreaterThanOrEqual(2);
       expect(diffWorkingDirectory.mock.calls.length).toBeGreaterThanOrEqual(2);
       expect(listActivity.mock.calls.length).toBeGreaterThanOrEqual(2);
     });
+
+    fireEvent.change(screen.getByLabelText("发布同步模式"), { target: { value: "symlink" } });
+    fireEvent.click(screen.getByRole("button", { name: "创建发布计划" }));
+    await waitFor(() => expect(dependencies.library.createPublishPlan).toHaveBeenCalledWith({
+      skillId: "skill-1",
+      snapshotId: "snapshot-1",
+      targets: [{ platformName: "codex", syncMode: "symlink", driftPolicy: "abort" }],
+    }));
+    expect(await screen.findByText("Codex · symlink · in_sync · ready")).toBeTruthy();
+
+    fireEvent.change(screen.getByLabelText("漂移处理策略"), { target: { value: "overwrite" } });
+    fireEvent.click(screen.getByRole("button", { name: "创建发布计划" }));
+    await waitFor(() => expect(dependencies.library.createPublishPlan).toHaveBeenLastCalledWith({
+      skillId: "skill-1",
+      snapshotId: "snapshot-1",
+      targets: [{ platformName: "codex", syncMode: "symlink", driftPolicy: "overwrite" }],
+    }));
+
+    fireEvent.click(screen.getByRole("button", { name: "移入回收站" }));
+    expect(await screen.findByRole("heading", { name: "移入回收站影响确认" })).toBeTruthy();
+    expect(screen.getByText("codex · copy · in_sync")).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: "确认移入回收站" }));
+    await waitFor(() => expect(dependencies.trash.executeDelete).toHaveBeenCalledWith("delete-plan-1", "delete-plan-hash"));
   });
 });

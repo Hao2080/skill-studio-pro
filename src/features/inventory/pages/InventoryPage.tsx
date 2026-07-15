@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { AlertTriangle, LoaderCircle, Radar, RefreshCw } from "lucide-react";
 import { PageHeader, StatusBadge } from "@/shared/components/pro";
 import type { CatalogSkill, SourceConfidenceData } from "@/shared/model/proTypes";
@@ -63,6 +64,7 @@ function catalogView(instance: SkillInstance, resolution?: SourceResolution, det
 }
 
 export function InventoryPage({ api = inventoryApi }: InventoryPageProps) {
+  const navigate = useNavigate();
   const [skills, setSkills] = useState<CatalogSkill[]>([]);
   const [rootCount, setRootCount] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -158,7 +160,7 @@ export function InventoryPage({ api = inventoryApi }: InventoryPageProps) {
           eyebrow="LOCAL INVENTORY"
           title="本机 Skill"
           subtitle="来自 Agent、插件缓存与项目目录的只读盘点。纳管前不会移动原文件。"
-          actions={<><StatusBadge label={scanLabel} tone={scan?.status === "failed" ? "danger" : scan?.status === "running" ? "info" : "success"} /><button className="pro-button" type="button" onClick={startScan} disabled={scan?.status === "running"}><RefreshCw size={15} />重新扫描</button><button className="pro-button pro-button--primary" type="button"><Radar size={15} />管理扫描根</button></>}
+          actions={<><StatusBadge label={scanLabel} tone={scan?.status === "failed" ? "danger" : scan?.status === "running" ? "info" : "success"} /><button className="pro-button" type="button" onClick={startScan} disabled={scan?.status === "running"}><RefreshCw size={15} />重新扫描</button><button className="pro-button pro-button--primary" type="button" onClick={() => navigate("/platforms")}><Radar size={15} />管理扫描根</button></>}
         />
         {loading ? <div className="pro-empty glass-panel" role="status"><div><LoaderCircle size={28} /><strong>正在加载本机索引</strong><p>从 SQLite 读取现有结果，不会触碰外部 Skill。</p></div></div> : null}
         {error ? <div className="pro-empty glass-panel" role="alert"><div><AlertTriangle size={28} /><strong>本机索引加载失败</strong><p>{error}</p><button className="pro-button" type="button" onClick={load}>重试</button></div></div> : null}

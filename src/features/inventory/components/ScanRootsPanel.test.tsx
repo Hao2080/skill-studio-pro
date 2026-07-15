@@ -2,7 +2,7 @@
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import type { InventoryApi } from "../api/inventoryApi";
-import type { ScanRoot } from "../model";
+import type { ScanProgressEvent, ScanRoot } from "../model";
 import { ScanRootsPanel } from "./ScanRootsPanel";
 
 const root: ScanRoot = {
@@ -61,6 +61,29 @@ describe("ScanRootsPanel V1 closure", () => {
     fireEvent.click(screen.getByRole("button", { name: "停用" }));
     await waitFor(() => expect(api.upsertRoot).toHaveBeenCalledWith(expect.objectContaining({ id: "root-1", enabled: false, path: root.path })));
     expect(screen.getByText(/磁盘目录未被移动或删除/)).toBeTruthy();
+  });
+
+  it("keeps an asynchronous desktop scan running until the terminal progress event arrives", async () => {
+    let onProgress: ((event: ScanProgressEvent) => void) | undefined;
+    const listenProgress = vi.fn().mockImplementation(async (callback) => {
+      onProgress = callback;
+      return vi.fn();
+    });
+    const api = client({
+      startScan: vi.fn().mockResolvedValue({ id: "scan-async", mode: "incremental", status: "running", rootsTotal: 1, rootsCompleted: 0, candidatesSeen: 0, instancesChanged: 0, errorCount: 0, startedAt: 1 }),
+    });
+    render(<ScanRootsPanel api={api} listenProgress={listenProgress}/>);
+    await screen.findByText("C:/isolated/.codex/skills");
+    await waitFor(() => expect(onProgress).toBeTypeOf("function"));
+    fireEvent.click(screen.getByLabelText("选择扫描根 C:/isolated/.codex/skills"));
+    fireEvent.click(screen.getByRole("button", { name: "扫描选定根" }));
+    expect(await screen.findByText(/扫描 running：0\/1/)).toBeTruthy();
+    expect((screen.getByRole("button", { name: "扫描选定根" }) as HTMLButtonElement).disabled).toBe(true);
+
+    onProgress?.({ runId: "scan-async", status: "completed", rootsTotal: 1, rootsCompleted: 1, candidatesSeen: 3, instancesChanged: 2, errorCount: 0 });
+    expect(await screen.findByText(/扫描 completed：1\/1 个根，发现 3 个候选/)).toBeTruthy();
+    await waitFor(() => expect((screen.getByRole("button", { name: "扫描选定根" }) as HTMLButtonElement).disabled).toBe(false));
+    expect(api.listRoots).toHaveBeenCalledTimes(2);
   });
 
   it("adds an isolated custom root and exposes per-root save failures without losing the list", async () => {

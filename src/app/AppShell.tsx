@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import Tooltip from "antd/es/tooltip";
+import AntApp from "antd/es/app";
 import { Bell, Command, PanelLeft, PanelLeftClose, Search, ShieldCheck } from "lucide-react";
 import { useI18n } from "./providers/I18nContext";
 import { getPrimaryNavigationItems, getSystemNavigationItems, NavButton } from "./navigation";
@@ -15,7 +16,7 @@ import { TrashPage } from "@/features/trash/pages/TrashPage";
 import { ActivityPage } from "@/features/activity/pages/ActivityPage";
 import { ProSettingsPage } from "@/features/settings/pages/ProSettingsPage";
 import { AiSettingsPage } from "@/features/ai-settings/pages/AiSettingsPage";
-import { confirmDiscardForNavigation } from "@/features/editor/navigationGuard";
+import { hasUnsavedNavigationChanges, NAVIGATION_DIRTY_MESSAGE } from "@/features/editor/navigationGuard";
 
 const routeNames: Record<string, string> = {
   "/": "总览",
@@ -30,6 +31,7 @@ const routeNames: Record<string, string> = {
 };
 
 export function AppShell() {
+  const { modal } = AntApp.useApp();
   const navigate = useNavigate();
   const location = useLocation();
   const { t } = useI18n();
@@ -66,7 +68,18 @@ export function AppShell() {
   const routeRoot = location.pathname.startsWith("/inventory/") ? "/inventory" : location.pathname.startsWith("/library/") ? "/library" : location.pathname;
   const currentTitle = routeNames[routeRoot] ?? "Skill Studio Pro";
   const guardedNavigate = (path: string) => {
-    if (confirmDiscardForNavigation()) navigate(path);
+    if (!hasUnsavedNavigationChanges()) {
+      navigate(path);
+      return;
+    }
+    modal.confirm({
+      centered: true,
+      title: "放弃未保存修改？",
+      content: NAVIGATION_DIRTY_MESSAGE,
+      okText: "放弃并继续",
+      cancelText: "继续编辑",
+      onOk: () => navigate(path),
+    });
   };
 
   return (

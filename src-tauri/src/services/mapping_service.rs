@@ -395,6 +395,38 @@ impl MappingService {
         &self,
         input: &RemoveMappingInput,
     ) -> Result<PublishTargetResult, String> {
+        self.remove_mapping_with_lock_scope(input, Uuid::new_v4().to_string(), true)
+    }
+
+    pub(crate) fn remove_mapping_under_skill_lock(
+        &self,
+        input: &RemoveMappingInput,
+        parent_operation_id: &str,
+    ) -> Result<PublishTargetResult, String> {
+        let platform_key = input
+            .platform_name
+            .chars()
+            .map(|value| {
+                if value.is_ascii_alphanumeric() || matches!(value, '-' | '_') {
+                    value
+                } else {
+                    '_'
+                }
+            })
+            .collect::<String>();
+        self.remove_mapping_with_lock_scope(
+            input,
+            format!("{parent_operation_id}-remove-{platform_key}"),
+            false,
+        )
+    }
+
+    fn remove_mapping_with_lock_scope(
+        &self,
+        input: &RemoveMappingInput,
+        operation_id: String,
+        lock_skill: bool,
+    ) -> Result<PublishTargetResult, String> {
         let mut conn = self.library.open_connection()?;
         let mapping = load_existing_mapping(&conn, &input.skill_id, &input.platform_name)?
             .ok_or_else(|| "MAPPING_NOT_FOUND: 映射不存在".to_string())?;
@@ -408,11 +440,10 @@ impl MappingService {
             .validate_target(&configured.root, &target)
             .map_err(|e| e.to_string())?;
         verify_owned_target(&target, &input.skill_id, &input.platform_name, &mapping)?;
-        let operation_id = Uuid::new_v4().to_string();
-        let keys = vec![
-            format!("skill:{}", input.skill_id),
-            format!("path:{}", normalized_lock_path(&target)),
-        ];
+        let mut keys = vec![format!("path:{}", normalized_lock_path(&target))];
+        if lock_skill {
+            keys.insert(0, format!("skill:{}", input.skill_id));
+        }
         acquire_locks(&conn, &operation_id, &keys)?;
         let backup = configured
             .root

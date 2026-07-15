@@ -27,6 +27,8 @@ describe("AiArtifactPanel", () => {
     expect(screen.getByText("gpt-5.6-actual")).toBeTruthy();
     expect(screen.getByText("MiniMax-M3-actual")).toBeTruthy();
     expect(screen.getByText(/AI 生成内容可能有误/)).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: "刷新（优先缓存）" }));
+    expect(generate).toHaveBeenCalledWith(false);
     fireEvent.click(screen.getByRole("button", { name: "重新生成过期内容" }));
     expect(generate).toHaveBeenCalledWith(true);
   });

@@ -461,6 +461,15 @@ fn edit_creates_one_recovery_point_validates_path_and_marks_mappings_outdated() 
         rusqlite::params![imported.skill_id, imported.snapshot_id],
     )
     .unwrap();
+    conn.execute(
+        "INSERT INTO ai_artifacts (
+            id, skill_id, task_type, provider_id, model_id, responsibility,
+            prompt_version, input_hash, content_json, status, created_at
+         ) VALUES ('artifact-edit', ?1, 'final_summary', 'openai', 'gpt-test',
+            'summary', 'v1', 'before-edit', '{}', 'completed', 1)",
+        [&imported.skill_id],
+    )
+    .unwrap();
     drop(conn);
 
     let first = service
@@ -473,6 +482,16 @@ fn edit_creates_one_recovery_point_validates_path_and_marks_mappings_outdated() 
         .unwrap();
     assert!(first.recovery_point_created);
     assert_eq!(first.outdated_mapping_count, 1);
+    let conn = service.open_connection().unwrap();
+    let stale_at: Option<i64> = conn
+        .query_row(
+            "SELECT stale_at FROM ai_artifacts WHERE id = 'artifact-edit'",
+            [],
+            |row| row.get(0),
+        )
+        .unwrap();
+    assert!(stale_at.is_some(), "中央内容保存后 AI 产物必须标记 stale");
+    drop(conn);
     let second = service
         .save_text_file(&SaveTextFileInput {
             skill_id: imported.skill_id.clone(),

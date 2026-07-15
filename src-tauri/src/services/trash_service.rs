@@ -127,10 +127,13 @@ impl TrashService {
             let mapping_service =
                 MappingService::new(self.workspace_root.clone(), self.home.clone())?;
             for mapping in &plan.mappings {
-                mapping_service.remove_mapping(&RemoveMappingInput {
-                    skill_id: plan.skill_id.clone(),
-                    platform_name: mapping.platform_name.clone(),
-                })?;
+                mapping_service.remove_mapping_under_skill_lock(
+                    &RemoveMappingInput {
+                        skill_id: plan.skill_id.clone(),
+                        platform_name: mapping.platform_name.clone(),
+                    },
+                    &operation_id,
+                )?;
             }
             let _recovery = create_snapshot_record(
                 &conn,

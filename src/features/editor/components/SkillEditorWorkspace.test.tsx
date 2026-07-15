@@ -1,5 +1,7 @@
 /** @vitest-environment jsdom */
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import AntApp from "antd/es/app";
+import type { ReactElement } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { SkillEditorWorkspace, type EditorFile } from "./SkillEditorWorkspace";
 
@@ -20,6 +22,10 @@ const contents: Record<string, string> = {
   "notes.txt": "hello",
 };
 
+function renderEditor(element: ReactElement) {
+  return render(<AntApp>{element}</AntApp>);
+}
+
 afterEach(() => {
   cleanup();
   vi.restoreAllMocks();
@@ -36,8 +42,7 @@ describe("SkillEditorWorkspace V1 editor closure", () => {
       recoveryPointCreated: true,
       outdatedMappingCount: 2,
     }));
-    const confirm = vi.spyOn(window, "confirm").mockReturnValue(false);
-    render(<SkillEditorWorkspace skillId="skill-1" isLibrary files={files} initialContent={contents["SKILL.md"]} readFile={async (path)=>{
+    renderEditor(<SkillEditorWorkspace skillId="skill-1" isLibrary files={files} initialContent={contents["SKILL.md"]} readFile={async (path)=>{
       const value = contents[path];
       if (value == null) throw new Error("二进制文件");
       return value;
@@ -52,11 +57,14 @@ describe("SkillEditorWorkspace V1 editor closure", () => {
     fireEvent.click(screen.getByRole("button", { name: "进入编辑" }));
     fireEvent.change(screen.getByLabelText("SKILL.md 编辑器"), { target: { value: "# Changed" } });
     fireEvent.click(screen.getByRole("button", { name: /config.yaml/ }));
-    expect(confirm).toHaveBeenCalled();
+    expect(await screen.findByText("切换文件会丢失当前草稿。")).toBeTruthy();
+    expect(screen.getByLabelText("SKILL.md 编辑器")).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: "继续编辑" }));
     expect(screen.getByLabelText("SKILL.md 编辑器")).toBeTruthy();
 
-    confirm.mockReturnValue(true);
     fireEvent.click(screen.getByRole("button", { name: /data.json/ }));
+    const discardButtons = await screen.findAllByRole("button", { name: "放弃并切换" });
+    fireEvent.click(discardButtons[discardButtons.length - 1]);
     await screen.findByText("{\"enabled\":true}");
     fireEvent.click(screen.getByRole("button", { name: "进入编辑" }));
     fireEvent.change(screen.getByLabelText("data.json 编辑器"), { target: { value: "{" } });
@@ -79,7 +87,7 @@ describe("SkillEditorWorkspace V1 editor closure", () => {
 
   it("preserves typed content after backend format/save failure and registers the close guard", async () => {
     const saveFile = vi.fn().mockRejectedValue(new Error("INVALID_YAML: line 2"));
-    render(<SkillEditorWorkspace skillId="skill-2" isLibrary files={files} initialContent={contents["SKILL.md"]} readFile={async (path)=>{
+    renderEditor(<SkillEditorWorkspace skillId="skill-2" isLibrary files={files} initialContent={contents["SKILL.md"]} readFile={async (path)=>{
       const value = contents[path];
       if (value == null) throw new Error("二进制文件");
       return value;
@@ -101,7 +109,7 @@ describe("SkillEditorWorkspace V1 editor closure", () => {
 
   it("keeps external instances and binary files read-only with accessible management actions", async () => {
     const requestRegister = vi.fn();
-    render(<SkillEditorWorkspace skillId="instance-1" isLibrary={false} files={files} initialContent={contents["SKILL.md"]} readFile={async (path)=>{
+    renderEditor(<SkillEditorWorkspace skillId="instance-1" isLibrary={false} files={files} initialContent={contents["SKILL.md"]} readFile={async (path)=>{
       const value = contents[path];
       if (value == null) throw new Error("二进制文件");
       return value;
@@ -115,7 +123,7 @@ describe("SkillEditorWorkspace V1 editor closure", () => {
   });
 
   it("exposes file, mode and save actions as native keyboard-focusable controls", () => {
-    render(<SkillEditorWorkspace skillId="skill-keyboard" isLibrary files={files} initialContent={contents["SKILL.md"]} readFile={async () => contents["SKILL.md"]} saveFile={vi.fn()}/>);
+    renderEditor(<SkillEditorWorkspace skillId="skill-keyboard" isLibrary files={files} initialContent={contents["SKILL.md"]} readFile={async () => contents["SKILL.md"]} saveFile={vi.fn()}/>);
     const fileButton = screen.getByRole("button", { name: /SKILL\.md/ });
     fileButton.focus();
     expect(document.activeElement).toBe(fileButton);

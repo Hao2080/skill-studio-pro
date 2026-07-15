@@ -1,13 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { AlertTriangle, ArrowLeft, Boxes, CheckCircle2, Clock3, FileText, FolderTree, GitBranch, History, LoaderCircle, MapPin, PackageCheck, RotateCcw, Send, ShieldCheck } from "lucide-react";
+import AntApp from "antd/es/app";
+import { AlertTriangle, ArrowLeft, Boxes, CheckCircle2, Clock3, FileText, FolderTree, GitBranch, History, LoaderCircle, MapPin, PackageCheck, RotateCcw, Send, ShieldCheck, Trash2 } from "lucide-react";
 import { SourceConfidence } from "@/shared/components/SourceConfidence";
 import { PageHeader, StatusBadge } from "@/shared/components/pro";
 import type { SourceConfidenceData } from "@/shared/model/proTypes";
 import { inventoryApi, type InventoryApi } from "@/features/inventory/api/inventoryApi";
 import type { SkillInstanceDetail } from "@/features/inventory/model";
 import { libraryApi, type LibraryApi } from "@/features/library/api/libraryApi";
-import type { CentralSkill, MappingState, PublishPlan } from "@/features/library/model";
+import type { CentralSkill, DriftPolicy, MappingState, PublishPlan, SyncMode } from "@/features/library/model";
 import { aiApi, type AiApi } from "@/features/ai-settings/api/aiApi";
 import { generateArtifactBundle } from "@/features/ai-settings/model";
 import type { AiArtifact, AiProviderConfig, AiTaskRoute, AiTaskType } from "@/features/ai-settings/model";
@@ -18,8 +19,10 @@ import { listSkillFiles, openFileInEditor, readSkillFile } from "@/features/skil
 import { diffWorkingDirectory, listSnapshots } from "@/features/snapshots/api/snapshotsApi";
 import { lifecycleApi, type LifecycleApi } from "@/features/lifecycle/api/lifecycleApi";
 import type { SaveTextFileResult } from "@/features/lifecycle/model";
+import { trashApi, type TrashApi } from "@/features/trash/api/trashApi";
+import type { DeletePlan } from "@/features/trash/model";
 import { SkillEditorWorkspace } from "@/features/editor/components/SkillEditorWorkspace";
-import { confirmDiscardForNavigation } from "@/features/editor/navigationGuard";
+import { hasUnsavedNavigationChanges, NAVIGATION_DIRTY_MESSAGE } from "@/features/editor/navigationGuard";
 import type { SkillFileNode, SkillSnapshot, SnapshotDiffResult } from "@/types/skill";
 import "../styles/pro-detail.css";
 
@@ -39,6 +42,7 @@ export interface SkillDetailDependencies {
   inventory: InventoryApi;
   library: LibraryApi;
   lifecycle: LifecycleApi;
+  trash: TrashApi;
   ai: AiApi;
   activity: ActivityApi;
   readCentralFile(skillId: string, relativePath: string): Promise<string>;
@@ -52,6 +56,7 @@ const defaultDependencies: SkillDetailDependencies = {
   inventory: inventoryApi,
   library: libraryApi,
   lifecycle: lifecycleApi,
+  trash: trashApi,
   ai: aiApi,
   activity: activityApi,
   readCentralFile: readSkillFile,
@@ -131,6 +136,7 @@ function flattenTree(node: SkillFileNode): Array<{ path: string; type: string }>
 }
 
 export function SkillDetailProPage({ dependencies = defaultDependencies }: { dependencies?: SkillDetailDependencies }) {
+  const { modal } = AntApp.useApp();
   const { skillId = "" } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
@@ -156,12 +162,15 @@ export function SkillDetailProPage({ dependencies = defaultDependencies }: { dep
   const [partial, setPartial] = useState("");
   const [registerPlan, setRegisterPlan] = useState<{ id: string; planHash: string; targetPath: string } | null>(null);
   const [publishPlan, setPublishPlan] = useState<PublishPlan | null>(null);
+  const [deletePlan, setDeletePlan] = useState<DeletePlan | null>(null);
   const [publishTarget, setPublishTarget] = useState("codex");
+  const [publishSyncMode, setPublishSyncMode] = useState<SyncMode>("copy");
+  const [publishDriftPolicy, setPublishDriftPolicy] = useState<DriftPolicy>("abort");
   const [notice, setNotice] = useState("");
 
-  const load = useCallback(async () => {
+  const load = useCallback(async (background = false) => {
     if (!skillId) return;
-    setLoading(true);
+    if (!background) setLoading(true);
     setError("");
     setPartial("");
     try {
@@ -220,7 +229,7 @@ export function SkillDetailProPage({ dependencies = defaultDependencies }: { dep
       setError(reason instanceof Error ? reason.message : String(reason));
       setDetail(null);
     } finally {
-      setLoading(false);
+      if (!background) setLoading(false);
     }
   }, [dependencies, isLibrary, skillId]);
 
@@ -256,7 +265,7 @@ export function SkillDetailProPage({ dependencies = defaultDependencies }: { dep
     const snapshot = snapshots.find((item) => item.isActive) ?? snapshots.find((item) => item.isCurrent) ?? snapshots[0];
     if (!snapshot) { setError("没有可发布快照，请先创建快照。"); return; }
     try {
-      setPublishPlan(await dependencies.library.createPublishPlan({ skillId, snapshotId: snapshot.id, targets: [{ platformName: publishTarget, syncMode: "copy", driftPolicy: "abort" }] }));
+      setPublishPlan(await dependencies.library.createPublishPlan({ skillId, snapshotId: snapshot.id, targets: [{ platformName: publishTarget, syncMode: publishSyncMode, driftPolicy: publishDriftPolicy }] }));
     } catch (reason) { setError(reason instanceof Error ? reason.message : String(reason)); }
   }
 
@@ -267,6 +276,20 @@ export function SkillDetailProPage({ dependencies = defaultDependencies }: { dep
       setNotice(`发布结果：${result.status}；${result.targets.filter((item) => item.status === "success").length}/${result.targets.length} 个目标成功。`);
       setPublishPlan(null);
       await load();
+    } catch (reason) { setError(reason instanceof Error ? reason.message : String(reason)); }
+  }
+
+  async function createDeletePlan() {
+    try {
+      setDeletePlan(await dependencies.trash.createDeletePlan(skillId));
+    } catch (reason) { setError(reason instanceof Error ? reason.message : String(reason)); }
+  }
+
+  async function executeDeletePlan() {
+    if (!deletePlan) return;
+    try {
+      await dependencies.trash.executeDelete(deletePlan.id, deletePlan.planHash);
+      navigate("/trash");
     } catch (reason) { setError(reason instanceof Error ? reason.message : String(reason)); }
   }
 
@@ -313,31 +336,46 @@ export function SkillDetailProPage({ dependencies = defaultDependencies }: { dep
 
   async function handleSaved(result: SaveTextFileResult) {
     setNotice(`已保存 ${result.relativePath}；恢复点 ${result.recoverySnapshotId}，${result.outdatedMappingCount} 个映射已标记过期。`);
-    await load();
+    await load(true);
+  }
+
+  function confirmDiscard(action: () => void) {
+    if (!hasUnsavedNavigationChanges()) {
+      action();
+      return;
+    }
+    modal.confirm({
+      centered: true,
+      title: "放弃未保存修改？",
+      content: NAVIGATION_DIRTY_MESSAGE,
+      okText: "放弃并继续",
+      cancelText: "继续编辑",
+      onOk: action,
+    });
   }
 
   function selectTab(nextTab: TabId) {
     if (nextTab === activeTab) return;
-    if (!confirmDiscardForNavigation()) return;
-    setActiveTab(nextTab);
+    confirmDiscard(() => setActiveTab(nextTab));
   }
 
   const parentRoute = isLibrary ? "/library" : "/inventory";
 
   if (loading) return <div className="pro-page"><div className="pro-page__inner"><div className="pro-empty glass-panel" role="status"><div><LoaderCircle size={28}/><strong>正在加载 Skill 详情</strong></div></div></div></div>;
-  if (error && !detail) return <div className="pro-page"><div className="pro-page__inner"><div className="pro-empty glass-panel" role="alert"><div><AlertTriangle size={28}/><strong>Skill 详情加载失败</strong><p>{error}</p><button className="pro-button" type="button" onClick={load}>重试</button></div></div></div></div>;
+  if (error && !detail) return <div className="pro-page"><div className="pro-page__inner"><div className="pro-empty glass-panel" role="alert"><div><AlertTriangle size={28}/><strong>Skill 详情加载失败</strong><p>{error}</p><button className="pro-button" type="button" onClick={() => void load()}>重试</button></div></div></div></div>;
   if (!detail) return null;
 
   return (
     <div className="pro-page skill-detail-pro"><div className="pro-page__inner">
-      <button type="button" className="skill-detail-pro__back" onClick={() => { if (confirmDiscardForNavigation()) navigate(parentRoute); }}><ArrowLeft size={14}/>返回{isLibrary ? "中央库" : "本机 Skill"}</button>
-      <PageHeader eyebrow={isLibrary ? "CENTRAL SKILL" : "LOCAL INSTANCE"} title={detail.name} subtitle={detail.description} actions={isLibrary ? <button type="button" className="pro-button pro-button--primary" onClick={createPublishPlan}><Send size={15}/>创建发布计划</button> : <><button type="button" className="pro-button" onClick={recalculate}><RotateCcw size={15}/>重算来源</button><button type="button" className="pro-button pro-button--primary" onClick={createRegisterPlan} disabled={Boolean(instanceDetail?.instance.centralSkillId)}><Send size={15}/>纳入中央库</button></>} />
+      <button type="button" className="skill-detail-pro__back" onClick={() => confirmDiscard(() => navigate(parentRoute))}><ArrowLeft size={14}/>返回{isLibrary ? "中央库" : "本机 Skill"}</button>
+      <PageHeader eyebrow={isLibrary ? "CENTRAL SKILL" : "LOCAL INSTANCE"} title={detail.name} subtitle={detail.description} actions={isLibrary ? <><button type="button" className="pro-button pro-button--danger" onClick={createDeletePlan}><Trash2 size={15}/>移入回收站</button><button type="button" className="pro-button pro-button--primary" onClick={createPublishPlan}><Send size={15}/>创建发布计划</button></> : <><button type="button" className="pro-button" onClick={recalculate}><RotateCcw size={15}/>重算来源</button><button type="button" className="pro-button pro-button--primary" onClick={createRegisterPlan} disabled={Boolean(instanceDetail?.instance.centralSkillId)}><Send size={15}/>纳入中央库</button></>} />
       {error ? <div className="trash-notice glass-panel" role="alert"><StatusBadge label="操作失败" tone="danger"/><span>{error}</span></div> : null}
       {partial ? <div className="trash-notice glass-panel" role="status"><StatusBadge label="部分加载" tone="warning"/><span>{partial}</span></div> : null}
       {notice ? <div className="trash-notice glass-panel" role="status"><StatusBadge label="操作完成" tone="success"/><span>{notice}</span></div> : null}
       {registerPlan ? <section className="glass-panel panel-padding"><h2>纳管计划已就绪</h2><p>中央目标：<code>{registerPlan.targetPath}</code>。执行只复制到中央库，原实例保持不动。</p><button className="pro-button" type="button" onClick={()=>setRegisterPlan(null)}>取消</button><button className="pro-button pro-button--primary" type="button" onClick={executeRegisterPlan}>确认纳管</button></section> : null}
-      {publishPlan ? <section className="glass-panel panel-padding"><h2>发布计划已就绪</h2>{publishPlan.targets.map((target)=><p key={target.platformName}>{target.displayName} · {target.syncMode} · {target.driftStatus} · {target.status}</p>)}<button className="pro-button" type="button" onClick={()=>setPublishPlan(null)}>取消</button><button className="pro-button pro-button--primary" type="button" disabled={publishPlan.targets.some((target)=>target.status==="blocked")} onClick={executePublishPlan}>执行发布</button></section> : null}
-      {isLibrary ? <section className="glass-panel panel-padding"><label>发布目标 <select value={publishTarget} onChange={(event)=>setPublishTarget(event.target.value)}><option value="codex">Codex</option><option value="claude">Claude Code</option><option value="cursor">Cursor</option><option value="windsurf">Windsurf</option><option value="gemini">Gemini CLI</option></select></label><span>默认复制；漂移策略为停止覆盖。</span></section> : null}
+      {publishPlan ? <section className="glass-panel panel-padding"><h2>发布计划已就绪</h2>{publishPlan.targets.map((target)=><p key={target.platformName}>{target.displayName} · {target.syncMode} · {target.driftStatus} · {target.status}</p>)}<button className="pro-button" type="button" onClick={()=>setPublishPlan(null)}>取消</button><button className="pro-button pro-button--primary" type="button" disabled={publishPlan.targets.some((target)=>target.status==="blocked")} onClick={executePublishPlan}>{publishPlan.targets.some((target)=>target.driftPolicy==="overwrite" && target.driftStatus!=="in_sync" && target.driftStatus!=="not_published") ? "确认覆盖并发布" : "执行发布"}</button></section> : null}
+      {deletePlan ? <section className="glass-panel panel-padding"><h2>移入回收站影响确认</h2><p>中央主副本将移动到应用受控回收站；已发布映射会解除，外部未受管实例不会删除。</p><dl><div><dt>中央文件</dt><dd>{deletePlan.fileCount} 个 · {deletePlan.totalBytes} bytes</dd></div><div><dt>原位置</dt><dd><code>{deletePlan.originalPath}</code></dd></div><div><dt>内容哈希</dt><dd><code>{deletePlan.sourceHash}</code></dd></div></dl>{deletePlan.mappings.map((mapping)=><p key={mapping.platformName}>{mapping.platformName} · {mapping.syncMode} · {mapping.driftStatus}</p>)}<button className="pro-button" type="button" onClick={()=>setDeletePlan(null)}>取消删除</button><button className="pro-button pro-button--danger" type="button" onClick={executeDeletePlan}>确认移入回收站</button></section> : null}
+      {isLibrary ? <section className="glass-panel panel-padding"><label>发布目标 <select value={publishTarget} onChange={(event)=>setPublishTarget(event.target.value)}><option value="codex">Codex</option><option value="claude">Claude Code</option><option value="cursor">Cursor</option><option value="windsurf">Windsurf</option><option value="gemini">Gemini CLI</option></select></label><label>同步模式 <select aria-label="发布同步模式" value={publishSyncMode} onChange={(event)=>setPublishSyncMode(event.target.value as SyncMode)}><option value="copy">复制（默认）</option><option value="symlink">符号链接（需系统与平台支持）</option></select></label><label>漂移处理策略 <select aria-label="漂移处理策略" value={publishDriftPolicy} onChange={(event)=>setPublishDriftPolicy(event.target.value as DriftPolicy)}><option value="abort">检测到漂移时停止（默认）</option><option value="overwrite">明确覆盖目标变更</option></select></label><span>{publishSyncMode === "symlink" ? "创建计划时会执行真实能力检测；不可用时将明确失败，不会静默降级为复制。" : publishDriftPolicy === "overwrite" ? "计划将显示受影响目标；只有再次点击“确认覆盖并发布”才会覆盖已检测到的漂移。" : "默认复制；检测到漂移时停止覆盖。"}</span></section> : null}
       <div className="skill-detail-pro__identity glass-panel"><span className="skill-card__glyph">{detail.name.slice(0,2).toUpperCase()}</span><div className="skill-detail-pro__path"><span>{isLibrary ? "中央主副本" : "当前实例"}</span><code>{detail.path}</code></div><div className="skill-detail-pro__badges"><StatusBadge label={detail.parseStatus} tone={detail.parseStatus === "error" ? "danger" : "success"}/>{detail.hasScripts == null ? null : <StatusBadge label={detail.hasScripts ? "包含脚本" : "纯内容"} tone={detail.hasScripts ? "warning" : "neutral"}/>} {detail.platforms.map((platform)=><StatusBadge key={platform} label={platform} tone="info"/>)}</div></div>
       <nav className="skill-detail-tabs glass-panel" aria-label="Skill 详情标签页" role="tablist">{tabs.map(({id,label,icon:Icon})=><button key={id} type="button" role="tab" aria-selected={activeTab===id} onClick={()=>selectTab(id)}><Icon size={14}/>{label}</button>)}</nav>
       <div className="skill-detail-pro__content" role="tabpanel">
