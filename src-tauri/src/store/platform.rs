@@ -363,8 +363,32 @@ fn upsert_platform_connection(
     Ok(())
 }
 
-fn to_platform_connection(row: PlatformConnectionRow) -> PlatformConnection {
-    PlatformConnection {
+fn to_platform_connection(
+    conn: &rusqlite::Connection,
+    row: PlatformConnectionRow,
+) -> Result<PlatformConnection, String> {
+    let managed_skill_count = conn
+        .query_row(
+            "SELECT COUNT(*) FROM platform_release_targets WHERE platform_name = ?1",
+            rusqlite::params![row.platform_name],
+            |query_row| query_row.get(0),
+        )
+        .map_err(|error| format!("统计平台受管 Skill 失败: {error}"))?;
+    let last_result = conn
+        .query_row(
+            "SELECT status, error_message FROM sync_logs
+             WHERE platform_name = ?1 ORDER BY synced_at DESC LIMIT 1",
+            rusqlite::params![row.platform_name],
+            |query_row| {
+                Ok((
+                    query_row.get::<_, String>(0)?,
+                    query_row.get::<_, Option<String>>(1)?,
+                ))
+            },
+        )
+        .optional()
+        .map_err(|error| format!("读取平台最近同步状态失败: {error}"))?;
+    Ok(PlatformConnection {
         id: row.id,
         platform_name: row.platform_name,
         display_name: row.display_name,
@@ -378,7 +402,10 @@ fn to_platform_connection(row: PlatformConnectionRow) -> PlatformConnection {
         supports_symlink: row.supports_symlink,
         supports_copy: row.supports_copy,
         last_sync_at: row.last_sync_at,
-    }
+        managed_skill_count,
+        last_sync_status: last_result.as_ref().map(|result| result.0.clone()),
+        last_error_message: last_result.and_then(|result| result.1),
+    })
 }
 
 fn detect_path(skills_dir: Option<&str>) -> bool {
@@ -430,7 +457,7 @@ pub fn detect_platforms<R: tauri::Runtime>(
             last_sync_at: existing.and_then(|row| row.last_sync_at),
         };
         upsert_platform_connection(&conn, &row)?;
-        platforms.push(to_platform_connection(row));
+        platforms.push(to_platform_connection(&conn, row)?);
     }
 
     for custom_row in load_custom_platform_rows(&conn)? {
@@ -441,7 +468,7 @@ pub fn detect_platforms<R: tauri::Runtime>(
             ..custom_row
         };
         upsert_platform_connection(&conn, &updated)?;
-        platforms.push(to_platform_connection(updated));
+        platforms.push(to_platform_connection(&conn, updated)?);
     }
 
     platforms.sort_by(|left, right| {
@@ -594,7 +621,7 @@ pub fn save_platform_connection<R: tauri::Runtime>(
     upsert_platform_connection(&tx, &row)?;
     tx.commit()
         .map_err(|e| format!("提交平台保存事务失败: {}", e))?;
-    Ok(to_platform_connection(row))
+    to_platform_connection(&conn, row)
 }
 
 pub fn get_platform_governance_impact<R: tauri::Runtime>(
@@ -709,7 +736,7 @@ pub fn create_custom_platform<R: tauri::Runtime>(
     };
 
     upsert_platform_connection(&conn, &row)?;
-    Ok(to_platform_connection(row))
+    to_platform_connection(&conn, row)
 }
 
 pub fn delete_custom_platform<R: tauri::Runtime>(

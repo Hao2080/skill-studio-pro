@@ -42,3 +42,20 @@
 @media (max-width: 1180px) { .skill-catalog__items.is-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } .skill-catalog__toolbar { grid-template-columns: 1fr auto; } .skill-filter-row { grid-row: 2; grid-column: 1 / -1; } }
 @media (max-width: 860px) { .skill-card.is-list { grid-template-columns: 1fr; } .skill-catalog__items.is-grid { grid-template-columns: 1fr; } }
 @media (max-width: 620px) { .skill-catalog__toolbar { grid-template-columns: 1fr; } .skill-view-toggle { display: none; } .skill-filter-row { grid-column: auto; flex-wrap: wrap; } .skill-catalog__summary span:last-child { display: none; } }
+.scan-roots-panel { display: grid; gap: 14px; margin-top: 26px; }
+.scan-root-list { display: grid; gap: 10px; }
+.scan-root-card { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 12px; padding: 13px; }
+.scan-root-card__select { padding-top: 3px; }
+.scan-root-card__body { min-width: 0; display: grid; gap: 10px; }
+.scan-root-card__head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.scan-root-card__head > div:first-child { flex: 1; min-width: 180px; display: grid; gap: 4px; }
+.scan-root-card__head code { overflow-wrap: anywhere; color: var(--text-muted); }
+.scan-root-editor { display: grid; grid-template-columns: minmax(110px, .5fr) minmax(130px, .7fr) minmax(260px, 2fr) auto auto auto; gap: 10px; align-items: end; padding: 13px; }
+.scan-root-editor.is-inline { grid-template-columns: minmax(260px, 1fr) auto auto auto auto; padding: 0; }
+.scan-root-editor label { display: grid; gap: 5px; color: var(--text-muted); font-size: 11px; }
+.scan-root-editor label:not(.is-path) { display: flex; align-items: center; gap: 5px; min-height: 32px; }
+.scan-root-editor input:not([type="checkbox"]), .scan-root-editor select { min-width: 0; height: 32px; padding: 0 9px; border: 1px solid var(--border-default); border-radius: 8px; background: var(--bg-surface-2); color: var(--text-primary); }
+.scan-root-editor .is-path > span { display: flex; gap: 7px; }
+.scan-root-editor .is-path input { flex: 1; }
+.scan-root-card__error { display: flex; gap: 6px; color: var(--accent-red); }
+@media (max-width: 1050px) { .scan-root-editor, .scan-root-editor.is-inline { grid-template-columns: 1fr 1fr; } .scan-root-editor .is-path { grid-column: 1 / -1; } }

@@ -1,21 +1,26 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { AlertTriangle, ArrowLeft, Boxes, CheckCircle2, Clock3, Code2, FileCode2, FileText, FolderTree, GitBranch, History, LoaderCircle, MapPin, PackageCheck, RotateCcw, Send, ShieldCheck } from "lucide-react";
-import { ModelAttribution } from "@/shared/model-attribution/ModelAttribution";
+import { AlertTriangle, ArrowLeft, Boxes, CheckCircle2, Clock3, FileText, FolderTree, GitBranch, History, LoaderCircle, MapPin, PackageCheck, RotateCcw, Send, ShieldCheck } from "lucide-react";
 import { SourceConfidence } from "@/shared/components/SourceConfidence";
 import { PageHeader, StatusBadge } from "@/shared/components/pro";
-import type { ModelAttributionData, SourceConfidenceData } from "@/shared/model/proTypes";
+import type { SourceConfidenceData } from "@/shared/model/proTypes";
 import { inventoryApi, type InventoryApi } from "@/features/inventory/api/inventoryApi";
 import type { SkillInstanceDetail } from "@/features/inventory/model";
 import { libraryApi, type LibraryApi } from "@/features/library/api/libraryApi";
 import type { CentralSkill, MappingState, PublishPlan } from "@/features/library/model";
 import { aiApi, type AiApi } from "@/features/ai-settings/api/aiApi";
-import type { AiArtifact } from "@/features/ai-settings/model";
+import { generateArtifactBundle } from "@/features/ai-settings/model";
+import type { AiArtifact, AiProviderConfig, AiTaskRoute, AiTaskType } from "@/features/ai-settings/model";
+import { AiArtifactPanel, type ArtifactRunState } from "@/features/ai-settings/components/AiArtifactPanel";
 import { activityApi, type ActivityApi } from "@/features/activity/api/activityApi";
 import type { OperationLog } from "@/features/activity/model";
-import { listSkillFiles, readSkillFile } from "@/features/skills/api/skillsApi";
-import { listSnapshots } from "@/features/snapshots/api/snapshotsApi";
-import type { SkillFileNode, SkillSnapshot } from "@/types/skill";
+import { listSkillFiles, openFileInEditor, readSkillFile } from "@/features/skills/api/skillsApi";
+import { diffWorkingDirectory, listSnapshots } from "@/features/snapshots/api/snapshotsApi";
+import { lifecycleApi, type LifecycleApi } from "@/features/lifecycle/api/lifecycleApi";
+import type { SaveTextFileResult } from "@/features/lifecycle/model";
+import { SkillEditorWorkspace } from "@/features/editor/components/SkillEditorWorkspace";
+import { confirmDiscardForNavigation } from "@/features/editor/navigationGuard";
+import type { SkillFileNode, SkillSnapshot, SnapshotDiffResult } from "@/types/skill";
 import "../styles/pro-detail.css";
 
 const tabs = [
@@ -33,21 +38,27 @@ type TabId = typeof tabs[number]["id"];
 export interface SkillDetailDependencies {
   inventory: InventoryApi;
   library: LibraryApi;
+  lifecycle: LifecycleApi;
   ai: AiApi;
   activity: ActivityApi;
   readCentralFile(skillId: string, relativePath: string): Promise<string>;
   listCentralFiles(skillId: string): Promise<SkillFileNode>;
   listSnapshots(skillId: string): Promise<SkillSnapshot[]>;
+  diffWorkingDirectory(skillId: string): Promise<SnapshotDiffResult>;
+  openCentralFile(skillId: string, relativePath: string): Promise<void>;
 }
 
 const defaultDependencies: SkillDetailDependencies = {
   inventory: inventoryApi,
   library: libraryApi,
+  lifecycle: lifecycleApi,
   ai: aiApi,
   activity: activityApi,
   readCentralFile: readSkillFile,
   listCentralFiles: listSkillFiles,
   listSnapshots,
+  diffWorkingDirectory,
+  openCentralFile: openFileInEditor,
 };
 
 interface DetailView {
@@ -119,17 +130,6 @@ function flattenTree(node: SkillFileNode): Array<{ path: string; type: string }>
   return [...current, ...node.children.flatMap(flattenTree)];
 }
 
-function artifactAttribution(artifact?: AiArtifact): ModelAttributionData | undefined {
-  if (!artifact) return undefined;
-  return {
-    provider: artifact.providerId,
-    modelId: artifact.modelId,
-    responsibility: artifact.responsibility,
-    generatedAt: new Date(artifact.createdAt).toLocaleString(),
-    state: artifact.status === "failed" ? "failed" : artifact.staleAt ? "stale" : "fresh",
-  };
-}
-
 export function SkillDetailProPage({ dependencies = defaultDependencies }: { dependencies?: SkillDetailDependencies }) {
   const { skillId = "" } = useParams();
   const location = useLocation();
@@ -142,8 +142,15 @@ export function SkillDetailProPage({ dependencies = defaultDependencies }: { dep
   const [files, setFiles] = useState<Array<{ path: string; type: string; size?: number }>>([]);
   const [mappings, setMappings] = useState<MappingState[]>([]);
   const [snapshots, setSnapshots] = useState<SkillSnapshot[]>([]);
+  const [workingDiff, setWorkingDiff] = useState<SnapshotDiffResult | null>(null);
   const [activities, setActivities] = useState<OperationLog[]>([]);
-  const [artifact, setArtifact] = useState<AiArtifact | undefined>();
+  const [artifacts, setArtifacts] = useState<AiArtifact[]>([]);
+  const [providers, setProviders] = useState<AiProviderConfig[]>([]);
+  const [routes, setRoutes] = useState<AiTaskRoute[]>([]);
+  const [artifactRunState, setArtifactRunState] = useState<ArtifactRunState>("idle");
+  const [artifactErrors, setArtifactErrors] = useState<Array<{ taskType: AiTaskType; message: string }>>([]);
+  const [artifactCacheHit, setArtifactCacheHit] = useState(false);
+  const activeCancellationIds = useRef(new Set<string>());
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [partial, setPartial] = useState("");
@@ -159,14 +166,17 @@ export function SkillDetailProPage({ dependencies = defaultDependencies }: { dep
     setPartial("");
     try {
       if (isLibrary) {
-        const [skill, mappingResult, markdownResult, fileResult, snapshotResult, activityResult, artifactResult] = await Promise.allSettled([
+        const [skill, mappingResult, markdownResult, fileResult, snapshotResult, diffResult, activityResult, artifactResult, providerResult, routeResult] = await Promise.allSettled([
           dependencies.library.get(skillId),
           dependencies.library.detectDrift(skillId),
           dependencies.readCentralFile(skillId, "SKILL.md"),
           dependencies.listCentralFiles(skillId),
           dependencies.listSnapshots(skillId),
+          dependencies.diffWorkingDirectory(skillId),
           dependencies.activity.list({ entityId: skillId, limit: 100, offset: 0 }),
           dependencies.ai.listArtifacts({ skillId, includeStale: true }),
+          dependencies.ai.listProviders(),
+          dependencies.ai.listTaskRoutes(),
         ]);
         if (skill.status === "rejected") throw skill.reason;
         const nextMappings = mappingResult.status === "fulfilled" ? mappingResult.value : [];
@@ -175,24 +185,35 @@ export function SkillDetailProPage({ dependencies = defaultDependencies }: { dep
         setMarkdown(markdownResult.status === "fulfilled" ? markdownResult.value : "");
         setFiles(fileResult.status === "fulfilled" ? flattenTree(fileResult.value).filter((item) => item.type === "文件") : []);
         setSnapshots(snapshotResult.status === "fulfilled" ? snapshotResult.value : []);
+        setWorkingDiff(diffResult.status === "fulfilled" ? diffResult.value : null);
         setActivities(activityResult.status === "fulfilled" ? activityResult.value : []);
-        setArtifact(artifactResult.status === "fulfilled" ? artifactResult.value[0] : undefined);
-        const failed = [mappingResult, markdownResult, fileResult, snapshotResult, activityResult, artifactResult].filter((item) => item.status === "rejected").length;
+        const nextArtifacts = artifactResult.status === "fulfilled" ? artifactResult.value : [];
+        setArtifacts(nextArtifacts);
+        setProviders(providerResult.status === "fulfilled" ? providerResult.value : []);
+        setRoutes(routeResult.status === "fulfilled" ? routeResult.value : []);
+        setArtifactRunState(nextArtifacts.some((artifact) => artifact.staleAt) ? "stale" : nextArtifacts.length ? "success" : "idle");
+        const failed = [mappingResult, markdownResult, fileResult, snapshotResult, diffResult, activityResult, artifactResult, providerResult, routeResult].filter((item) => item.status === "rejected").length;
         if (failed) setPartial(`${failed} 个详情分区加载失败，中央主副本信息仍可用。`);
       } else {
         const base = await dependencies.inventory.getInstance(skillId);
         setInstanceDetail(base);
         setDetail(inventoryView(base));
         setFiles(base.files.map((file) => ({ path: file.relativePath, type: file.fileType, size: file.sizeBytes })));
-        const [markdownResult, activityResult, artifactResult] = await Promise.allSettled([
+        const [markdownResult, activityResult, artifactResult, providerResult, routeResult] = await Promise.allSettled([
           dependencies.inventory.readInstanceFile(skillId, "SKILL.md"),
           dependencies.activity.list({ entityId: skillId, limit: 100, offset: 0 }),
           dependencies.ai.listArtifacts({ instanceId: skillId, includeStale: true }),
+          dependencies.ai.listProviders(),
+          dependencies.ai.listTaskRoutes(),
         ]);
         setMarkdown(markdownResult.status === "fulfilled" ? markdownResult.value : "");
         setActivities(activityResult.status === "fulfilled" ? activityResult.value : []);
-        setArtifact(artifactResult.status === "fulfilled" ? artifactResult.value[0] : undefined);
-        const failed = [markdownResult, activityResult, artifactResult].filter((item) => item.status === "rejected").length;
+        const nextArtifacts = artifactResult.status === "fulfilled" ? artifactResult.value : [];
+        setArtifacts(nextArtifacts);
+        setProviders(providerResult.status === "fulfilled" ? providerResult.value : []);
+        setRoutes(routeResult.status === "fulfilled" ? routeResult.value : []);
+        setArtifactRunState(nextArtifacts.some((artifact) => artifact.staleAt) ? "stale" : nextArtifacts.length ? "success" : "idle");
+        const failed = [markdownResult, activityResult, artifactResult, providerResult, routeResult].filter((item) => item.status === "rejected").length;
         if (failed) setPartial(`${failed} 个详情分区加载失败，本地索引与来源证据仍可用。`);
       }
     } catch (reason) {
@@ -227,6 +248,7 @@ export function SkillDetailProPage({ dependencies = defaultDependencies }: { dep
       const skill = await dependencies.library.executeRegisterPlan({ planId: registerPlan.id, planHash: registerPlan.planHash });
       setNotice(`已创建中央主副本 ${skill.name}；外部实例未移动。`);
       setRegisterPlan(null);
+      navigate(`/library/${skill.id}`);
     } catch (reason) { setError(reason instanceof Error ? reason.message : String(reason)); }
   }
 
@@ -248,7 +270,58 @@ export function SkillDetailProPage({ dependencies = defaultDependencies }: { dep
     } catch (reason) { setError(reason instanceof Error ? reason.message : String(reason)); }
   }
 
-  const model = useMemo(() => artifactAttribution(artifact), [artifact]);
+  async function generateArtifacts(force: boolean) {
+    if (artifactRunState === "running") return;
+    const existingIds = new Set(artifacts.map((artifact) => artifact.id));
+    setArtifactRunState("running");
+    setArtifactErrors([]);
+    setArtifactCacheHit(false);
+    try {
+      const result = await generateArtifactBundle({
+        api: dependencies.ai,
+        subject: isLibrary ? { skillId } : { instanceId: skillId },
+        skillMd: markdown,
+        metadata: {
+          name: detail?.name,
+          description: detail?.description,
+          contentHash: detail?.contentHash,
+          sourceType: detail?.source.type,
+        },
+        force,
+        onTaskStart: (_taskType, cancellationId) => activeCancellationIds.current.add(cancellationId),
+        onTaskSettled: (_taskType, cancellationId) => activeCancellationIds.current.delete(cancellationId),
+      });
+      setArtifactErrors(result.errors);
+      setArtifactCacheHit(Boolean(result.artifacts.length) && result.artifacts.every((artifact) => existingIds.has(artifact.id)));
+      const refreshed = await dependencies.ai.listArtifacts({
+        ...(isLibrary ? { skillId } : { instanceId: skillId }),
+        includeStale: true,
+      });
+      setArtifacts(refreshed);
+      setArtifactRunState(result.errors.length && !result.artifacts.length ? "error" : "success");
+    } catch (reason) {
+      setArtifactErrors([{ taskType: "final_summary", message: reason instanceof Error ? reason.message : String(reason) }]);
+      setArtifactRunState("error");
+    }
+  }
+
+  async function cancelArtifacts() {
+    const ids = [...activeCancellationIds.current];
+    await Promise.allSettled(ids.map((cancellationId) => dependencies.ai.cancelArtifact(cancellationId)));
+    setArtifactRunState("cancelled");
+  }
+
+  async function handleSaved(result: SaveTextFileResult) {
+    setNotice(`已保存 ${result.relativePath}；恢复点 ${result.recoverySnapshotId}，${result.outdatedMappingCount} 个映射已标记过期。`);
+    await load();
+  }
+
+  function selectTab(nextTab: TabId) {
+    if (nextTab === activeTab) return;
+    if (!confirmDiscardForNavigation()) return;
+    setActiveTab(nextTab);
+  }
+
   const parentRoute = isLibrary ? "/library" : "/inventory";
 
   if (loading) return <div className="pro-page"><div className="pro-page__inner"><div className="pro-empty glass-panel" role="status"><div><LoaderCircle size={28}/><strong>正在加载 Skill 详情</strong></div></div></div></div>;
@@ -257,7 +330,7 @@ export function SkillDetailProPage({ dependencies = defaultDependencies }: { dep
 
   return (
     <div className="pro-page skill-detail-pro"><div className="pro-page__inner">
-      <button type="button" className="skill-detail-pro__back" onClick={() => navigate(parentRoute)}><ArrowLeft size={14}/>返回{isLibrary ? "中央库" : "本机 Skill"}</button>
+      <button type="button" className="skill-detail-pro__back" onClick={() => { if (confirmDiscardForNavigation()) navigate(parentRoute); }}><ArrowLeft size={14}/>返回{isLibrary ? "中央库" : "本机 Skill"}</button>
       <PageHeader eyebrow={isLibrary ? "CENTRAL SKILL" : "LOCAL INSTANCE"} title={detail.name} subtitle={detail.description} actions={isLibrary ? <button type="button" className="pro-button pro-button--primary" onClick={createPublishPlan}><Send size={15}/>创建发布计划</button> : <><button type="button" className="pro-button" onClick={recalculate}><RotateCcw size={15}/>重算来源</button><button type="button" className="pro-button pro-button--primary" onClick={createRegisterPlan} disabled={Boolean(instanceDetail?.instance.centralSkillId)}><Send size={15}/>纳入中央库</button></>} />
       {error ? <div className="trash-notice glass-panel" role="alert"><StatusBadge label="操作失败" tone="danger"/><span>{error}</span></div> : null}
       {partial ? <div className="trash-notice glass-panel" role="status"><StatusBadge label="部分加载" tone="warning"/><span>{partial}</span></div> : null}
@@ -266,27 +339,26 @@ export function SkillDetailProPage({ dependencies = defaultDependencies }: { dep
       {publishPlan ? <section className="glass-panel panel-padding"><h2>发布计划已就绪</h2>{publishPlan.targets.map((target)=><p key={target.platformName}>{target.displayName} · {target.syncMode} · {target.driftStatus} · {target.status}</p>)}<button className="pro-button" type="button" onClick={()=>setPublishPlan(null)}>取消</button><button className="pro-button pro-button--primary" type="button" disabled={publishPlan.targets.some((target)=>target.status==="blocked")} onClick={executePublishPlan}>执行发布</button></section> : null}
       {isLibrary ? <section className="glass-panel panel-padding"><label>发布目标 <select value={publishTarget} onChange={(event)=>setPublishTarget(event.target.value)}><option value="codex">Codex</option><option value="claude">Claude Code</option><option value="cursor">Cursor</option><option value="windsurf">Windsurf</option><option value="gemini">Gemini CLI</option></select></label><span>默认复制；漂移策略为停止覆盖。</span></section> : null}
       <div className="skill-detail-pro__identity glass-panel"><span className="skill-card__glyph">{detail.name.slice(0,2).toUpperCase()}</span><div className="skill-detail-pro__path"><span>{isLibrary ? "中央主副本" : "当前实例"}</span><code>{detail.path}</code></div><div className="skill-detail-pro__badges"><StatusBadge label={detail.parseStatus} tone={detail.parseStatus === "error" ? "danger" : "success"}/>{detail.hasScripts == null ? null : <StatusBadge label={detail.hasScripts ? "包含脚本" : "纯内容"} tone={detail.hasScripts ? "warning" : "neutral"}/>} {detail.platforms.map((platform)=><StatusBadge key={platform} label={platform} tone="info"/>)}</div></div>
-      <nav className="skill-detail-tabs glass-panel" aria-label="Skill 详情标签页" role="tablist">{tabs.map(({id,label,icon:Icon})=><button key={id} type="button" role="tab" aria-selected={activeTab===id} onClick={()=>setActiveTab(id)}><Icon size={14}/>{label}</button>)}</nav>
+      <nav className="skill-detail-tabs glass-panel" aria-label="Skill 详情标签页" role="tablist">{tabs.map(({id,label,icon:Icon})=><button key={id} type="button" role="tab" aria-selected={activeTab===id} onClick={()=>selectTab(id)}><Icon size={14}/>{label}</button>)}</nav>
       <div className="skill-detail-pro__content" role="tabpanel">
-        {activeTab === "overview" ? <OverviewTab detail={detail} model={model}/> : null}
-        {activeTab === "markdown" ? <MarkdownTab markdown={markdown}/> : null}
+        {activeTab === "overview" ? <><OverviewTab detail={detail}/><AiArtifactPanel artifacts={artifacts} providers={providers} routes={routes} runState={artifactRunState} errors={artifactErrors} cacheHit={artifactCacheHit} onGenerate={(force)=>void generateArtifacts(force)} onCancel={()=>void cancelArtifacts()}/></> : null}
+        {activeTab === "markdown" ? <SkillEditorWorkspace skillId={skillId} isLibrary={isLibrary} files={files} initialContent={markdown} readFile={(relativePath)=>isLibrary ? dependencies.readCentralFile(skillId, relativePath) : dependencies.inventory.readInstanceFile(skillId, relativePath)} saveFile={isLibrary ? (input)=>dependencies.lifecycle.saveTextFile(input) : undefined} openExternal={isLibrary ? (relativePath)=>dependencies.openCentralFile(skillId, relativePath) : undefined} onSaved={handleSaved} onExternalChange={async()=>{ await load(); }} onRequestRegister={createRegisterPlan}/> : null}
         {activeTab === "files" ? <FilesTab files={files}/> : null}
         {activeTab === "source" ? <SourceTab detail={detail}/> : null}
         {activeTab === "locations" ? <LocationsTab mappings={mappings} platforms={detail.platforms}/> : null}
-        {activeTab === "versions" ? <VersionsTab snapshots={snapshots}/> : null}
+        {activeTab === "versions" ? <VersionsTab snapshots={snapshots} workingDiff={workingDiff}/> : null}
         {activeTab === "activity" ? <ActivityTab activities={activities}/> : null}
       </div>
     </div></div>
   );
 }
 
-function OverviewTab({ detail, model }: { detail: DetailView; model?: ModelAttributionData }) {
-  return <div className="skill-overview-grid"><section className="glass-panel panel-padding skill-summary-panel"><div className="skill-detail-section-head"><div><h2>快速理解</h2><p>原文优先；AI 只显示已有缓存，不自动调用模型。</p></div><StatusBadge label={model ? "已有模型产物" : "本地解析"} tone={model ? "success" : "neutral"}/></div><div className="skill-summary-panel__lead"><span><FileCode2 size={17}/></span><p>{detail.description}</p></div>{model ? <ModelAttribution {...model}/> : <div className="local-attribution"><Code2 size={14}/>当前只显示本地确定性解析结果</div>}</section><aside className="skill-overview-side"><SourceConfidence source={detail.source}/><section className="glass-panel panel-padding skill-meta-panel"><h2>本地元数据</h2><dl><div><dt>文件数量</dt><dd>{detail.fileCount || "按需加载"}</dd></div><div><dt>内容哈希</dt><dd><code>{detail.contentHash ? `${detail.contentHash.slice(0,10)}…` : "未记录"}</code></dd></div><div><dt>最近修改</dt><dd>{new Date(detail.updatedAt).toLocaleString()}</dd></div><div><dt>状态</dt><dd>{detail.parseStatus}</dd></div></dl></section></aside></div>;
+function OverviewTab({ detail }: { detail: DetailView }) {
+  return <div className="skill-overview-grid"><section className="glass-panel panel-padding skill-summary-panel"><div className="skill-detail-section-head"><div><h2>本地快速理解</h2><p>确定性解析始终可用，不依赖模型。</p></div><StatusBadge label="本地解析" tone="neutral"/></div><div className="skill-summary-panel__lead"><span><FileText size={17}/></span><p>{detail.description}</p></div></section><aside className="skill-overview-side"><SourceConfidence source={detail.source}/><section className="glass-panel panel-padding skill-meta-panel"><h2>本地元数据</h2><dl><div><dt>文件数量</dt><dd>{detail.fileCount || "按需加载"}</dd></div><div><dt>内容哈希</dt><dd><code>{detail.contentHash ? `${detail.contentHash.slice(0,10)}…` : "未记录"}</code></dd></div><div><dt>最近修改</dt><dd>{new Date(detail.updatedAt).toLocaleString()}</dd></div><div><dt>状态</dt><dd>{detail.parseStatus}</dd></div></dl></section></aside></div>;
 }
 
-function MarkdownTab({ markdown }: { markdown: string }) { return <section className="glass-panel markdown-view"><header><div><h2>SKILL.md</h2><span>只读预览</span></div></header>{markdown ? <pre>{markdown}</pre> : <div className="pro-empty"><p>原文分区加载失败或文件不存在。</p></div>}</section>; }
 function FilesTab({ files }: { files: Array<{path:string;type:string;size?:number}> }) { return <section className="glass-panel panel-padding"><div className="skill-detail-section-head"><div><h2>完整文件树</h2><p>正文按需读取，列表只保留摘要。</p></div><StatusBadge label={`${files.length} 个已索引文件`} tone="info"/></div><div className="pro-file-list">{files.map((file)=><button key={file.path} type="button"><FileText size={14}/><span><strong>{file.path}</strong><small>{file.type}</small></span><em>{file.size == null ? "" : `${file.size} B`}</em></button>)}</div></section>; }
 function SourceTab({ detail }: { detail: DetailView }) { return <div className="pro-grid-2"><SourceConfidence source={detail.source}/><section className="glass-panel panel-padding evidence-panel"><h2>证据解释</h2><p>结论由本地确定性规则生成；可信度不是安全评分。</p>{detail.evidence.map((item,index)=><article key={`${item}-${index}`}><span>{index+1}</span><div><strong>{item}</strong></div><CheckCircle2 size={15}/></article>)}</section></div>; }
 function LocationsTab({ mappings, platforms }: { mappings: MappingState[]; platforms: string[] }) { const shown = mappings.length ? mappings : platforms.map((platform)=>({platformName:platform,driftStatus:"external",targetPath:"外部扫描实例",syncMode:"copy" as const})); return <section className="glass-panel panel-padding"><div className="skill-detail-section-head"><div><h2>安装位置与发布状态</h2><p>中央映射使用复制模式为默认，漂移不会静默覆盖。</p></div></div><div className="location-list">{shown.map((mapping)=><article key={mapping.platformName}><span className="platform-monogram">{mapping.platformName.slice(0,2).toUpperCase()}</span><div><strong>{mapping.platformName}</strong><code>{mapping.targetPath}</code></div><StatusBadge label={mapping.driftStatus} tone={mapping.driftStatus==="in_sync"?"success":mapping.driftStatus==="drifted"?"warning":"neutral"}/><span>{mapping.syncMode}</span></article>)}</div></section>; }
-function VersionsTab({ snapshots }: { snapshots: SkillSnapshot[] }) { return <section className="glass-panel panel-padding"><div className="skill-detail-section-head"><div><h2>版本与恢复点</h2><p>编辑、覆盖发布与删除前都会保留恢复路径。</p></div></div><div className="version-timeline">{snapshots.map((item,index)=><article key={item.id}><span>{index===0?<PackageCheck size={15}/>:<Clock3 size={15}/>}</span><div><strong>v{item.snapshotNumber} · {item.isActive?"生效版本":item.source}</strong><p>{item.changeSummary ?? "无变更摘要"}</p></div><time>{new Date(item.createdAt).toLocaleString()}</time></article>)}{!snapshots.length?<p>外部实例没有中央快照。</p>:null}</div></section>; }
+function VersionsTab({ snapshots, workingDiff }: { snapshots: SkillSnapshot[]; workingDiff: SnapshotDiffResult | null }) { const changed = workingDiff ? [...workingDiff.addedFiles, ...workingDiff.modifiedFiles, ...workingDiff.deletedFiles] : []; return <section className="glass-panel panel-padding"><div className="skill-detail-section-head"><div><h2>版本、恢复点与当前差异</h2><p>编辑、覆盖发布与删除前都会保留恢复路径。</p></div><StatusBadge label={`${changed.length} 个工作区差异`} tone={changed.length ? "warning" : "success"}/></div>{changed.length?<div className="pro-file-list">{changed.map((path)=><div key={path}><FileText size={14}/><span><strong>{path}</strong><small>{workingDiff?.addedFiles.includes(path)?"新增":workingDiff?.deletedFiles.includes(path)?"删除":"修改"}</small></span></div>)}</div>:null}<div className="version-timeline">{snapshots.map((item,index)=><article key={item.id}><span>{index===0?<PackageCheck size={15}/>:<Clock3 size={15}/>}</span><div><strong>v{item.snapshotNumber} · {item.isActive?"生效版本":item.source}</strong><p>{item.changeSummary ?? "无变更摘要"}</p></div><time>{new Date(item.createdAt).toLocaleString()}</time></article>)}{!snapshots.length?<p>外部实例没有中央快照。</p>:null}</div></section>; }
 function ActivityTab({ activities }: { activities: OperationLog[] }) { return <section className="glass-panel panel-padding"><div className="skill-detail-section-head"><div><h2>操作记录</h2><p>只显示与此 Skill ID 相关的审计记录。</p></div></div><div className="detail-activity-list">{activities.map((item)=><article key={item.id}><span className={`is-${item.status}`}>{item.status==="failed"?<AlertTriangle size={14}/>:<CheckCircle2 size={14}/>}</span><div><strong>{item.operationType}</strong><p>{item.errorSummary ?? item.targetLabel}</p></div><time>{new Date(item.createdAt).toLocaleString()}</time></article>)}{!activities.length?<p>尚无相关操作记录。</p>:null}</div></section>; }

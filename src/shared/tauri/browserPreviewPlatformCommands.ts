@@ -152,8 +152,22 @@ export function invokeBrowserPreviewPlatformCommand<T>(
       const input = args?.input as { skillsDir: string };
       return evaluatePreviewPath(input.skillsDir) as T;
     }
-    case "platform_detect":
-      return { platforms: cloneValue(sortPreviewPlatforms(state.platforms)) } as T;
+    case "platform_governance_impact": {
+      const platformName = args?.platformName as string;
+      const platform = getPreviewPlatformOrThrow(state, platformName);
+      const globalReleaseCount = Object.values(state.platformReleaseTargetsBySkillId)
+        .filter((targets) => Boolean(targets[platformName])).length;
+      return { platformName, displayName: platform.displayName, globalReleaseCount, projectConnectionCount: 0, enabledProjectConnectionCount: 0, assignmentCount: 0, enabledAssignmentCount: 0, affectedProjects: [] } as T;
+    }
+    case "platform_detect": {
+      const platforms = state.platforms.map((platform) => ({
+        ...platform,
+        managedSkillCount: Object.values(state.platformReleaseTargetsBySkillId).filter((targets) => Boolean(targets[platform.platformName])).length,
+        lastSyncStatus: platform.lastSyncAt ? "success" : undefined,
+        lastErrorMessage: undefined,
+      }));
+      return { platforms: cloneValue(sortPreviewPlatforms(platforms)) } as T;
+    }
     case "get_skill_platform_releases": {
       const skillId = args?.skillId as string;
       return cloneValue(helpers.buildReleaseOverview(state, skillId)) as T;

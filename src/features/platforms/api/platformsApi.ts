@@ -22,31 +22,52 @@ interface PlatformConnectionsResponse {
   platforms: PlatformConnection[];
 }
 
+export type PlatformsInvoker = <T>(command: string, args?: Record<string, unknown>) => Promise<T>;
+
+export interface PlatformsApi {
+  listConnections(): Promise<PlatformConnection[]>;
+  saveConnection(input: SavePlatformConnectionInput): Promise<PlatformConnection>;
+  getGovernanceImpact(platformName: string): Promise<PlatformGovernanceImpact>;
+  createCustom(input: CreateCustomPlatformInput): Promise<PlatformConnection>;
+  deleteCustom(input: DeleteCustomPlatformInput): Promise<void>;
+  testPath(skillsDir: string): Promise<TestPlatformPathResult>;
+}
+
+export function createPlatformsApi(invoke: PlatformsInvoker = invokeCommand): PlatformsApi {
+  return {
+    listConnections: async () => (await invoke<PlatformConnectionsResponse>("platform_detect")).platforms,
+    saveConnection: (input) => invoke<PlatformConnection>("save_platform_connection", { input }),
+    getGovernanceImpact: (platformName) => invoke<PlatformGovernanceImpact>("platform_governance_impact", { platformName }),
+    createCustom: (input) => invoke<PlatformConnection>("create_custom_platform", { input }),
+    deleteCustom: (input) => invoke<void>("delete_custom_platform", { input }),
+    testPath: (skillsDir) => invoke<TestPlatformPathResult>("test_platform_path", { input: { skillsDir } }),
+  };
+}
+
+export const platformsApi = createPlatformsApi();
+
 export async function listPlatformConnections(): Promise<PlatformConnection[]> {
-  const response = await invokeCommand<PlatformConnectionsResponse>("platform_detect");
-  return response.platforms;
+  return platformsApi.listConnections();
 }
 
 export async function savePlatformConnection(input: SavePlatformConnectionInput): Promise<PlatformConnection> {
-  return invokeCommand<PlatformConnection>("save_platform_connection", { input });
+  return platformsApi.saveConnection(input);
 }
 
 export async function getPlatformGovernanceImpact(platformName: string): Promise<PlatformGovernanceImpact> {
-  return invokeCommand<PlatformGovernanceImpact>("platform_governance_impact", { platformName });
+  return platformsApi.getGovernanceImpact(platformName);
 }
 
 export async function createCustomPlatform(input: CreateCustomPlatformInput): Promise<PlatformConnection> {
-  return invokeCommand<PlatformConnection>("create_custom_platform", { input });
+  return platformsApi.createCustom(input);
 }
 
 export async function deleteCustomPlatform(input: DeleteCustomPlatformInput): Promise<void> {
-  return invokeCommand<void>("delete_custom_platform", { input });
+  return platformsApi.deleteCustom(input);
 }
 
 export async function testPlatformPath(skillsDir: string): Promise<TestPlatformPathResult> {
-  return invokeCommand<TestPlatformPathResult>("test_platform_path", {
-    input: { skillsDir },
-  });
+  return platformsApi.testPath(skillsDir);
 }
 
 export async function pickPlatformDirectory(): Promise<string | null> {

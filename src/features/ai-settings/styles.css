@@ -32,3 +32,20 @@
 .provider-config footer { display: flex; justify-content: flex-end; gap: 7px; }
 .attribution-preview .skill-detail-section-head h2 { margin: 0; color: var(--pro-text-primary); font-size: 13px; }
 @media (max-width: 880px) { .provider-config-grid { grid-template-columns: 1fr; } }
+.ai-artifact-panel { display: grid; gap: 14px; }
+.ai-artifact-panel__actions { display: flex; align-items: center; flex-wrap: wrap; gap: 9px; color: var(--text-muted); }
+.ai-artifact-panel__running { display: flex; align-items: flex-start; gap: 10px; padding: 12px; border-radius: 10px; background: color-mix(in srgb, var(--accent-blue) 10%, transparent); }
+.ai-artifact-panel__running > div { flex: 1; display: grid; gap: 3px; }
+.ai-artifact-panel__running span { color: var(--text-muted); font-size: 11px; }
+.ai-artifact-panel__notice, .ai-artifact-panel__errors { padding: 10px 12px; border-radius: 9px; }
+.ai-artifact-panel__notice { background: var(--bg-surface-2); color: var(--text-secondary); }
+.ai-artifact-panel__errors { display: flex; gap: 8px; color: var(--accent-red); background: color-mix(in srgb, var(--accent-red) 11%, transparent); }
+.ai-artifact-panel__errors > div { display: grid; gap: 3px; }
+.ai-artifact-panel__results { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.ai-artifact-panel__results > article { min-width: 0; padding: 13px; border: 1px solid var(--border-subtle); border-radius: 11px; background: var(--bg-surface-2); }
+.ai-artifact-panel__results h3 { margin: 0 0 8px; }
+.ai-artifact-panel__results p, .ai-artifact-panel__results li { color: var(--text-secondary); line-height: 1.55; }
+.ai-artifact-panel__results ul { margin: 8px 0; padding-left: 18px; }
+.ai-artifact-panel__results .model-attribution { margin-top: 12px; }
+.ai-artifact-panel__collection { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; padding: 9px 11px; border: 1px solid var(--border-subtle); border-radius: 9px; color: var(--text-muted); }
+@media (max-width: 900px) { .ai-artifact-panel__results { grid-template-columns: 1fr; } }

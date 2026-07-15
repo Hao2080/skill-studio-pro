@@ -217,6 +217,9 @@ pub struct PlatformConnection {
     pub supports_symlink: bool,
     pub supports_copy: bool,
     pub last_sync_at: Option<i64>,
+    pub managed_skill_count: i64,
+    pub last_sync_status: Option<String>,
+    pub last_error_message: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

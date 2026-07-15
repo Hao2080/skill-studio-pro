@@ -466,6 +466,7 @@ export async function invokeBrowserPreviewCommand<T>(command: string, args?: Rec
     case "create_custom_platform":
     case "delete_custom_platform":
     case "test_platform_path":
+    case "platform_governance_impact":
     case "platform_detect":
     case "get_skill_platform_releases":
     case "publish_snapshot_to_platforms":

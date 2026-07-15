@@ -194,25 +194,17 @@ describe("SettingsPage platform settings", () => {
     expect(messageApi.warning).toHaveBeenCalledWith("Skill Studio Pro 自动更新尚未配置。");
   });
 
-  it.skip("shows manual directory input and latest sync result for each platform — UI simplified in current SettingsPage", async () => {
+  it("不在设置页隐式扫描或修改平台目录", async () => {
     invokeMock.mockImplementation((command: string) => {
       if (command === "db_health_check") {
-        return Promise.resolve({ dbPath: "/tmp/metadata.db" });
-      }
-      if (command === "platform_detect") {
         return Promise.resolve({
-          platforms: [
-            {
-              id: "conn-1",
-              platformName: "claude",
-              detected: true,
-              enabled: true,
-              skillsDir: "/Users/demo/.claude/skills",
-              lastSyncAt: 1712600000000,
-              lastSyncStatus: "success",
-              lastSyncMessage: undefined,
-            },
-          ],
+          workspacePath: "D:/SkillStudio",
+          dbPath: "D:/SkillStudio/metadata.db",
+          settingsPath: "D:/SkillStudio/settings.json",
+          skillsPath: "D:/SkillStudio/skills",
+          projectsPath: "D:/SkillStudio/projects",
+          snapshotsPath: "D:/SkillStudio/snapshots",
+          tables: [],
         });
       }
       return Promise.resolve(undefined);
@@ -220,83 +212,41 @@ describe("SettingsPage platform settings", () => {
 
     render(<SettingsPage />);
 
-    expect(await screen.findByDisplayValue("/Users/demo/.claude/skills")).toBeTruthy();
-    expect(screen.getByRole("button", { name: "测试连接" })).toBeTruthy();
-    expect(screen.getByText("最近同步")).toBeTruthy();
-    expect(screen.getByText("最近结果")).toBeTruthy();
-    expect(screen.getByText("成功")).toBeTruthy();
+    expect(await screen.findByText("D:/SkillStudio/skills")).toBeTruthy();
+    expect(invokeMock).toHaveBeenCalledWith("db_health_check", undefined);
+    expect(invokeMock.mock.calls.some(([command]) => String(command).startsWith("platform_"))).toBe(false);
   });
 
-  it.skip("saves manual directory and refreshes platform state after connection test succeeds — UI simplified in current SettingsPage", async () => {
-    let platformCallCount = 0;
-    invokeMock.mockImplementation((command: string, args?: Record<string, unknown>) => {
+  it("通过受控剪贴板操作复制应用拥有的存储路径", async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.defineProperty(navigator, "clipboard", {
+      configurable: true,
+      value: { writeText },
+    });
+    invokeMock.mockImplementation((command: string) => {
       if (command === "db_health_check") {
-        return Promise.resolve({ dbPath: "/tmp/metadata.db" });
-      }
-      if (command === "platform_detect") {
-        platformCallCount += 1;
-        if (platformCallCount === 1) {
-          return Promise.resolve({
-            platforms: [
-              {
-                id: "conn-1",
-                platformName: "Claude Code",
-                detected: false,
-                enabled: false,
-                skillsDir: undefined,
-              },
-            ],
-          });
-        }
         return Promise.resolve({
-          platforms: [
-            {
-              id: "conn-1",
-              platformName: "claude",
-              detected: true,
-              enabled: true,
-              skillsDir: "/custom/skills",
-              lastSyncAt: 1712600200000,
-              lastSyncStatus: "success",
-              lastSyncMessage: undefined,
-            },
-          ],
+          workspacePath: "D:/SkillStudio",
+          dbPath: "D:/SkillStudio/metadata.db",
+          settingsPath: "D:/SkillStudio/settings.json",
+          skillsPath: "D:/SkillStudio/skills",
+          projectsPath: "D:/SkillStudio/projects",
+          snapshotsPath: "D:/SkillStudio/snapshots",
+          tables: [],
         });
-      }
-      if (command === "platform_connection_update") {
-        expect(args).toEqual({
-          input: {
-            platformName: "claude",
-            skillsDir: "/custom/skills",
-            enabled: true,
-          },
-        });
-        return Promise.resolve({ ok: true });
-      }
-      if (command === "platform_connection_test") {
-        expect(args).toEqual({
-          input: {
-            platformName: "claude",
-            skillsDir: "/custom/skills",
-          },
-        });
-        return Promise.resolve({ ok: true });
       }
       return Promise.resolve(undefined);
     });
 
     render(<SettingsPage />);
 
-    const input = await screen.findByPlaceholderText("输入 Skill 平台目录");
-    fireEvent.change(input, { target: { value: "/custom/skills" } });
-    fireEvent.click(screen.getByRole("checkbox"));
-    fireEvent.click(screen.getByRole("button", { name: "保存配置" }));
-    fireEvent.click(screen.getByRole("button", { name: "测试连接" }));
+    await screen.findByText("D:/SkillStudio");
+    const copyButtons = screen.getAllByRole("button", { name: "复制" });
+    fireEvent.click(copyButtons[0]);
 
     await waitFor(() => {
-      expect(messageApi.success).toHaveBeenCalledWith("连接成功");
+      expect(writeText).toHaveBeenCalledWith("D:/SkillStudio");
     });
-    expect(await screen.findByDisplayValue("/custom/skills")).toBeTruthy();
-    expect(screen.getByText("已启用")).toBeTruthy();
+    expect(messageApi.success).toHaveBeenCalledWith("已复制");
   });
 });

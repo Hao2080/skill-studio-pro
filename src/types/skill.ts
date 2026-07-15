@@ -183,6 +183,9 @@ export interface PlatformConnection {
   supportsSymlink?: boolean;
   supportsCopy?: boolean;
   lastSyncAt?: number;
+  managedSkillCount?: number;
+  lastSyncStatus?: string;
+  lastErrorMessage?: string;
 }
 
 export interface PlatformGovernanceImpact {

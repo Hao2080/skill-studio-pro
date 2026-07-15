@@ -15,6 +15,7 @@ import { TrashPage } from "@/features/trash/pages/TrashPage";
 import { ActivityPage } from "@/features/activity/pages/ActivityPage";
 import { ProSettingsPage } from "@/features/settings/pages/ProSettingsPage";
 import { AiSettingsPage } from "@/features/ai-settings/pages/AiSettingsPage";
+import { confirmDiscardForNavigation } from "@/features/editor/navigationGuard";
 
 const routeNames: Record<string, string> = {
   "/": "总览",
@@ -64,6 +65,9 @@ export function AppShell() {
   const systemNavItems = getSystemNavigationItems(t);
   const routeRoot = location.pathname.startsWith("/inventory/") ? "/inventory" : location.pathname.startsWith("/library/") ? "/library" : location.pathname;
   const currentTitle = routeNames[routeRoot] ?? "Skill Studio Pro";
+  const guardedNavigate = (path: string) => {
+    if (confirmDiscardForNavigation()) navigate(path);
+  };
 
   return (
     <div className="app-window">
@@ -78,10 +82,10 @@ export function AppShell() {
             </Tooltip>
           </div>
           {!collapsed ? <div className="app-sidebar__section-label">{t("app.nav.product")}</div> : null}
-          <nav className="app-sidebar__nav" aria-label={t("app.nav.product")}>{primaryNavItems.map((item)=><NavButton key={item.to} {...item} navigate={navigate} current={location.pathname} collapsed={collapsed}/>)}</nav>
+          <nav className="app-sidebar__nav" aria-label={t("app.nav.product")}>{primaryNavItems.map((item)=><NavButton key={item.to} {...item} navigate={guardedNavigate} current={location.pathname} collapsed={collapsed}/>)}</nav>
           <div className="app-sidebar__spacer" />
           {!collapsed ? <div className="app-sidebar__section-label">{t("app.nav.system")}</div> : null}
-          <nav className="app-sidebar__nav app-sidebar__nav--footer" aria-label={t("app.nav.system")}>{systemNavItems.map((item)=><NavButton key={item.to} {...item} navigate={navigate} current={location.pathname} collapsed={collapsed}/>)}</nav>
+          <nav className="app-sidebar__nav app-sidebar__nav--footer" aria-label={t("app.nav.system")}>{systemNavItems.map((item)=><NavButton key={item.to} {...item} navigate={guardedNavigate} current={location.pathname} collapsed={collapsed}/>)}</nav>
           {!collapsed ? <div className="app-sidebar__security"><ShieldCheck size={14}/><span><strong>本地优先</strong><small>外部 Skill 默认只读</small></span></div> : null}
         </aside>
 

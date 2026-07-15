@@ -5,6 +5,7 @@ import { ThemeProvider } from "./providers/ThemeContext";
 import { SkillProvider } from "@/features/skills/state/SkillContext";
 import { SnapshotProvider } from "@/features/snapshots/state/SnapshotContext";
 import { TeamProvider } from "@/features/teams/state/TeamContext";
+import { AiAutoEnrichmentProvider } from "@/features/ai-settings/state/AiAutoEnrichmentContext";
 
 interface AppProvidersProps {
   children: ReactNode;
@@ -17,7 +18,7 @@ export function AppProviders({ children }: AppProvidersProps) {
         <I18nProvider>
           <SkillProvider>
             <SnapshotProvider>
-              <TeamProvider>{children}</TeamProvider>
+              <TeamProvider><AiAutoEnrichmentProvider>{children}</AiAutoEnrichmentProvider></TeamProvider>
             </SnapshotProvider>
           </SkillProvider>
         </I18nProvider>

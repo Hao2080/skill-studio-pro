@@ -1,4 +1,4 @@
-import type { AiProviderConfig, AiTaskRoute } from "@/features/ai-settings/model";
+import type { AiArtifact, AiProviderConfig, AiTaskRoute } from "@/features/ai-settings/model";
 import type { OperationLog } from "@/features/activity/model";
 import type { CentralSkill, MappingState } from "@/features/library/model";
 import type { InstallPlan } from "@/features/lifecycle/model";
@@ -89,8 +89,12 @@ let providers: AiProviderConfig[] = mockProviderConfigs.map((provider) => ({
 
 let routes: AiTaskRoute[] = [
   { taskType: "extract_usage", providerId: "minimax", modelId: "MiniMax-M3", promptVersion: "usage/v1", responsibility: "用法要点提取", enabled: true, updatedAt: now },
+  { taskType: "suggest_tags", providerId: "minimax", modelId: "MiniMax-M3", promptVersion: "tags/v1", responsibility: "标签候选采集", enabled: true, updatedAt: now },
+  { taskType: "classify", providerId: "minimax", modelId: "MiniMax-M3", promptVersion: "classification/v1", responsibility: "分类候选采集", enabled: true, updatedAt: now },
   { taskType: "final_summary", providerId: "openai", modelId: "gpt-5.6", promptVersion: "summary/v1", responsibility: "最终摘要与内容提炼", enabled: true, updatedAt: now },
 ];
+
+let artifacts: AiArtifact[] = [];
 
 let restorePlanEntryId: string | undefined;
 
@@ -246,12 +250,27 @@ export async function invokeBrowserPreviewProCommand<T>(command: string, args?: 
     case "ai_task_route_list": return routes as T;
     case "ai_task_route_save": { const input = args?.input as AiTaskRoute; routes = routes.map((route) => route.taskType === input.taskType ? { ...input, updatedAt: now } : route); return routes.find((route) => route.taskType === input.taskType) as T; }
     case "ai_artifact_generate": {
-      const input = args?.input as { taskType: AiTaskRoute["taskType"]; skillId?: string; instanceId?: string };
+      const input = args?.input as { taskType: AiTaskRoute["taskType"]; skillId?: string; instanceId?: string; force?: boolean };
       const route = routes.find((item) => item.taskType === input.taskType) ?? routes[0];
-      return { id: "preview-artifact", skillId: input.skillId, instanceId: input.instanceId, taskType: route.taskType, providerId: route.providerId, modelId: route.modelId, modelDisplayName: route.modelId, responsibility: route.responsibility, promptVersion: route.promptVersion, inputHash: "preview-input-hash", content: { summary: "preview" }, status: "success", staleAt: null, createdAt: now } as T;
+      const cached = artifacts.find((artifact) => artifact.taskType === input.taskType && artifact.skillId === input.skillId && artifact.instanceId === input.instanceId && !artifact.staleAt);
+      if (cached && !input.force) return cached as T;
+      if (input.force) artifacts = artifacts.map((artifact) => artifact.taskType === input.taskType && artifact.skillId === input.skillId && artifact.instanceId === input.instanceId ? { ...artifact, staleAt: now } : artifact);
+      const content = input.taskType === "final_summary"
+        ? { oneLineSummary: "浏览器预览简介", details: "由 Mock OpenAI 路由生成，不访问真实网络。" }
+        : input.taskType === "extract_usage"
+          ? { usagePoints: ["打开当前 Skill 原文", "按需执行明确步骤"], dependencies: [], inputs: [], outputs: [] }
+          : input.taskType === "suggest_tags"
+            ? { tags: ["preview", "local-first"] }
+            : { category: "工具", rationale: "浏览器 Mock 分类候选" };
+      const artifact: AiArtifact = { id: `preview-artifact-${input.taskType}-${artifacts.length + 1}`, skillId: input.skillId, instanceId: input.instanceId, taskType: input.taskType, providerId: route.providerId, modelId: route.modelId, modelDisplayName: route.modelId, responsibility: route.responsibility, promptVersion: route.promptVersion, inputHash: "preview-input-hash", content, status: "completed", staleAt: null, createdAt: now + artifacts.length };
+      artifacts.push(artifact);
+      return artifact as T;
     }
     case "ai_artifact_cancel": return true as T;
-    case "ai_artifact_list": return [] as T;
+    case "ai_artifact_list": {
+      const input = (args?.input ?? {}) as { skillId?: string; instanceId?: string; taskType?: AiTaskRoute["taskType"]; includeStale?: boolean };
+      return artifacts.filter((artifact) => (!input.skillId || artifact.skillId === input.skillId) && (!input.instanceId || artifact.instanceId === input.instanceId) && (!input.taskType || artifact.taskType === input.taskType) && (input.includeStale || !artifact.staleAt)) as T;
+    }
     default: throw new Error(`浏览器 Pro 预览暂未实现命令: ${command}`);
   }
 }

@@ -66,4 +66,17 @@ describe("AiSettingsPage", () => {
     await waitFor(() => expect(client.saveProvider).toHaveBeenCalledWith(expect.objectContaining({ apiKey: "unit-key", secretMode: "persistent" })));
     await waitFor(() => expect(input.value).toBe(""));
   });
+
+  it("clears a plaintext key from ordinary UI state when secure save fails", async () => {
+    const client = api();
+    vi.mocked(client.saveProvider).mockRejectedValue(new Error("凭据服务不可用"));
+    render(<AiSettingsPage api={client}/>);
+    const input = await screen.findByLabelText("MiniMax API Key") as HTMLInputElement;
+    fireEvent.change(input, { target: { value: "failure-unit-key" } });
+    fireEvent.click(screen.getByRole("button", { name: "保存配置" }));
+    await waitFor(() => expect(client.saveProvider).toHaveBeenCalled());
+    await waitFor(() => expect(input.value).toBe(""));
+    expect(screen.queryByDisplayValue("failure-unit-key")).toBeNull();
+    expect(localStorage.getItem("failure-unit-key")).toBeNull();
+  });
 });

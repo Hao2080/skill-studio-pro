@@ -189,6 +189,13 @@ describe("PlatformsPage", () => {
       } satisfies PlatformConnection;
     });
     deleteCustomPlatformMock.mockResolvedValue(undefined);
+    testPlatformPathMock.mockResolvedValue({
+      ok: true,
+      normalizedPath: "D:/AgentStudio/preview-skills",
+      exists: true,
+      isDirectory: true,
+      message: "目录可用",
+    });
   });
 
   afterEach(() => {
@@ -276,6 +283,37 @@ describe("PlatformsPage", () => {
     expect(screen.getByRole("button", { name: "选择目录" })).toBeTruthy();
     expect(screen.getByRole("button", { name: "测试路径" })).toBeTruthy();
     expect(screen.getByRole("button", { name: "保存配置" })).toBeTruthy();
+  });
+
+  it("修改有受管映射的平台目录前先测试路径并等待治理确认", async () => {
+    renderPage();
+
+    await screen.findByText("Claude Code");
+    fireEvent.click(screen.getByRole("button", { name: "查看配置" }));
+    fireEvent.change(screen.getByDisplayValue("C:/Users/demo/.claude/skills"), {
+      target: { value: "D:/Managed/claude-skills" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "保存配置" }));
+
+    await waitFor(() => {
+      expect(getPlatformGovernanceImpactMock).toHaveBeenCalledWith("claude");
+      expect(modalConfirmMock).toHaveBeenCalledTimes(1);
+    });
+    expect(testPlatformPathMock).not.toHaveBeenCalled();
+    expect(savePlatformConnectionMock).not.toHaveBeenCalled();
+
+    const confirmConfig = modalConfirmMock.mock.calls[0]?.[0];
+    await confirmConfig.onOk();
+
+    await waitFor(() => {
+      expect(testPlatformPathMock).toHaveBeenCalledWith("D:/Managed/claude-skills");
+      expect(savePlatformConnectionMock).toHaveBeenCalledWith({
+        platformName: "claude",
+        enabled: true,
+        skillsDir: "D:/Managed/claude-skills",
+        syncMode: "symlink",
+      });
+    });
   });
 
   it("新增自定义平台后实时更新统计并切换到自定义视图", async () => {

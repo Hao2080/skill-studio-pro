@@ -15,6 +15,7 @@ import type {
   CreateCustomPlatformInput,
   PlatformConnection,
   PlatformGovernanceImpact,
+  TestPlatformPathResult,
 } from "@/types/skill";
 import { useI18n } from "@/features/settings/state/I18nContext";
 import { PlatformLogo } from "../components/PlatformLogo";
@@ -107,6 +108,7 @@ export function PlatformsPage() {
   const [creating, setCreating] = useState(false);
   const [createForm, setCreateForm] = useState<CustomPlatformForm>(INITIAL_CUSTOM_PLATFORM_FORM);
   const [testingCustomPath, setTestingCustomPath] = useState(false);
+  const [pathTestResults, setPathTestResults] = useState<Record<string, TestPlatformPathResult>>({});
 
   const bucketCounts = useMemo(() => {
     const counts: Record<PlatformViewKey, number> = {
@@ -305,11 +307,55 @@ export function PlatformsPage() {
 
   const handleSave = async (platform: PlatformConnection) => {
     const draft = drafts[platform.platformName] ?? buildPlatformDraft(platform);
-    await persistPlatformDraft(
-      platform,
-      draft,
-      copy.savedConfig(platform.displayName ?? platform.platformName),
-    );
+    const directoryChanged = draft.skillsDir.trim() !== (platform.skillsDir ?? "").trim();
+    const performSave = async () => {
+      if (directoryChanged) {
+        const tested = await testPlatformPath(draft.skillsDir.trim());
+        setPathTestResults((current) => ({ ...current, [platform.platformName]: tested }));
+        if (!tested.ok) {
+          message.warning(copy.testPathFailed(tested.message));
+          return;
+        }
+      }
+      await persistPlatformDraft(
+        platform,
+        draft,
+        copy.savedConfig(platform.displayName ?? platform.platformName),
+      );
+    };
+
+    if (!directoryChanged) {
+      await performSave();
+      return;
+    }
+
+    try {
+      const impact = await getPlatformGovernanceImpact(platform.platformName);
+      if (impact.globalReleaseCount === 0 && impact.projectConnectionCount === 0) {
+        await performSave();
+        return;
+      }
+      modal.confirm({
+        ...PLATFORM_CONFIRM_MODAL_PROPS,
+        title: `修改平台「${platform.displayName ?? platform.platformName}」目录`,
+        content: (
+          <PlatformGovernanceImpactPreview
+            impact={impact}
+            items={[
+              { label: copy.impactGlobalRelease, value: impact.globalReleaseCount },
+              { label: copy.impactProjectConnection, value: impact.projectConnectionCount },
+              { label: copy.impactAffectedProjects, value: formatAffectedProjects(impact, copy.impactNone) },
+            ]}
+            note="修改目录会改变后续发布目标；现有受管映射不会被静默遗弃。确认后才会保存新目录。"
+          />
+        ),
+        okText: copy.saveConfig,
+        cancelText: copy.cancel,
+        onOk: performSave,
+      });
+    } catch (error) {
+      message.error(copy.saveFailed(error instanceof Error ? error.message : String(error)));
+    }
   };
 
   const handleQuickToggle = async (platform: PlatformConnection, enabled: boolean) => {
@@ -392,6 +438,7 @@ export function PlatformsPage() {
 
     try {
       const result = await testPlatformPath(skillsDir);
+      setPathTestResults((current) => ({ ...current, [platform.platformName]: result }));
       if (result.ok) {
         message.success({
           content: copy.testPathSuccess,
@@ -512,6 +559,12 @@ export function PlatformsPage() {
 
     setCreating(true);
     try {
+      const tested = await testPlatformPath(skillsDir);
+      if (!tested.ok) {
+        message.error(copy.testPathFailed(tested.message));
+        setCreating(false);
+        return;
+      }
       const createdPlatform = await createCustomPlatform(input);
       applyPlatformConnection(createdPlatform);
       setActiveView("custom");
@@ -706,6 +759,14 @@ export function PlatformsPage() {
                     <span>{copy.syncMode}</span>
                     <strong>{getSyncModeLabel(resolvedSyncMode, resolvedLanguage)}</strong>
                   </div>
+                  <div className="platforms-page__summary-item">
+                    <span>受管 Skill</span>
+                    <strong>{platform.managedSkillCount ?? 0}</strong>
+                  </div>
+                  <div className="platforms-page__summary-item">
+                    <span>最近状态</span>
+                    <strong>{platform.lastSyncStatus ?? copy.noLastSync}</strong>
+                  </div>
                   <div className="platforms-page__summary-item platforms-page__summary-item--path">
                     <span>{copy.syncDirectory}</span>
                     <strong title={draft.skillsDir || copy.notSet}>{draft.skillsDir || copy.notSet}</strong>
@@ -720,8 +781,12 @@ export function PlatformsPage() {
                   </span>
                   <span className="platforms-page__card-governance-text">
                     {getPlatformGovernanceNote(platform, resolvedLanguage)}
+                    {platform.supportsSymlink ? " 符号链接会在执行时探测权限；Windows 不可用时会明确失败，不会静默复制。" : " 当前环境不支持符号链接；不会静默复制。"}
                   </span>
                 </div>
+
+                {platform.lastErrorMessage ? <Alert showIcon type="error" message="最近平台操作失败" description={platform.lastErrorMessage} /> : null}
+                {pathTestResults[platform.platformName] ? <Alert showIcon type={pathTestResults[platform.platformName].ok ? "success" : "error"} message={pathTestResults[platform.platformName].ok ? "路径测试通过" : "路径测试失败"} description={`${pathTestResults[platform.platformName].normalizedPath} · ${pathTestResults[platform.platformName].message}`} /> : null}
 
                 {isExpanded ? (
                   <div className="platforms-page__editor">
