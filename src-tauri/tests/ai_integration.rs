@@ -11,7 +11,6 @@ use skill_studio_pro_lib::ai::model::{
 };
 use skill_studio_pro_lib::ai::provider::AiProvider;
 use skill_studio_pro_lib::ai::{defaults, minimax::MiniMaxProvider, prompts, service};
-#[cfg(target_os = "windows")]
 use skill_studio_pro_lib::credentials::SystemCredentialStore;
 use skill_studio_pro_lib::credentials::{
     CredentialManager, CredentialStore, MemoryCredentialStore,
@@ -487,9 +486,8 @@ fn secret_store_contract_never_requires_plaintext_fallback() {
     );
 }
 
-#[cfg(target_os = "windows")]
 #[test]
-fn windows_credential_manager_contract() {
+fn native_secret_store_contract() {
     if std::env::var_os("SKILL_STUDIO_PRO_NATIVE_SECRET_STORE_TEST").as_deref()
         != Some(std::ffi::OsStr::new("1"))
     {
@@ -501,16 +499,16 @@ fn windows_credential_manager_contract() {
         .set(
             skill_studio_pro_lib::credentials::CREDENTIAL_SERVICE,
             &account,
-            "fictional-windows-contract-secret",
+            "fictional-native-contract-secret",
         )
-        .expect("Windows Credential Manager 应可保存测试凭据");
+        .expect("平台原生安全凭据存储应可保存隔离测试凭据");
     let value = store
         .get(
             skill_studio_pro_lib::credentials::CREDENTIAL_SERVICE,
             &account,
         )
         .unwrap();
-    assert_eq!(value.as_deref(), Some("fictional-windows-contract-secret"));
+    assert_eq!(value.as_deref(), Some("fictional-native-contract-secret"));
     store
         .delete(
             skill_studio_pro_lib::credentials::CREDENTIAL_SERVICE,

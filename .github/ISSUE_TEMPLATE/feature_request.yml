@@ -1,5 +1,5 @@
 name: Feature request
-description: Suggest an improvement for Skill Studio.
+description: Suggest an improvement for Skill Studio Pro.
 title: "[Feature]: "
 labels: ["enhancement"]
 body:
@@ -14,7 +14,7 @@ body:
     id: proposal
     attributes:
       label: Proposal
-      description: What should Skill Studio do?
+      description: What should Skill Studio Pro do?
     validations:
       required: true
   - type: textarea

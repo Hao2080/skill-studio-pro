@@ -1,5 +1,5 @@
 name: Bug report
-description: Report a reproducible problem in Skill Studio.
+description: Report a reproducible problem in Skill Studio Pro.
 title: "[Bug]: "
 labels: ["bug"]
 body:
@@ -36,8 +36,8 @@ body:
   - type: input
     id: version
     attributes:
-      label: Skill Studio version
-      placeholder: "0.1.0"
+      label: Skill Studio Pro version
+      placeholder: "0.1.0-beta.1"
   - type: dropdown
     id: os
     attributes:

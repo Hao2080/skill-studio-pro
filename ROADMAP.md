@@ -1,45 +1,29 @@
-# Roadmap
+# Skill Studio Pro Roadmap
 
-This roadmap describes the near-term direction for Skill Studio. It is intentionally conservative: items listed here are product commitments we can explain, test, and maintain.
+Repository: https://github.com/Hao2080/skill-studio-pro
 
-## Current Focus
+## Public Beta maintenance
 
-- Stabilize the cross-platform preview release for Windows, macOS, and Linux.
-- Make Skill import, versioning, comparison, and platform sync predictable for local-first workflows.
-- Improve trust signals for third-party Skills before broad marketplace-style usage.
-- Tighten packaging, update metadata, and release documentation.
+- Fix reproducible beta defects without weakening file safety, credential isolation, provenance semantics, or test gates.
+- Keep Windows, macOS, and Linux package/startup/Secret Store CI green.
+- Improve Simplified Chinese and English localization, screen-reader flow, focus restoration, and platform visual QA.
+- Expand long-running watcher, permission-error, TOCTOU, network interruption, and large-inventory regression coverage.
+- Keep dependency licenses, CycloneDX SBOMs, hashes, upstream attribution, and public documentation current.
 
-## v0.1.x Preview
+## Stable-candidate requirements
 
-- Keep release artifacts available for Windows, macOS, and Linux.
-- Fix CI and release workflow noise so contributors can trust the Actions status.
-- Improve first-run guidance for unsigned preview installers.
-- Expand regression coverage around Skill import, snapshot creation, restore, and sync planning.
-- Narrow file-system permissions to the minimum needed by the desktop app.
+- Decide and implement a maintainer-owned Windows signing and macOS Developer ID/notarization process, or retain a clearly documented unsigned distribution model.
+- Define a Pro-owned updater signing key and endpoint before enabling automatic updates; upstream keys/endpoints will not be reused.
+- Validate more distributions/filesystems and successful symlink branches where real OS permissions permit.
+- Complete broader English localization, accessibility-assistive-technology review, and beta defect regression.
+- Re-audit SQLite migrations, crash recovery, backup/restore, import limits, and artifact reproducibility.
 
-## Before v0.2.0
+## Not planned for V1
 
-- Add clearer provenance metadata for imported Skills.
-- Improve diff review and restore flows for larger Skill directories.
-- Refine platform detection for less common Agent tools.
-- Add release smoke checks for generated installers and updater metadata.
-- Document privacy and local-data behavior in a dedicated policy.
+- Required accounts, telemetry, hosted cloud sync, or cloud backup
+- Automatic execution of imported Skill code
+- Team spaces, approvals, or multi-user collaboration
+- A repository-operated hosted Skill marketplace
+- Claims that provenance confidence is a malware or absolute safety score
 
-## Before Stable Release
-
-- Complete Windows code signing and macOS notarization.
-- Define a stable update channel and a preview channel.
-- Publish a compatibility matrix for supported Agent platforms.
-- Add migration notes for data directory and snapshot format changes.
-- Harden backup, restore, and rollback behavior for team workflows.
-
-## Not Planned Yet
-
-- Hosted cloud sync as a default dependency.
-- Executing imported Skill code automatically.
-- A centralized public Skill marketplace operated by this repository.
-- Replacing existing Agent platform package formats.
-
-## Feedback
-
-Use GitHub Issues for reproducible bugs and concrete feature requests. Use Discussions for broader workflow feedback once repository discussions are enabled.
+Use [GitHub Issues](https://github.com/Hao2080/skill-studio-pro/issues) for reproducible bugs and concrete proposals. Security reports must follow [SECURITY.md](SECURITY.md).

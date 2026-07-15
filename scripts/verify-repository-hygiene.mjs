@@ -31,6 +31,11 @@ const secretPatterns = [
   /\beyJ[A-Za-z0-9_-]{8,}\.[A-Za-z0-9_-]{8,}\.[A-Za-z0-9_-]{8,}\b/g,
 ];
 const findings = [];
+const localPathPatterns = [
+  new RegExp(String.raw`E:[\\/]AIHHao` + String.raw`_Data[\\/]`, "gi"),
+  /C:[\\/]Users[\\/](?!demo(?:[\\/]|$))[A-Za-z0-9._-]+[\\/]/gi,
+  new RegExp("Skill-Studio-Pro-Task2-UAT-" + "e9f842b-20260716", "gi"),
+];
 for (const path of tracked) {
   let content;
   try {
@@ -47,9 +52,16 @@ for (const path of tracked) {
       findings.push(`${path}:${line}:${value.slice(0, 12)}…`);
     }
   }
+  for (const pattern of localPathPatterns) {
+    pattern.lastIndex = 0;
+    for (const match of content.matchAll(pattern)) {
+      const line = content.slice(0, match.index).split("\n").length;
+      findings.push(`${path}:${line}:local-machine-path`);
+    }
+  }
 }
 if (findings.length) {
-  throw new Error(`High-confidence secret patterns found:\n${findings.join("\n")}`);
+  throw new Error(`Secrets or local-machine paths found:\n${findings.join("\n")}`);
 }
 
 console.log(`Repository hygiene passed for ${tracked.length} tracked or unignored candidate files.`);

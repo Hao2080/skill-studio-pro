@@ -1,10 +1,13 @@
 [package]
 name = "skill-studio-pro"
-version = "0.1.0"
+version = "0.1.0-beta.1"
 description = "Skill Studio Pro local-first desktop workspace"
 authors = ["Jensen", "Skill Studio Pro contributors"]
 edition = "2021"
 license = "Apache-2.0"
+repository = "https://github.com/Hao2080/skill-studio-pro"
+homepage = "https://github.com/Hao2080/skill-studio-pro"
+keywords = ["tauri", "skills", "local-first", "ai-agent"]
 
 [lib]
 name = "skill_studio_pro_lib"

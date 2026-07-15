@@ -271,7 +271,7 @@ export function SettingsPage() {
                     <span className="settings-page__field-label">{t("settings.field.version")}</span>
                   </div>
                   <div className="settings-page__badge-row">
-                    <span className="settings-page__badge">0.1.0</span>
+                    <span className="settings-page__badge">0.1.0-beta.1</span>
                   </div>
                 </div>
                 <div className="settings-page__field">

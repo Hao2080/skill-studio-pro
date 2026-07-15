@@ -1,57 +1,47 @@
-# Skill Studio Release Notes / 发布说明
+# Skill Studio Pro v0.1.0-beta.1
 
-本次 Release 是跨平台预发布版本，面向 Windows、macOS 和 Linux。
-This prerelease ships desktop builds for Windows, macOS, and Linux.
+This is the first public beta of Skill Studio Pro, an Apache-2.0, local-first desktop manager for AI Agent Skills.
 
-## 包含内容 / Included assets
+Repository: https://github.com/Hao2080/skill-studio-pro
 
-| 平台 / Platform | 主要安装包 / Primary installers | 辅助文件 / Supporting files |
-|---|---|---|
-| Windows | `.msi`、`.exe` | `latest.json`、`*.sig`、`sha256sums-windows.txt` |
-| macOS | `.dmg`、`.tar.gz` | `latest.json`、`*.sig`、`sha256sums-macos.txt` |
-| Linux | `.AppImage`、`.deb`、`.rpm` | `latest.json`、`*.sig`、`sha256sums-linux.txt` |
+## Highlights
 
-`latest.json` 和 `*.sig` 是自动更新所需的元数据与签名文件，不是手动安装包。
-`sha256sums-*.txt` 用于校验下载文件完整性。
+- Read-only inventory across Codex, Claude Code, Cursor, Windsurf, Gemini CLI, plugin caches, project roots, and custom scan roots.
+- Deterministic metadata, duplicate detection, provenance evidence, confidence rationale, and raw `SKILL.md` viewing.
+- Stable-ID central library, snapshots, safe text editing, copy-based multi-agent publishing, drift detection, and owned-target removal.
+- Install previews for local directories, Git repositories, ZIP archives, and upstream market sources without executing imported scripts.
+- Trash, conflict-aware restore, restricted permanent deletion, operation history, and crash-recovery journals.
+- Optional MiniMax/OpenAI-compatible enrichment with secure native credential storage, cancellation, caching, staleness, redaction, and actual model attribution.
+- Deep-ocean Pro desktop UI validated on Windows release/NSIS at 900×600, 1280×800, 150% DPI, keyboard focus, reduced motion, and reduced transparency.
 
-## 下载与校验 / Download and verification
+## Platform evidence
 
-1. 先选择与你系统匹配的主安装包。
-2. 再对照同一 Release 中的 SHA256 校验文件核对下载结果。
-3. 如需自动更新，请保留同一 Release 中的 `latest.json` 和签名文件。
+Windows, macOS, and Linux GitHub-hosted runners each execute the frontend and Rust quality gates, a real native Secret Store contract using a disposable test entry, Tauri installer construction, and installed/mounted desktop startup smoke in an isolated home/config/workspace. Linux uses an isolated D-Bus Secret Service and Xvfb display harness.
 
-1. Download the installer that matches your operating system.
-2. Verify it against the SHA256 checksum file attached to the same release.
-3. If you rely on auto-updates, keep the matching `latest.json` and signature files from the same release.
+The Windows release candidate also completed the isolated full lifecycle UAT and the 1,000 Skill / 100,000 file benchmark recorded in `docs/handoffs/WINDOWS-UAT.md`.
 
-## 自动更新前提 / Auto-update prerequisites
+## Assets and verification
 
-- 先手动安装一个已包含 updater 的基线版本。
-- CI 必须配置 `TAURI_SIGNING_PRIVATE_KEY`；如果私钥有密码，还需要 `TAURI_SIGNING_PRIVATE_KEY_PASSWORD`。
-- 预发布版本的更新链路依赖 GitHub Releases，请不要手动改动 `latest.json` 或签名文件。
+The Release contains:
 
-- First install a baseline build that already includes the updater.
-- CI must provide `TAURI_SIGNING_PRIVATE_KEY`; if the key is password-protected, also set `TAURI_SIGNING_PRIVATE_KEY_PASSWORD`.
-- Preview releases depend on GitHub Releases for update metadata, so do not edit `latest.json` or signature files manually.
+- Windows NSIS, macOS DMG, Linux deb and AppImage packages
+- Per-platform hashes, manifests, quality logs, smoke JSON/logs, and Secret Store logs
+- `SHA256SUMS.txt` plus `release-manifest.json`
+- Frontend, Rust, and combined CycloneDX 1.6 JSON SBOMs
+- Machine-readable dependency licenses and the third-party dependency/asset notice
+- Apache-2.0 `LICENSE` and upstream-preserving `NOTICE`
 
-## 预发布限制 / Preview limitations
+Verify the downloaded files against `SHA256SUMS.txt`. Hash verification establishes byte integrity relative to this GitHub Release; it is not a substitute for platform publisher signing.
 
-- Windows 安装包当前未做正式代码签名，可能出现未知发布者或 SmartScreen 提示。
-- macOS 安装包当前未做签名与 notarization，首次打开可能需要用户手动确认。
-- Linux 产物会按发行版选择不同格式，请优先选择与你系统匹配的包。
-- 这是预发布说明页，不代表稳定版承诺；稳定版发布前，产物说明会继续补齐和收敛。
+## Known limitations
 
-- Windows installers are not code-signed yet and may show unknown publisher or SmartScreen warnings.
-- macOS installers are not signed or notarized yet and may require manual approval on first launch.
-- Linux artifacts ship in multiple formats; choose the one that matches your distribution.
-- This is a prerelease note page, not a stable-release guarantee. The packaging story will continue to be tightened before the first stable release.
+- Windows is not Authenticode-signed.
+- macOS is not Developer ID-signed or notarized.
+- Linux packages are not distribution-signed.
+- Automatic updates are disabled and no updater metadata or signatures are included.
+- CI does not call real MiniMax or OpenAI paid endpoints. Real Provider compatibility depends on user configuration, endpoint behavior, model access, quota, and network policy.
+- Linux persistent credentials require an available and unlocked Secret Service; the application never silently falls back to plaintext.
+- Symlink publishing depends on actual OS/filesystem capability and privilege. Copy remains the default.
+- The current primary product language is Simplified Chinese; some inherited or advanced surfaces are not fully localized.
 
-## 说明 / Notes
-
-- 每个平台的 release job 都会上传该平台的安装包、更新元数据和校验文件。
-- GitHub Release 正文会引用这份文件，确保三个平台使用一致的说明口径。
-- 如需更完整的功能背景和架构说明，请查看仓库中的 README 与 `docs/ARCHITECTURE.md`。
-
-- Each platform release job uploads the installer, update metadata, and checksum files for that platform.
-- The GitHub Release body is sourced from this file so all platforms share the same release wording.
-- For broader product context and architecture notes, see the repository README and `docs/ARCHITECTURE.md`.
+Read [README.md](../README.md), [SECURITY.md](../SECURITY.md), and [CHANGELOG.md](../CHANGELOG.md) before installing the beta.

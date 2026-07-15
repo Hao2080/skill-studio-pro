@@ -2,7 +2,7 @@
 
 状态：`HANDOFF_READY`  
 完成日期：2026-07-15  
-工作目录：`E:\AIHHao_Data\Codex_Xiangmu\Skills-All-in`
+工作目录：`<repo>`
 
 ## 1. 上游仓库和 commit
 

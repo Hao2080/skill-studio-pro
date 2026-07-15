@@ -84,7 +84,6 @@ function runPythonScript(scriptPath) {
     process.platform === "win32"
       ? [
           process.env.CODEX_WORKSPACE_PYTHON,
-          "C:\\Users\\jense\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
           process.env.PYTHON,
           "python",
           "py",

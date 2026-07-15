@@ -4,70 +4,71 @@
 
 # Skill Studio Pro
 
-Skill Studio Pro is a local-first, cross-platform desktop application for managing AI Agent Skill assets. It preserves the upstream workspace, Skill management, snapshot, market, platform, project, and team-compatibility foundations while establishing independent Pro naming, storage, branding, update isolation, and cross-platform CI.
+Skill Studio Pro is a local-first, open-source desktop application for discovering, understanding, and safely managing Skills across AI agents. It separates scanned external instances from a central source of truth and adds provenance evidence, snapshots, safe editing, multi-agent publishing, drift handling, trash, and optional AI summaries.
 
-Wave 1 provides the Pro UI shell, typed Mock pages, source confidence, model attribution, install preview, and trash interactions. The scanner, AI providers, central mapping, and file transactions remain ready for later backend integration.
+[中文 README](README.md)
 
-## Upstream relationship
+![Skill Studio Pro Windows release UAT with isolated fixture data](docs/assets/skill-studio-pro-windows.png)
 
-Skill Studio Pro is derived from the open-source [liu673/skill-studio](https://github.com/liu673/skill-studio) project.
+The screenshot is from the isolated Windows release/NSIS UAT at 1280×800 logical pixels and 150% DPI. It contains no user Skills, real credentials, or personal paths.
 
-- Audited upstream baseline: [`cd0bb0af53865d4a9643968080bfc5a8137b72d9`](https://github.com/liu673/skill-studio/commit/cd0bb0af53865d4a9643968080bfc5a8137b72d9)
-- Upstream authorship, contributor copyright, Apache-2.0 `LICENSE`, and `NOTICE` are preserved
-- The `upstream` Git remote points to the original repository for auditability and future synchronization
-- The npm package, Rust crate and binary, Tauri identifier, data directory, and brand assets are independent from upstream
+## Public Beta capabilities
 
-See [SPEC](docs/SPEC.md), [PRD](docs/PRD.md), [technical design](docs/TECHNICAL-DESIGN.md), and [automated testing](docs/AUTOMATED-TESTING.md) for the planned product scope.
+- Read-only discovery for Codex, Claude Code, Cursor, Windsurf, Gemini CLI, and custom roots.
+- Raw `SKILL.md`, file trees, risks, duplicates, provenance evidence, and deterministic confidence scores.
+- A unique central copy with snapshots and copy-based publishing to one or more agents.
+- Safe editing for Markdown, YAML, JSON, TOML, and text, with recovery points and unsaved-change guards.
+- Drift detection, explicit overwrite decisions, owned-target checks, trash, restore, and restricted permanent deletion.
+- On-demand MiniMax/OpenAI-compatible enrichment with actual provider/model attribution and cache staleness.
 
-## Baseline identities
+See the [SPEC](docs/SPEC.md), [PRD](docs/PRD.md), [technical design](docs/TECHNICAL-DESIGN.md), and [test plan](docs/AUTOMATED-TESTING.md) for the complete contracts.
 
-| Item | Value |
-|---|---|
-| Product | Skill Studio Pro |
-| npm package | `skill-studio-pro` |
-| Rust package / binary | `skill-studio-pro` |
-| Rust library crate | `skill_studio_pro_lib` |
-| Tauri identifier | `app.skillstudiopro` |
-| Default workspace | `~/.skill-studio-pro/` |
-| Stack | Tauri 2, React 18, TypeScript, Rust, SQLite |
+## Install
 
-## Branding and updates
+Download a platform artifact from the [v0.1.0-beta.1 prerelease](https://github.com/Hao2080/skill-studio-pro/releases/tag/v0.1.0-beta.1) and verify it with `SHA256SUMS.txt`.
 
-The Pro interface uses independent assets under `public/assets/brand/`; the upstream logo is retained only for attribution and is not used as the formal Pro identity.
+| Platform | Artifact | Beta boundary |
+|---|---|---|
+| Windows x64 | NSIS setup `.exe` | Not Authenticode-signed; Windows may show an unknown-publisher or SmartScreen warning |
+| macOS | `.dmg` | Not Developer ID-signed or notarized; manual approval may be required |
+| Linux x64 | `.deb`, `.AppImage` | Not distribution-signed; persistent credentials require an unlocked Secret Service |
 
-Automatic updates are explicitly disabled. The repository contains no upstream update endpoint, public key, or updater capability and does not generate updater artifacts. Do not enable updates until Skill Studio Pro has its own release repository, signing keys, and update source. Upstream Release installers are not Skill Studio Pro installers.
+Real Windows, macOS, and Linux GitHub-hosted runners build the installers, install or mount them, launch the desktop executable, verify isolated bootstrap, and exercise each native Secret Store with a disposable test entry. Automatic updates remain disabled.
 
-## Build and validate
+## Build from source
 
-Prerequisites are Node.js 22, stable Rust, Git, and the target platform's [Tauri system dependencies](https://v2.tauri.app/start/prerequisites/).
+Install Node.js 22, stable Rust, Git, and the target platform's [Tauri 2 prerequisites](https://v2.tauri.app/start/prerequisites/).
 
 ```bash
+git clone https://github.com/Hao2080/skill-studio-pro.git
+cd skill-studio-pro
 npm ci
-npm run tauri dev
-```
-
-```bash
-npm run typecheck
-npm run test
-npm run build
-cargo fmt --manifest-path src-tauri/Cargo.toml --check
-cargo check --manifest-path src-tauri/Cargo.toml
-cargo test --manifest-path src-tauri/Cargo.toml
 npm run check
+npm run supply-chain:check
+npm run tauri -- build --ci
 ```
 
-GitHub Actions runs the baseline checks on Windows, macOS, and Linux. CI must not call real AI providers or include API keys, databases, logs, or local Skills.
+## Local data, API configuration, and privacy
 
-## Local data and security
+The default workspace is `~/.skill-studio-pro/`, separate from upstream `~/.skill-studio/`. It stores the SQLite index, central Skills, snapshots, trash, staging journals, logs, and AI cache. Persistent API keys are stored only in Windows Credential Manager, macOS Keychain, or Linux Secret Service; the application never silently falls back to plaintext.
 
-- Pro data defaults to `~/.skill-studio-pro/` and does not automatically reuse or overwrite upstream `~/.skill-studio/`
-- Imported Skills are not automatically executed during discovery or display
-- Market browsing and Git imports may make user-initiated network requests
-- `.gitignore` excludes local databases, logs, trash, credential files, local Skills, and build output
-- Report vulnerabilities according to [SECURITY.md](SECURITY.md)
+Configure provider URL, model ID, responsibility, timeout, and credentials under “Models & API.” AI is optional and on-demand. CI uses loopback mock providers and never calls paid endpoints. Core inventory, editing, publishing, and recovery remain available offline.
 
-## License and attribution
+Imported Skills are untrusted input and are never executed during scan, preview, import, or summarization. High-risk writes use plans, hashes, owned-target checks, allowed-root validation, staging, atomic replacement, and recovery paths.
 
-Skill Studio Pro remains licensed under the **Apache License, Version 2.0**. See [LICENSE](LICENSE) and [NOTICE](NOTICE).
+## Supply chain and upstream
 
-This derivative preserves the original Skill Studio authors, contributors, copyright notices, and upstream attribution. Third-party platform names and logos remain the property of their respective owners and are used only for identification and interoperability.
+Releases include reproducible CycloneDX 1.6 SBOMs for npm and Rust, a machine-readable license inventory, SHA-256 manifests, smoke results, and the [third-party dependency/asset report](docs/THIRD-PARTY-NOTICES.md). CI rejects stale SBOMs, unknown licenses, disallowed copyleft, secrets, user data, and broken repository metadata.
+
+Skill Studio Pro is Apache-2.0 software derived from [liu673/skill-studio](https://github.com/liu673/skill-studio) at [`cd0bb0af53865d4a9643968080bfc5a8137b72d9`](https://github.com/liu673/skill-studio/commit/cd0bb0af53865d4a9643968080bfc5a8137b72d9). Upstream authorship, history, LICENSE, NOTICE, and required attribution are preserved. `upstream` remains the upstream remote; the Pro repository is the independent `origin`.
+
+## Known limitations and troubleshooting
+
+- The beta is unsigned, macOS is not notarized, and automatic updates are disabled.
+- Symlink publishing depends on real OS capability and privilege; copy is the default and safe fallback selected by the user.
+- Linux cannot persist credentials without an available, unlocked Secret Service.
+- Real provider compatibility depends on the user's endpoint, model, account, and quota and is not implied by the release.
+- For a blank window or startup error, verify Tauri/WebView prerequisites and launch from a terminal to retain logs.
+- For security reports use GitHub Private Vulnerability Reporting as described in [SECURITY.md](SECURITY.md).
+
+See [CHANGELOG.md](CHANGELOG.md), [release notes](docs/release-notes.md), [CONTRIBUTING.md](CONTRIBUTING.md), and [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).

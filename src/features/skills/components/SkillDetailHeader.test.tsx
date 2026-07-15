@@ -100,7 +100,7 @@ describe("SkillDetailHeader", () => {
           skillId: "skill-2",
           sourceType: "local",
           sourceLabel: "本地目录导入",
-          sourcePath: "C:\\Users\\jense\\.codex\\skills\\frontend-design",
+          sourcePath: "C:\\Users\\demo\\.codex\\skills\\frontend-design",
           metadataJson: undefined,
           isPrimary: true,
           createdAt: 1713427200000,

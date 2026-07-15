@@ -2,7 +2,7 @@
 
 状态：`HANDOFF_READY`  
 完成日期：2026-07-15  
-独立 worktree：`E:\AIHHao_Data\Codex_Xiangmu\Skills-All-in-ui-shell`
+独立 worktree：`<separate-ui-worktree>`
 
 ## 1. 分支和 commit
 

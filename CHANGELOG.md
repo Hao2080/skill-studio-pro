@@ -1,44 +1,35 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.
+All notable Skill Studio Pro changes are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-
-> **Release types:**
-> - `Added` — new features
-> - `Changed` — changes in existing functionality
-> - `Deprecated` — soon-to-be removed features
-> - `Removed` — removed features
-> - `Fixed` — bug fixes
-> - `Security` — vulnerability fixes
-
----
-
-## [0.1.0] - 2026-05-07
+## [0.1.0-beta.1] - 2026-07-16
 
 ### Added
 
-- Local-first Skill workspace with persistent storage
-- Skill lifecycle management: create, import, search, categorize, tag, and batch organize
-- Skill file browser with inline preview, in-app editing, external editor launch, and directory access
-- Version snapshots: create, view history, compare diffs, restore working copy, and set active version
-- Multi-source import: local directories, Git repositories, built-in templates, and platform scans
-- Agent platform detection with configurable Skill directory sync
-- Project workspaces with cross-platform sync planning and execution logs
-- Team spaces with shared Skill library, submissions, diff review, merge, recommended versions, and pull
-- Theme switching (light/dark), language configuration, pre-sync restore points, and snapshot retention limits
-- Open source governance: Apache License 2.0, contributing guidelines, security policy, code of conduct, and third-party notices
+- Local-first inventory for five primary Agents, plugin caches, project directories, custom roots, incremental scans, file indexing, duplicates, and deterministic provenance evidence.
+- Stable central Skill identities, snapshots, safe registration, multi-agent copy publishing, drift policies, ownership markers, and per-target results.
+- Local/Git/ZIP/market installation previews with staging, hash-bound plans, conflict policies, limits, and no external script execution.
+- Safe Markdown/YAML/JSON/TOML/text editing with dirty guards, validation, recovery points, atomic replacement, diffs, and outdated mapping status.
+- Application trash, conflict-aware restore, confirmation-token purge, operation history, and lifecycle crash recovery.
+- MiniMax/OpenAI-compatible routing, secure native credentials, structured artifacts, cancellation, caching, staleness, redaction, and model attribution.
+- Real platform and scan-root management UI, Windows release WebView lifecycle UAT, accessibility/responsive checks, and the 1,000 Skill / 100,000 file benchmark.
+- Independent public repository metadata, three-platform installer/startup/Secret Store CI, CycloneDX SBOMs, license policy, release manifests, and SHA-256 verification.
 
-### Known Issues
+### Changed
 
-- **File system capability**: Tauri capabilities currently grant broad file system access. Scope will be narrowed to minimum necessary permissions before the first stable release.
-- **Installers and signing**: Preview installers are published for Windows, macOS, and Linux, but Windows code signing and macOS notarization are not yet finalized.
-- **UI polish**: Some page layouts and internationalized strings are still being refined for consistency.
-- **Third-party Skill trust**: Imported Skills from external markets do not yet have provenance confidence scoring or dependency license reporting.
+- Product, package, binary, Tauri identifier, data directory, brand, and release infrastructure are independent from upstream Skill Studio.
+- Automatic updates remain disabled until Skill Studio Pro owns a reviewed signing and update chain.
 
----
+### Security
 
-## [Unreleased] — History
+- Added allowed-root and ownership checks, path/symlink/junction/Zip Slip defenses, plan expiry and hash validation, atomic file transactions, no-plaintext credential fallback, repository hygiene, dependency audits, and full-history secret scanning.
 
-Prior to v0.1.0, this project was in private development. No public changelog entries exist.
+### Known limitations
+
+- Beta packages are unsigned; macOS is not notarized and Linux packages are not distribution-signed.
+- CI uses Mock AI providers; real Provider access is user-configured and not asserted by this release.
+- Linux persistent credentials require an unlocked Secret Service; symlink support remains platform/privilege dependent.
+
+## Upstream baseline
+
+Skill Studio Pro preserves the complete Apache-2.0 history and attribution of `liu673/skill-studio` through commit `cd0bb0af53865d4a9643968080bfc5a8137b72d9`. Earlier upstream product history remains available in Git rather than being relabeled as a Skill Studio Pro public release.

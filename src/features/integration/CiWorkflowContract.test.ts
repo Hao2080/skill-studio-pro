@@ -6,10 +6,10 @@ const readWorkflow = (name: string) =>
   readFileSync(resolve(process.cwd(), ".github", "workflows", name), "utf8");
 
 describe("GitHub Actions release-quality contract", () => {
-  it("runs the complete baseline on Windows, macOS, and Linux", () => {
+  it("runs quality, native Secret Store, package, and installed smoke on three real runners", () => {
     const workflow = readWorkflow("ci.yml");
     for (const runner of ["ubuntu-latest", "windows-latest", "macos-latest"]) {
-      expect(workflow).toContain(`- ${runner}`);
+      expect(workflow).toContain(`os: ${runner}`);
     }
     for (const command of [
       "npm ci",
@@ -26,15 +26,30 @@ describe("GitHub Actions release-quality contract", () => {
     expect(workflow).toContain("components: rustfmt, clippy");
     expect(workflow).toContain("workspaces: src-tauri");
     expect(workflow).toContain("npm run security:repo");
-    expect(workflow).toContain("gitleaks/gitleaks-action@v2");
+    expect(workflow).toContain("npm run supply-chain:check");
+    expect(workflow).toContain("gitleaks/gitleaks-action@");
+    expect(workflow).toContain("native_secret_store_contract");
+    expect(workflow).toContain("test-secret-store-linux.sh");
+    expect(workflow).toContain("build --ci --bundles");
+    expect(workflow).toContain("smoke-windows.ps1");
+    expect(workflow).toContain("smoke-macos.sh");
+    expect(workflow).toContain("smoke-linux.sh");
+    expect(workflow).toContain("stage-release-assets.mjs");
   });
 
-  it("blocks every platform release on the same quality gate", () => {
+  it("blocks the prerelease on three platform gates and downloaded hash verification", () => {
     const workflow = readWorkflow("release.yml");
-    expect(workflow.match(/run: npm ci/g)).toHaveLength(3);
-    expect(workflow.match(/run: npm run check/g)).toHaveLength(3);
-    expect(workflow.match(/uses: tauri-apps\/tauri-action@v0/g)).toHaveLength(6);
-    expect(workflow.match(/components: rustfmt, clippy/g)).toHaveLength(3);
-    expect(workflow.match(/workspaces: src-tauri/g)).toHaveLength(3);
+    for (const runner of ["ubuntu-latest", "windows-latest", "macos-latest"]) {
+      expect(workflow).toContain(`os: ${runner}`);
+    }
+    expect(workflow).toContain("npm run check 2>&1");
+    expect(workflow).toContain("npm run supply-chain:check");
+    expect(workflow).toContain("native_secret_store_contract");
+    expect(workflow).toContain("assemble-release-assets.mjs");
+    expect(workflow).toContain("actions/download-artifact@");
+    expect(workflow).toContain("gh release create");
+    expect(workflow).toContain("--prerelease");
+    expect(workflow).toContain("--verify-tag");
+    expect(workflow).not.toContain("includeUpdaterJson: true");
   });
 });

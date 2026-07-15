@@ -35,6 +35,9 @@ pnpm-debug.log*
 .tmp/
 release/
 releases/
+release-assets/
+downloaded-artifacts/
+publish-assets/
 
 # ========== Secrets & Credentials ==========
 .env

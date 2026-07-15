@@ -1,159 +1,50 @@
 Skill Studio Pro
 Copyright 2026 Skill Studio Pro contributors
 
-This product is based on Skill Studio:
+This derivative product is based on Skill Studio:
   https://github.com/liu673/skill-studio
   audited baseline cd0bb0af53865d4a9643968080bfc5a8137b72d9
 
 Skill Studio
 Copyright 2026 Skill Studio contributors
 
-The original authorship, contributor notices, and upstream attribution are
-preserved in this derivative work.
+The original authorship, contributor notices, copyright statements, Apache
+License 2.0 text, and upstream attribution are preserved in this derivative
+work. Files modified for Skill Studio Pro include product naming, packaging,
+data-directory isolation, user interface, inventory, provenance, central
+library mapping, lifecycle safety, AI routing, tests, CI, and release tooling.
 
-This product is licensed under the Apache License, Version 2.0.
-See the LICENSE file for the full license text.
+This product is licensed under the Apache License, Version 2.0. See LICENSE.
 
----
+Third-Party Software and Assets
+================================
 
-Third-Party Software Notices
-============================
+The authoritative dependency and asset inventory for the current lockfiles is:
 
-This product includes the following third-party open source components.
-Each component remains under its respective license. In case of conflict
-between a component's license and the Apache License 2.0, the component's
-license takes precedence with respect to that component only.
+  docs/THIRD-PARTY-NOTICES.md
+  artifacts/THIRD-PARTY-LICENSES.json
+  artifacts/sbom/frontend.cdx.json
+  artifacts/sbom/rust.cdx.json
+  artifacts/sbom/skill-studio-pro.cdx.json
 
-The authoritative list of all included dependencies, their versions, and
-their licenses is maintained in:
+These files preserve package-declared license expressions and evidence. A
+missing or unknown license is a CI failure; the project does not guess license
+terms. Components remain under their respective licenses. Attribution or
+file-level obligations identified by the generated inventory continue to apply
+to those components.
 
-  - Frontend:  package.json / package-lock.json
-  - Backend:    src-tauri/Cargo.toml / src-tauri/Cargo.lock
+Brand and Icon Assets
+=====================
 
----
+The Skill Studio Pro mark, wordmark, and generated application icons are
+original project artwork distributed under Apache-2.0. Upstream Skill Studio
+logo files are retained only under branding/upstream-logo-reference/ for
+attribution and audit and are excluded from the formal Pro application brand.
 
-Frontend Dependencies
----------------------
+Third-party platform names and brands, including Codex, Claude Code, Cursor,
+Windsurf, and Gemini CLI, are owned by their respective holders. Their names
+are used only for identification and interoperability and do not imply
+endorsement, sponsorship, or affiliation.
 
-- **Tauri** (https://tauri.app) — MIT / Apache-2.0
-  Desktop runtime and IPC framework.
-
-- **React**, **React DOM** — MIT
-  User interface library.
-
-- **Vite** (https://vitejs.dev) — MIT
-  Frontend build tool and dev server.
-
-- **TypeScript** (https://www.typescriptlang.org) — Apache-2.0
-  Static type checker and language.
-
-- **Ant Design** (https://ant.design) — MIT
-  UI component library.
-
-- **lucide-react** (https://lucide.dev) — ISC
-  Icon library.
-
-- **simple-icons** (https://simpleicons.org) — CC0-1.0
-  Platform brand icons.
-
-- **@lobehub/icons-static-svg** (https://github.com/lobehub/lobe-icon) — MIT
-  Additional icon assets.
-
-- **Vitest** (https://vitest.dev) — MIT
-  Frontend test runner.
-
-- **@testing-library/react** — MIT
-  React component testing utilities.
-
-Backend Dependencies (Rust)
----------------------------
-
-- **tauri** — MIT / Apache-2.0
-  Desktop runtime.
-
-- **tauri-plugin-dialog** — MIT
-  Native file dialogs and window management.
-
-- **tauri-plugin-fs** — MIT
-  File system access APIs.
-
-- **tauri-plugin-opener** — MIT
-  URL and file opening utilities.
-
-- **serde / serde_json** — MIT / Apache-2.0
-  Serialization framework.
-
-- **rusqlite** — MIT
-  SQLite database bindings.
-
-- **reqwest** — MIT
-  HTTP client.
-
-- **tokio** — MIT
-  Async runtime.
-
-- **uuid** — Apache-2.0 / MIT
-  UUID generation.
-
-- **chrono** — MIT / Apache-2.0
-  Date and time utilities.
-
-- **sha2** — MIT / Apache-2.0
-  SHA-2 cryptographic hashing.
-
-- **similar** — MIT
-  Text diffing and patching.
-
-- **regex** — MIT / Apache-2.0
-  Regular expressions.
-
-- **dirs** — MIT / Apache-2.0
-  Platform-specific directory paths.
-
-- **open** — MIT / Apache-2.0
-  Cross-platform URL/file opening.
-
----
-
-Trademark Notice
----------------
-
-Skill Studio is a project name and trademark of its contributors.
-
-The names, logos, and brands of third-party AI agent platforms mentioned
-in this application (including but not limited to Cursor, Claude Code,
-Codex, Windsurf, and others) are the property of their respective owners.
-Their appearance in Skill Studio is solely for identification and
-interoperability purposes and does not constitute or imply endorsement,
-sponsorship, or recommendation by those owners.
-
----
-
-Asset Licenses
---------------
-
-Application icons and logos included in this repository are original works
-created for this project and licensed under the same Apache License 2.0,
-unless otherwise noted in the file header.
-
-Skill Studio Pro uses independent Wave 0 placeholder assets under
-public/assets/brand/. Upstream Skill Studio brand assets remain attributable
-to their original contributors and are not the formal Skill Studio Pro brand.
-
-If you redistribute this software or create derivative works that include
-visual assets from this project, please preserve the applicable copyright
-notices.
-
----
-
-Maintainer Responsibility
---------------------------
-
-Before publishing any release artifact, maintainers are responsible for:
-
-1. Verifying the complete dependency tree and confirming license compatibility
-2. Checking for any components with copyleft licenses that may impose
-   additional obligations
-3. Confirming that bundled assets (icons, fonts, images) are correctly
-   attributed
-4. Updating this NOTICE file if new dependencies or assets are introduced
+No font files are bundled. Runtime UI font stacks use fonts supplied by the
+user's operating system.

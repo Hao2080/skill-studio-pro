@@ -5,8 +5,7 @@ on:
   push:
     branches:
       - main
-      - master
-      - "wave-*"
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -16,50 +15,59 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  baseline:
-    name: Baseline (${{ matrix.os }})
+  platform:
+    name: ${{ matrix.platform }} quality, package, and smoke
     strategy:
       fail-fast: false
       matrix:
-        os:
-          - ubuntu-latest
-          - windows-latest
-          - macos-latest
+        include:
+          - platform: linux
+            os: ubuntu-latest
+            bundles: deb,appimage
+          - platform: windows
+            os: windows-latest
+            bundles: nsis
+          - platform: macos
+            os: macos-latest
+            bundles: app,dmg
     runs-on: ${{ matrix.os }}
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
-      - name: Install Linux dependencies
+      - name: Install Linux desktop and Secret Service dependencies
         if: runner.os == 'Linux'
         run: |
           sudo apt-get update
           sudo apt-get install -y \
-            pkg-config \
+            dbus-x11 \
+            gnome-keyring \
+            libayatana-appindicator3-dev \
+            librsvg2-dev \
+            libssl-dev \
             libwebkit2gtk-4.1-dev \
             libxdo-dev \
-            libssl-dev \
-            libayatana-appindicator3-dev \
-            librsvg2-dev
+            pkg-config \
+            xvfb
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: 22
           cache: npm
 
       - name: Setup Rust
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@4be7066ada62dd38de10e7b70166bc74ed198c30 # stable 2026-07-16
         with:
           components: rustfmt, clippy
 
       - name: Cache Rust dependencies
-        uses: Swatinem/rust-cache@v2
+        uses: Swatinem/rust-cache@23869a5bd66c73db3c0ac40331f3206eb23791dc # v2.9.1
         with:
           workspaces: src-tauri
 
-      - name: Install dependencies
+      - name: Install locked frontend dependencies
         run: npm ci
 
       - name: Typecheck frontend
@@ -83,26 +91,106 @@ jobs:
       - name: Test Rust
         run: cargo test --manifest-path src-tauri/Cargo.toml
         env:
-          SKILL_STUDIO_PRO_NATIVE_SECRET_STORE_TEST: ${{ runner.os == 'Windows' && '1' || '0' }}
+          SKILL_STUDIO_PRO_NATIVE_SECRET_STORE_TEST: "0"
 
-  secret-scan:
-    name: Secret scan
+      - name: Verify repository hygiene
+        run: npm run security:repo
+
+      - name: Test Linux Secret Service contract in isolated D-Bus session
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          set -o pipefail
+          bash scripts/ci/test-secret-store-linux.sh 2>&1 | tee secret-store-linux.log
+
+      - name: Test Windows Credential Manager contract
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          cargo test --manifest-path src-tauri/Cargo.toml --test ai_integration native_secret_store_contract -- --exact --nocapture 2>&1 | Tee-Object secret-store-windows.log
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+        env:
+          SKILL_STUDIO_PRO_NATIVE_SECRET_STORE_TEST: "1"
+
+      - name: Test macOS Keychain contract
+        if: runner.os == 'macOS'
+        shell: bash
+        run: |
+          set -o pipefail
+          SKILL_STUDIO_PRO_NATIVE_SECRET_STORE_TEST=1 cargo test --manifest-path src-tauri/Cargo.toml --test ai_integration native_secret_store_contract -- --exact --nocapture 2>&1 | tee secret-store-macos.log
+
+      - name: Build Tauri installers
+        run: npm run tauri -- build --ci --bundles ${{ matrix.bundles }}
+
+      - name: Stage and hash installers
+        run: node scripts/stage-release-assets.mjs --platform ${{ matrix.platform }} --bundle-root src-tauri/target/release/bundle --output release-assets/${{ matrix.platform }}
+
+      - name: Smoke installed Windows NSIS application
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $installer = (Get-ChildItem release-assets/windows -Filter '*.exe' -File | Select-Object -First 1).FullName
+          ./scripts/ci/smoke-windows.ps1 -Installer $installer -Output release-assets/windows/smoke-windows.json
+
+      - name: Smoke installed macOS DMG application
+        if: runner.os == 'macOS'
+        shell: bash
+        run: bash scripts/ci/smoke-macos.sh "$(find release-assets/macos -maxdepth 1 -name '*.dmg' -print -quit)" release-assets/macos/smoke-macos.json
+
+      - name: Smoke installed Linux deb application under Xvfb
+        if: runner.os == 'Linux'
+        shell: bash
+        run: bash scripts/ci/smoke-linux.sh "$(find release-assets/linux -maxdepth 1 -name '*.deb' -print -quit)" release-assets/linux/smoke-linux.json
+
+      - name: Add Secret Store evidence to platform artifact
+        shell: bash
+        run: cp "secret-store-${{ matrix.platform }}.log" "release-assets/${{ matrix.platform }}/"
+
+      - name: Upload installers, hashes, smoke logs, and Secret Store evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: ci-${{ matrix.platform }}-${{ github.run_id }}
+          path: release-assets/${{ matrix.platform }}
+          if-no-files-found: error
+          retention-days: 14
+
+  supply-chain:
+    name: SBOM, licenses, links, audits, and secrets
     runs-on: ubuntu-latest
     steps:
       - name: Checkout full history
-        uses: actions/checkout@v4
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           fetch-depth: 0
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: 22
+          cache: npm
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@4be7066ada62dd38de10e7b70166bc74ed198c30 # stable 2026-07-16
+
+      - name: Install locked dependencies
+        run: npm ci
+
+      - name: Verify lockfiles, CycloneDX SBOMs, license policy, and repository links
+        run: npm run supply-chain:check
+
+      - name: Audit npm dependencies
+        run: npm audit --audit-level=high
+
+      - name: Audit Rust dependencies
+        uses: rustsec/audit-check@69366f33c96575abad1ee0dba8212993eecbe998 # v2.0.0
+        with:
+          working-directory: src-tauri
 
       - name: Verify tracked-file hygiene
         run: npm run security:repo
 
-      - name: Scan tracked history for secrets
-        uses: gitleaks/gitleaks-action@v2
+      - name: Scan full Git history for secrets
+        uses: gitleaks/gitleaks-action@e0c47f4f8be36e29cdc102c57e68cb5cbf0e8d1e # v3.0.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

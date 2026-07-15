@@ -47,7 +47,7 @@ export function ProSettingsPage() {
             <SettingRow icon={autoAi.paused?<Play size={14}/>:<Pause size={14}/>} title="队列暂停" description={`待处理 ${autoAi.queued}，完成 ${autoAi.completed}，失败 ${autoAi.failed}。`}><button type="button" className="pro-button" disabled={!autoAi.enabled} onClick={()=>autoAi.setPaused(!autoAi.paused)}>{autoAi.paused?<><Play size={14}/>继续队列</>:<><Pause size={14}/>暂停队列</>}</button></SettingRow>
             <SettingRow icon={<ScanSearch size={14}/>} title="运行状态" description={autoAi.lastError || "自动补充不会在首次扫描时无条件上传全部 Skill。"}><div><StatusBadge label={autoAi.running?"运行中":autoAi.paused?"已暂停":"空闲"} tone={autoAi.running?"info":autoAi.failed?"warning":"neutral"}/><button type="button" className="pro-button" disabled={!autoAi.enabled||autoAi.running||autoAi.paused} onClick={autoAi.runNow}>检查缺少/过期项</button></div></SettingRow>
           </section>
-          <section className="glass-panel settings-pro-section about-pro"><header><span><Info size={17}/></span><div><h2>关于 Skill Studio Pro</h2><p>基于开源 Skill Studio 改造，继续采用 Apache-2.0。</p></div></header><dl><div><dt>版本</dt><dd>0.1.0 · Wave 1 UI Shell</dd></div><div><dt>上游基线</dt><dd><code>liu673/skill-studio@cd0bb0a</code></dd></div><div><dt>运行栈</dt><dd>Tauri 2 · React 18 · TypeScript</dd></div></dl></section>
+          <section className="glass-panel settings-pro-section about-pro"><header><span><Info size={17}/></span><div><h2>关于 Skill Studio Pro</h2><p>基于开源 Skill Studio 改造，继续采用 Apache-2.0。</p></div></header><dl><div><dt>版本</dt><dd>0.1.0-beta.1 · Public Beta</dd></div><div><dt>上游基线</dt><dd><code>liu673/skill-studio@cd0bb0a</code></dd></div><div><dt>运行栈</dt><dd>Tauri 2 · React 18 · TypeScript</dd></div></dl></section>
         </div>
       </div>
     </div></div>

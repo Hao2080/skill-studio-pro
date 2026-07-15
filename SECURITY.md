@@ -1,94 +1,49 @@
 # Security Policy
 
-## Supported Versions
+## Supported releases
 
-Only the latest release is supported for security updates.
+Skill Studio Pro is currently a public beta. Security fixes are made against the latest prerelease and `main`; older beta builds may not receive backports.
 
-| Version | Supported          |
-| ------- | ------------------ |
-| 0.1.x   | :white_check_mark: |
-| < 0.1   | :x:                |
+| Version | Supported |
+|---|---|
+| `0.1.0-beta.1` / `main` | Yes |
+| Older or upstream Skill Studio builds | No |
 
-## Reporting a Vulnerability
+## Report a vulnerability privately
 
-We take security issues seriously. If you discover a vulnerability,
-please report it responsibly.
+Do not open a public issue with exploit details, real credentials, private Skill content, database contents, or personal paths.
 
-**Please do not open public GitHub issues for security vulnerabilities.**
+Use [GitHub Private Vulnerability Reporting](https://github.com/Hao2080/skill-studio-pro/security/advisories/new). Include the affected version/commit, operating system, installation method, minimal reproduction, impact, and any safe mitigation. Use fixture data and redact secrets.
 
-### How to Report
+The maintainer will acknowledge the report, assess severity and affected versions, coordinate a fix, and agree on disclosure timing. Response time depends on impact and maintainer availability; this beta does not promise a commercial support SLA.
 
-Use one of the following methods:
+## Security model and boundaries
 
-1. **GitHub Security Advisories** — navigate to the repository's
-   **Security** tab and click **Report a vulnerability**
-2. **Email** — send details to **skillstudio@proton.me**
+1. **Local-first storage.** Runtime data defaults to `~/.skill-studio-pro/`. The application does not enable telemetry or cloud synchronization.
+2. **External Skill content is untrusted.** Scan, preview, import, provenance analysis, and AI summarization do not execute scripts, commands, installers, or hooks from a Skill.
+3. **Writes are scoped and recoverable.** Central-library edits, publishing, trash, restore, and purge use stable IDs, allowed-root checks, plan hashes, staging, ownership markers, atomic replacement where supported, and recovery journals.
+4. **AI is optional and explicit.** Content is sent only after an explicit generation action or opt-in auto-enrichment. Provider requests are minimized and redacted. CI uses loopback mocks and blocks paid provider domains.
+5. **Secrets stay outside ordinary files.** Persistent keys use Windows Credential Manager, macOS Keychain, or Linux Secret Service. If the native store is unavailable, the application refuses persistent plaintext fallback; process-only storage remains an explicit option.
+6. **Imported sources may use the network.** User-initiated Git/market import and configured AI providers make outbound requests. Remote provider compatibility and trust remain the user's responsibility.
 
-### What to Include
+## Release trust boundary
 
-Please provide as much of the following as possible:
+`v0.1.0-beta.1` packages are test builds, not identity-signed production distributions:
 
-- Affected version or commit range
-- Operating system and installation method
-- Steps to reproduce the issue
-- Impact assessment (data loss, file read/write, remote execution, etc.)
-- Any potential mitigations you are aware of
+- Windows is not Authenticode-signed.
+- macOS is not Developer ID-signed or notarized.
+- Linux packages are not distribution-signed.
+- Automatic updates are disabled; no updater key or endpoint is configured.
 
-### Response Timeline
+Each release includes SHA-256 manifests, CycloneDX SBOMs, dependency/license records, and platform smoke evidence. Hashes prove download integrity relative to the GitHub Release manifest; they do not establish publisher identity in the way platform code signing does.
 
-We aim to acknowledge reports within **48 hours** and to provide a
-timeline for fix and disclosure within **7 days**. The actual resolution
-time depends on complexity.
+## In-scope security areas
 
-| Severity | Expected Response | Expected Fix |
-|---|---|---|
-| Critical | 24 hours | 7 days |
-| High | 48 hours | 30 days |
-| Medium | 5 days | 60 days |
-| Low | 14 days | 90 days |
+- Path traversal, symlink/junction escape, Zip Slip, or unsafe recursive operations
+- Bypass of plan/hash/ownership checks during edit, publish, trash, restore, or purge
+- API Key or sensitive Skill content written to SQLite, JSON, logs, crash output, Git, or release assets
+- Unintended execution of imported Skill content
+- Provider request redaction, credential isolation, or permission boundary failures
+- Supply-chain, dependency, build workflow, artifact manifest, or release integrity issues
 
-Severity is assessed using CVSS 3.1 by the maintainers.
-
-## Security Design Boundaries
-
-Understanding these boundaries helps you assess the impact of any vulnerability:
-
-1. **Local-first data storage** — all user data (Skills, snapshots, settings, SQLite metadata) is stored in `~/.skill-studio/`. No data is uploaded to any remote service by default.
-
-2. **Network access is scoped** — external market browsing and Git import fetch data over HTTPS. These are the only outbound network operations; the application does not make arbitrary outbound connections.
-
-3. **File system access is user-directed** — the application reads and writes only within:
-   - The user-configured workspace directory (`~/.skill-studio/` by default)
-   - Agent platform Skill directories explicitly added by the user
-   - Project directories explicitly bound to a project in the application
-
-4. **Third-party Skills are untrusted input** — Skills imported from external markets, Git repositories, or local directories may contain scripts, commands, or credential-fetching instructions. They are stored as files and displayed, but **never automatically executed**.
-
-5. **Platform sync is additive** — sync operations copy files to user-configured directories. The application does not delete or overwrite files outside of explicitly configured target directories without user confirmation.
-
-## Areas Requiring Ongoing Security Review
-
-These areas are known to require continued attention and are tracked
-internally:
-
-- **Tauri capabilities**: file system, shell, and network permissions should be
-  scoped to minimum necessary access before the first stable release
-- **External imports**: path traversal, archive extraction escape, and oversized
-  file handling for Git repository and market imports
-- **Platform sync**: race conditions, directory conflicts, and atomic write
-  guarantees during concurrent sync operations
-- **Data migration**: SQLite schema migrations must be backward-compatible
-  and have tested rollback paths
-
-## Security Acknowledgments
-
-We maintain a list of security researchers and contributors who have
-responsibly disclosed vulnerabilities. If you report a confirmed
-security issue that is fixed in a release, you will be credited by name
-(unless you prefer to remain anonymous) in the release notes.
-
-## Related Policies
-
-- [Contributing Guidelines](CONTRIBUTING.md) — covers secure development practices
-- [Code of Conduct](CODE_OF_CONDUCT.md) — community behavior expectations
-- [NOTICE](NOTICE) — open source attribution and license information
+General bugs and feature requests belong in [GitHub Issues](https://github.com/Hao2080/skill-studio-pro/issues). See [CONTRIBUTING.md](CONTRIBUTING.md) for secure development requirements.

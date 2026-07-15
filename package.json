@@ -1,9 +1,17 @@
 {
   "name": "skill-studio-pro",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.1.0-beta.1",
   "license": "Apache-2.0",
   "description": "Skill Studio Pro local-first desktop workspace for AI Agent Skill assets",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Hao2080/skill-studio-pro.git"
+  },
+  "homepage": "https://github.com/Hao2080/skill-studio-pro#readme",
+  "bugs": {
+    "url": "https://github.com/Hao2080/skill-studio-pro/issues"
+  },
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -16,6 +24,10 @@
     "rust:check": "cargo check --manifest-path src-tauri/Cargo.toml",
     "rust:clippy": "cargo clippy --manifest-path src-tauri/Cargo.toml --all-targets -- -D warnings",
     "rust:test": "cargo test --manifest-path src-tauri/Cargo.toml",
+    "sbom:generate": "node scripts/generate-supply-chain.mjs",
+    "sbom:check": "node scripts/generate-supply-chain.mjs --check",
+    "release:metadata": "node scripts/verify-release-metadata.mjs",
+    "supply-chain:check": "npm run sbom:check && npm run release:metadata",
     "security:repo": "node scripts/verify-repository-hygiene.mjs",
     "check": "npm run typecheck && npm run test && npm run build && npm run rust:fmt && npm run rust:check && npm run rust:clippy && npm run rust:test && npm run security:repo"
   },
