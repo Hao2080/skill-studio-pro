@@ -1,7 +1,7 @@
 # Skill Studio Pro 详细技术方案
 
-文档状态：Draft 0.1  
-日期：2026-07-15  
+文档状态：Draft 0.2（V1 产品闭环修订）
+日期：2026-07-16
 依赖文档：[SPEC.md](./SPEC.md)、[PRD.md](./PRD.md)  
 上游审计基线：`liu673/skill-studio@cd0bb0af53865d4a9643968080bfc5a8137b72d9`
 
@@ -1013,6 +1013,34 @@ interface AppError {
 - 跨平台自动化测试
 - 性能、安全、许可证和安装包验证
 
+### Wave 5：V1 产品闭环
+
+- 中央 Skill 真实编辑工作区
+- AI 简介/用法生成、取消与重新生成入口
+- 平台中心和扫描根真实管理
+- 三个流程的跨层组件与 IPC 契约测试
+
+### Wave 6：Windows 真实验收
+
+- 使用隔离 Home、配置、中央库和 Agent 目录启动 release 应用
+- 完整执行扫描、纳管、编辑、AI、发布、漂移、回收和恢复
+- 记录 900×600、1280×800、高 DPI、键盘和降低透明度结果
+- 发现缺陷后返回 Wave 5 修复并重跑全部门槛
+
+### Wave 7：开源与跨平台发布
+
+- 建立独立公开 `origin` 和 `main`
+- 运行 Windows、macOS、Linux 真实 CI 与安装/启动 smoke
+- 生成 SBOM、第三方许可证、SECURITY、CONTRIBUTING 和构建文档
+- 生成公开 Beta 产物、校验文件、变更说明和已知限制
+
+### Wave 8：独立发布审计
+
+- 从 SPEC/PRD 反向检查 P0 闭环
+- 审查公开仓库、历史秘密、产物内容和上游归属
+- 运行最终回归、性能基准与发布阻断检查
+- 只有全部门槛通过后才创建发布结论
+
 ## 23. 技术验收要点
 
 1. 首次扫描对外部目录零写入。
@@ -1025,3 +1053,81 @@ interface AppError {
 8. API Key 不进入数据库、日志或普通配置。
 9. 上游快照、diff、市场和平台基础能力继续通过原测试。
 10. 五个首要 Agent 在 Windows、macOS、Linux 的目录契约通过验证。
+
+## 24. Draft 0.2 产品闭环实现
+
+### 24.1 实现基线
+
+`d626224` 已具备编辑、AI、平台、扫描和发布所需的后端 service、IPC 与类型化前端 API。Draft 0.2 的原则是复用这些接口补齐用户流程，不重写数据库、Platform Adapter、AI Provider 或文件事务。
+
+生产 Tauri 页面调用真实 IPC；浏览器 `?preview=pro` 继续使用类型化 Mock，但 Mock 只能用于预览和测试，不能作为完成证据。
+
+### 24.2 编辑器集成
+
+建议新增 `src/features/editor/`，或在现有 Skill 详情内建立隔离的 Editor Workspace。状态机至少包括：
+
+```text
+readonly -> loading -> clean -> dirty -> saving -> clean
+                                  |        |-> save_error -> dirty
+                                  |-> discard -> clean
+```
+
+实现约束：
+
+1. 只有中央 Skill 可进入编辑模式；外部实例显示纳管入口。
+2. 文件内容按 Skill ID 与相对路径读取，不向前端开放任意绝对路径写入。
+3. 每个编辑会话生成稳定 `editSessionId`，保存调用现有 `lifecycle_text_file_save`。
+4. 前端可以提供即时语法提示，但 Rust 保存校验是最终权威。
+5. 路由切换、文件切换和窗口关闭统一经过 dirty guard。
+6. 保存成功后刷新内容哈希、快照、diff、操作记录和 mapping outdated 数量。
+7. 保存失败不得清空输入或假装内容已落盘。
+8. 二进制文件只读；外部编辑器通过受控命令打开，并在返回后触发漂移/变更检查。
+
+### 24.3 AI 生成编排
+
+详情页通过现有 `aiApi.generateArtifact`、`cancelArtifact` 和 `listArtifacts` 编排任务。每次调用使用唯一 `cancellationId`，并以 task、输入哈希、Provider、模型和 prompt version 作为缓存身份。
+
+推荐流程：
+
+1. 本地确定性解析先生成可展示基础信息。
+2. 用户点击“生成简介/用法”，或显式开启自动补充后，按已启用路由生成 `extract_usage`、`suggest_tags` 等 MiniMax 结构化产物。
+3. `final_summary` 由 OpenAI 路由生成最终简介；输入仅包含本任务必要原文片段和已验证结构化候选。
+4. 部分任务失败时保留成功产物并显示具体失败，不阻断编辑、发布或回收站。
+5. 内容、模型、路由或 prompt version 变化时旧产物显示 stale，重新生成使用 `force=true`。
+6. 自动补充队列默认关闭；启用后使用有界并发，可暂停，不在首次扫描中无条件上传全部 Skill。
+
+前端不得把配置模型名当成实际返回模型，也不得在 API Key 输入保存后继续持有明文。
+
+### 24.4 平台中心与扫描根
+
+平台中心复用 `platformsApi` 的检测、保存、治理影响、路径测试、自定义平台与映射接口；扫描根复用 `inventoryApi.listRoots/upsertRoot/startScan`。
+
+页面加载时并行读取平台、扫描根和必要汇总，单项失败显示局部错误。路径保存流程为：选择/输入目录 → `test_platform_path` → 展示规范化路径和能力 → `save_platform_connection` → 重新检测。对仍有受管映射的平台执行停用、改目录或删除自定义平台前，必须先读取治理影响并要求确认。
+
+扫描根移除若后端暂时没有独立删除命令，第一版使用 `enabled=false` 表示停用；不得通过前端拼接文件删除。若新增删除配置 IPC，只能删除数据库配置和可重建索引，不能删除目标目录。
+
+### 24.5 真实 Windows 验收环境
+
+真实验收使用应用已支持的 Home/config/workspace 注入，创建一次性测试根和五个 Agent 目录。测试 Skill 全部为仓库夹具或临时复制，不使用真实用户目录。
+
+验收允许用户明确提供测试用 MiniMax/OpenAI 凭据，但不得写入测试报告、日志、截图、数据库或 Git。真实模型测试只验证连接、一次最小生成和模型归属；持续回归仍使用 Mock Provider。
+
+### 24.6 开源发布工程
+
+1. 建立 Pro 自有公开仓库和 `origin`；上游只保留为 `upstream`。
+2. 当前 `wave-0-baseline` 在完成发布审计后合并或改名为 `main`，不得丢失历史。
+3. PR/主分支 CI 在三种真实 OS Runner 执行 `npm run check`、仓库卫生、秘密与许可证检查。
+4. Release workflow 生成平台安装包、SHA-256、SBOM、第三方清单和产物内容审计结果。
+5. 自动更新在 Pro 自有签名密钥与端点完成前保持关闭。
+6. macOS 公证、Windows 签名或 Linux 包签名未完成时，Beta 文档必须明确；不得使用上游密钥。
+
+### 24.7 窗口依赖与交接协议
+
+后续任务按顺序执行，避免多个窗口同时修改主工作区：
+
+1. 产品闭环窗口：编辑器、AI 生成、平台/扫描根。
+2. Windows 真实验收窗口：只在产品闭环提交后启动；发现问题直接修复并回归。
+3. 开源与跨平台窗口：只在 Windows 验收通过后发布仓库和运行三平台流水线。
+4. 最终审计窗口：只在真实 CI/Release 结果可读后开始。
+
+每个窗口必须提交代码、生成 `docs/handoffs/` 交接文件、列出命令与结果，并以 `HANDOFF_READY` 结束。总控任务只以仓库、提交、交接和测试事实判断完成，不依赖人工复制聊天内容。
