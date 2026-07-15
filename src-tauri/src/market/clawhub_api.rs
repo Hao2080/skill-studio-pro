@@ -151,7 +151,7 @@ pub fn load_detail(
         repo_url: owner_handle
             .as_deref()
             .map(|owner_handle| format!("https://clawhub.ai/{}/{}", owner_handle, package_name))
-            .or_else(|| Some(format!("https://clawhub.ai/skills"))),
+            .or_else(|| Some("https://clawhub.ai/skills".to_string())),
         source_subpath: None,
         detail_url: owner_handle.as_deref().map(|owner_handle| {
             format!(

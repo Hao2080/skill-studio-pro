@@ -1668,6 +1668,7 @@ fn read_manifest(
         .map_err(|e| format!("解析 manifest 失败: {}", e))
 }
 
+#[allow(clippy::too_many_arguments)]
 fn insert_sync_log(
     conn: &Connection,
     project_id: &str,

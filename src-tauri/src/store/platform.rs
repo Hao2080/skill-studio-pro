@@ -1448,6 +1448,7 @@ fn clear_release_target(
     Ok(())
 }
 
+#[allow(clippy::too_many_arguments)]
 fn insert_release_log(
     conn: &rusqlite::Connection,
     skill_id: &str,

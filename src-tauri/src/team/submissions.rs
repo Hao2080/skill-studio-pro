@@ -30,6 +30,7 @@ fn load_submission_delivery_context(
     })
 }
 
+#[allow(clippy::too_many_arguments)]
 fn insert_activity(
     conn: &rusqlite::Connection,
     team_id: &str,

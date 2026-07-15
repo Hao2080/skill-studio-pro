@@ -47,6 +47,7 @@ fn normalize_team_ids(team_ids: &[String]) -> Vec<String> {
     normalized
 }
 
+#[allow(clippy::too_many_arguments)]
 fn insert_activity(
     conn: &Connection,
     team_id: &str,

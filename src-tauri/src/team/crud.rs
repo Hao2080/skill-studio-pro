@@ -119,6 +119,7 @@ fn ensure_unique_member_name(
     Ok(())
 }
 
+#[allow(clippy::too_many_arguments)]
 fn insert_activity(
     conn: &rusqlite::Connection,
     team_id: &str,

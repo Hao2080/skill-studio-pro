@@ -957,9 +957,8 @@ pub fn import_skill<R: tauri::Runtime>(
         )
         .map_err(|e| format!("插入 skill 失败: {}", e))?;
 
-        replace_primary_skill_source(&conn, &id, &prepared.source_seed).map_err(|e| {
+        replace_primary_skill_source(&conn, &id, &prepared.source_seed).inspect_err(|_| {
             let _ = conn.execute("DELETE FROM skills WHERE id = ?1", rusqlite::params![id]);
-            e
         })?;
 
         let target = skill_dir(app, &slug);

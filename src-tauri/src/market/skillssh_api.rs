@@ -21,7 +21,7 @@ pub enum LeaderboardType {
 }
 
 impl LeaderboardType {
-    pub fn from_str(value: &str) -> Self {
+    pub fn parse(value: &str) -> Self {
         match value {
             "trending" => Self::Trending,
             "hot" => Self::Hot,

@@ -276,7 +276,7 @@ fn load_market_source_items(
 ) -> Result<Vec<ExternalMarketSkill>, String> {
     match source_key {
         "skillssh" => {
-            let board_type = skillssh_api::LeaderboardType::from_str(board);
+            let board_type = skillssh_api::LeaderboardType::parse(board);
             let raw_items = skillssh_api::fetch_leaderboard(board_type)?;
             Ok(category::build_external_market_items(&raw_items))
         }
