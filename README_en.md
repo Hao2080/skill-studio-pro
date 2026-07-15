@@ -1,12 +1,12 @@
 <p align="center">
-  <img src="./public/assets/brand/skill-studio-pro-wordmark-placeholder.svg" alt="Skill Studio Pro" width="900" />
+  <img src="./public/assets/brand/skill-studio-pro-wordmark.svg" alt="Skill Studio Pro" width="900" />
 </p>
 
 # Skill Studio Pro
 
-Skill Studio Pro is a local-first, cross-platform desktop application for managing AI Agent Skill assets. This repository is currently at the Wave 0 baseline: it preserves and validates the upstream workspace, Skill management, snapshot, market, platform, project, and team-compatibility foundations while establishing independent Pro naming, storage, placeholder branding, update isolation, and cross-platform CI.
+Skill Studio Pro is a local-first, cross-platform desktop application for managing AI Agent Skill assets. It preserves the upstream workspace, Skill management, snapshot, market, platform, project, and team-compatibility foundations while establishing independent Pro naming, storage, branding, update isolation, and cross-platform CI.
 
-Wave 0 does not implement the planned Pro inventory scanner, AI integration, central mapping, install planning, or trash features. Later modules will build those capabilities on this baseline.
+Wave 1 provides the Pro UI shell, typed Mock pages, source confidence, model attribution, install preview, and trash interactions. The scanner, AI providers, central mapping, and file transactions remain ready for later backend integration.
 
 ## Upstream relationship
 
@@ -33,7 +33,7 @@ See [SPEC](docs/SPEC.md), [PRD](docs/PRD.md), [technical design](docs/TECHNICAL-
 
 ## Branding and updates
 
-Wave 0 uses independent Pro placeholder assets under `public/assets/brand/`; the upstream logo is not used as the formal Pro identity. A later branding workstream may replace these placeholders.
+The Pro interface uses independent assets under `public/assets/brand/`; the upstream logo is retained only for attribution and is not used as the formal Pro identity.
 
 Automatic updates are explicitly disabled. The repository contains no upstream update endpoint, public key, or updater capability and does not generate updater artifacts. Do not enable updates until Skill Studio Pro has its own release repository, signing keys, and update source. Upstream Release installers are not Skill Studio Pro installers.
 

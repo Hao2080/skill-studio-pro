@@ -3,95 +3,66 @@ import { render, screen, cleanup, fireEvent } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import App from "./App";
 
-vi.mock("@/features/skills/pages/WorkspacePage", () => ({ WorkspacePage: () => <div>WorkspacePage</div> }));
-vi.mock("@/features/skills/pages/SkillDetailWorkspacePage", () => ({ SkillDetailWorkspacePage: () => <div>SkillDetailWorkspacePage</div> }));
 vi.mock("@/features/dashboard/pages/DashboardPage", () => ({ DashboardPage: () => <div>DashboardPage</div> }));
-vi.mock("@/features/market/pages/MarketPage", () => ({ MarketPage: () => <div>MarketPage</div> }));
-vi.mock("@/features/projects/pages/ProjectsPage", () => ({ ProjectsPage: () => <div>ProjectsPage</div> }));
-vi.mock("@/features/teams/pages/TeamsPage", () => ({ TeamsPage: () => <div>TeamsPage</div> }));
-vi.mock("@/features/settings/pages/SettingsPage", () => ({ SettingsPage: () => <div>SettingsPage</div> }));
+vi.mock("@/features/inventory/pages/InventoryPage", () => ({ InventoryPage: () => <div>InventoryPage</div> }));
+vi.mock("@/features/skills/pages/SkillDetailProPage", () => ({ SkillDetailProPage: () => <div>SkillDetailProPage</div> }));
+vi.mock("@/features/library/pages/LibraryPage", () => ({ LibraryPage: () => <div>LibraryPage</div> }));
+vi.mock("@/features/platforms/pages/ProPlatformsPage", () => ({ ProPlatformsPage: () => <div>ProPlatformsPage</div> }));
+vi.mock("@/features/discover/pages/DiscoverPage", () => ({ DiscoverPage: () => <div>DiscoverPage</div> }));
+vi.mock("@/features/trash/pages/TrashPage", () => ({ TrashPage: () => <div>TrashPage</div> }));
+vi.mock("@/features/activity/pages/ActivityPage", () => ({ ActivityPage: () => <div>ActivityPage</div> }));
+vi.mock("@/features/settings/pages/ProSettingsPage", () => ({ ProSettingsPage: () => <div>ProSettingsPage</div> }));
+vi.mock("@/features/ai-settings/pages/AiSettingsPage", () => ({ AiSettingsPage: () => <div>AiSettingsPage</div> }));
 
-vi.mock("@/features/teams/state/TeamContext", () => ({
-  TeamProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-}));
-vi.mock("@/features/skills/state/SkillContext", () => ({
-  SkillProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-}));
-vi.mock("@/features/snapshots/state/SnapshotContext", () => ({
-  SnapshotProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-}));
-vi.mock("@/app/providers/ThemeContext", () => ({
-  ThemeProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-  useTheme: () => ({ theme: "dark", resolvedTheme: "dark", setTheme: vi.fn() }),
-}));
-vi.mock("@/app/providers/AppSettingsContext", () => ({
-  AppSettingsProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-}));
+vi.mock("@/features/teams/state/TeamContext", () => ({ TeamProvider: ({ children }: { children: React.ReactNode }) => <>{children}</> }));
+vi.mock("@/features/skills/state/SkillContext", () => ({ SkillProvider: ({ children }: { children: React.ReactNode }) => <>{children}</> }));
+vi.mock("@/features/snapshots/state/SnapshotContext", () => ({ SnapshotProvider: ({ children }: { children: React.ReactNode }) => <>{children}</> }));
+vi.mock("@/app/providers/ThemeContext", () => ({ ThemeProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>, useTheme: () => ({ theme: "dark", resolvedTheme: "dark", setTheme: vi.fn() }) }));
+vi.mock("@/app/providers/AppSettingsContext", () => ({ AppSettingsProvider: ({ children }: { children: React.ReactNode }) => <>{children}</> }));
 vi.mock("@/app/providers/I18nContext", () => ({
   I18nProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-  useI18n: () => ({
-    language: "zh-CN",
-    resolvedLanguage: "zh-CN",
-    antdLocale: {},
-    setLanguage: vi.fn(),
-    t: (key: string) =>
-      ({
-        "app.brand.subtitle": "技能资产管理平台",
-        "app.nav.product": "产品导航",
-        "app.nav.system": "系统",
-        "app.nav.dashboard": "总览",
-        "app.nav.workspace": "技能资产",
-        "app.nav.projects": "项目空间",
-        "app.nav.teams": "团队空间",
-        "app.nav.market": "市场与导入",
-        "app.nav.platforms": "平台中心",
-        "app.nav.settings": "系统设置",
-        "app.nav.expand": "展开导航",
-        "app.nav.collapse": "折叠导航",
-      }[key] ?? key),
-  }),
+  useI18n: () => ({ language: "zh-CN", resolvedLanguage: "zh-CN", antdLocale: {}, setLanguage: vi.fn(), t: (key: string) => ({
+    "app.nav.product": "产品导航", "app.nav.system": "系统", "app.nav.dashboard": "总览", "app.nav.inventory": "本机 Skill", "app.nav.library": "中央库", "app.nav.platforms": "平台中心", "app.nav.discover": "发现与安装", "app.nav.trash": "回收站", "app.nav.activity": "操作记录", "app.nav.settings": "设置", "app.nav.ai": "模型与 API", "app.nav.expand": "展开导航", "app.nav.collapse": "折叠导航",
+  }[key] ?? key) }),
 }));
 
-describe("App navigation structure", () => {
-  afterEach(() => {
-    cleanup();
-    window.history.replaceState({}, "", "/");
-  });
+describe("Skill Studio Pro application shell", () => {
+  afterEach(() => { cleanup(); window.history.replaceState({}, "", "/"); localStorage.clear(); });
 
-  it("renders localized sidebar navigation structure", () => {
+  it("renders the first-generation navigation and hides team spaces", () => {
     render(<App />);
     expect(screen.getByLabelText("Skill Studio Pro")).toBeTruthy();
-    expect(screen.queryByText("技能资产管理平台")).toBeNull();
-    expect(screen.getByText("总览")).toBeTruthy();
-    expect(screen.getByText("技能资产")).toBeTruthy();
-    expect(screen.getByText("项目空间")).toBeTruthy();
-    expect(screen.getByText("团队空间")).toBeTruthy();
-    expect(screen.getByText("市场与导入")).toBeTruthy();
-    expect(screen.getByText("平台中心")).toBeTruthy();
-    expect(screen.getByText("系统设置")).toBeTruthy();
+    expect(screen.getByRole("link", { name: "总览" })).toBeTruthy();
+    expect(screen.getByRole("link", { name: "本机 Skill" })).toBeTruthy();
+    expect(screen.getByRole("link", { name: "中央库" })).toBeTruthy();
+    expect(screen.getByRole("link", { name: "发现与安装" })).toBeTruthy();
+    expect(screen.getByRole("link", { name: "模型与 API" })).toBeTruthy();
+    expect(screen.queryByText("团队空间")).toBeNull();
+    expect(screen.queryByText("项目空间")).toBeNull();
   });
 
-  it("collapses sidebar to icon-only navigation", () => {
+  it("collapses the sidebar to icon-only navigation", () => {
     render(<App />);
-
     fireEvent.click(screen.getByRole("button", { name: "折叠导航" }));
-
-    expect(screen.queryByText("技能资产")).toBeNull();
-    expect(screen.queryByText("项目空间")).toBeNull();
-    expect(screen.queryByText("团队空间")).toBeNull();
+    expect(screen.queryByText("本机 Skill")).toBeNull();
     expect(screen.getByRole("button", { name: "展开导航" })).toBeTruthy();
   });
 
-  it("defaults to showing DashboardPage on first render", async () => {
+  it("shows the dashboard at the root route", async () => {
     render(<App />);
     expect(await screen.findByText("DashboardPage")).toBeTruthy();
   });
 
-  it("renders skill detail workspace route", async () => {
+  it("renders the new detail route and preserves the legacy redirect", async () => {
     window.history.pushState({}, "", "/workspace/skill-1");
-
     render(<App />);
+    expect(await screen.findByText("SkillDetailProPage")).toBeTruthy();
+    expect(window.location.pathname).toBe("/inventory/skill-1");
+  });
 
-    expect(await screen.findByText("SkillDetailWorkspacePage")).toBeTruthy();
+  it("focuses global search with Ctrl+K", () => {
+    render(<App />);
+    fireEvent.keyDown(window, { key: "k", ctrlKey: true });
+    expect(document.activeElement).toBe(screen.getByRole("textbox", { name: "全局搜索 Skill" }));
   });
 });

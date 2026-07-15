@@ -99,6 +99,7 @@ export default defineConfig({
   test: {
     environment: "jsdom",
     testTimeout: 20_000,
+    maxWorkers: 2,
     exclude: [
       "**/node_modules/**",
       "**/dist/**",

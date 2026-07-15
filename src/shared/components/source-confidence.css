@@ -1,0 +1,18 @@
+.source-confidence { padding: 15px; border: 1px solid var(--pro-border-soft); border-radius: 16px; background: rgba(6, 25, 42, .42); }
+.source-confidence__header { display: flex; align-items: center; gap: 10px; }
+.source-confidence__icon { display: inline-flex; padding: 8px; border-radius: 11px; color: var(--pro-accent); background: rgba(88,199,255,.1); }
+.source-confidence__title-wrap { min-width: 0; display: flex; flex: 1; flex-direction: column; gap: 2px; }
+.source-confidence__title-wrap strong { overflow: hidden; color: var(--pro-text-primary); font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
+.source-confidence__kicker { color: var(--pro-text-muted); font-size: 9px; letter-spacing: .08em; text-transform: uppercase; }
+.source-confidence__score { color: var(--pro-text-primary); font-size: 26px; font-weight: 750; letter-spacing: -.05em; }
+.source-confidence__score small { margin-left: 2px; color: var(--pro-text-muted); font-size: 11px; }
+.source-confidence__meter { height: 4px; margin: 12px 0 10px; overflow: hidden; border-radius: 99px; background: rgba(113,153,182,.15); }
+.source-confidence__meter span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--pro-info), var(--pro-accent), var(--pro-success)); box-shadow: 0 0 10px rgba(88,199,255,.4); }
+.source-confidence__summary { display: flex; align-items: flex-start; gap: 8px; color: var(--pro-text-secondary); font-size: 10px; line-height: 1.45; }
+.source-confidence__evidence { display: grid; gap: 6px; margin: 12px 0 0; padding: 0; list-style: none; }
+.source-confidence__evidence li { display: flex; align-items: flex-start; gap: 7px; color: var(--pro-text-muted); font-size: 10px; line-height: 1.4; }
+.source-confidence__evidence svg { flex: 0 0 auto; margin-top: 1px; color: var(--pro-success); }
+.source-confidence__notice { margin: 10px 0 0; color: var(--pro-text-muted); font-size: 9px; }
+.source-confidence--compact { padding: 11px; }
+.source-confidence--compact .source-confidence__score { font-size: 20px; }
+.source-confidence--compact .source-confidence__notice { display: none; }

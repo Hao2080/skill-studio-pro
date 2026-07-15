@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 316 72" role="img" aria-labelledby="title">
+  <title id="title">Skill Studio Pro</title>
+  <g transform="translate(4 4)">
+    <rect width="64" height="64" rx="19" fill="#0B2943" stroke="#9DDEFF" stroke-opacity=".25"/>
+    <path d="M13 21.7c6.5-7.4 16.6-10.1 25.3-6.6 4.3 1.7 7.8 4.4 10.2 7.9-9.3-3.2-18.7-.8-25.2 5.8-4.1-.9-7.6-3.3-10.3-7.1Z" fill="#58C7FF"/>
+    <path d="M12.6 31.1c7.3 4.1 15.3 4.6 22.5 1.4 4.6-2 9.1-1.8 14.1 1-5.2 8.8-15.6 13.5-25.4 10.5-5.3-1.6-9-5.2-11.2-10.8v-2.1Z" fill="#7F9EFF"/>
+  </g>
+  <text x="82" y="34" fill="#F3F9FF" font-family="Inter,Segoe UI,sans-serif" font-size="25" font-weight="750" letter-spacing="-.8">Skill Studio</text>
+  <text x="82" y="55" fill="#75D4FF" font-family="Inter,Segoe UI,sans-serif" font-size="13" font-weight="700" letter-spacing="3.4">PRO</text>
+</svg>

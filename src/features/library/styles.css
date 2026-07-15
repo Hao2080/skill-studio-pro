@@ -1,0 +1,5 @@
+.library-strip { display: flex; align-items: center; gap: 22px; padding: 12px 15px; flex-wrap: wrap; }
+.library-strip > div { display: flex; align-items: center; gap: 8px; color: var(--pro-accent); }
+.library-strip > div span { color: var(--pro-text-muted); font-size: 10px; }
+.library-strip > div strong { color: var(--pro-text-primary); font-size: 12px; }
+.library-strip > .status-badge { margin-left: auto; }

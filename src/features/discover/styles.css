@@ -1,0 +1,35 @@
+.discover-source-grid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 10px; }
+.discover-source-grid article { padding: 14px; }
+.discover-source-grid article > span { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 12px; color: var(--pro-accent); background: rgba(88,199,255,.1); }
+.discover-source-grid h2 { margin: 12px 0 5px; color: var(--pro-text-primary); font-size: 12px; }
+.discover-source-grid p { min-height: 28px; margin: 0; color: var(--pro-text-muted); font-size: 9px; line-height: 1.5; }
+.discover-source-grid button { margin-top: 10px; padding: 0; border: 0; background: transparent; color: var(--pro-accent); font-size: 9px; cursor: pointer; }
+.discover-workspace { display: grid; grid-template-columns: minmax(0,1fr) minmax(330px,.82fr); gap: 11px; }
+.git-intake > div:first-child { display: flex; align-items: center; gap: 10px; }
+.git-intake > div:first-child > span { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 12px; background: rgba(88,199,255,.1); color: var(--pro-accent); }
+.git-intake > div:first-child > div { flex: 1; }
+.git-intake h2, .install-plan h2 { margin: 0; color: var(--pro-text-primary); font-size: 13px; }
+.git-intake p, .install-plan .skill-detail-section-head p { margin: 4px 0 0; color: var(--pro-text-muted); font-size: 9px; }
+.git-intake label { display: flex; flex-direction: column; gap: 6px; margin-top: 15px; color: var(--pro-text-secondary); font-size: 9px; }
+.git-intake input { min-width: 0; min-height: 34px; padding: 0 10px; border: 1px solid var(--pro-border-soft); border-radius: 10px; outline: 0; background: rgba(3,19,33,.4); color: var(--pro-text-primary); font-size: 10px; }
+.git-intake input:focus { border-color: var(--control-active-border); }
+.git-intake__row { display: grid !important; grid-template-columns: 1fr 1fr; gap: 8px !important; }
+.git-intake > .pro-button { margin-top: 14px; }
+.git-intake__safety { display: flex; align-items: flex-start; gap: 6px; color: var(--pro-warning) !important; line-height: 1.4; }
+.install-plan__skill { display: grid; grid-template-columns: auto minmax(0,1fr) auto; align-items: center; gap: 9px; padding: 12px; border: 1px solid var(--pro-border-soft); border-radius: 13px; background: rgba(88,199,255,.05); }
+.install-plan__skill > span { color: var(--pro-accent); }
+.install-plan__skill div { min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.install-plan__skill strong { color: var(--pro-text-primary); font-size: 11px; }
+.install-plan__skill small { overflow: hidden; color: var(--pro-text-muted); font-size: 8px; text-overflow: ellipsis; white-space: nowrap; }
+.install-plan__skill > svg { color: var(--pro-success); }
+.install-plan dl { display: grid; gap: 8px; margin: 12px 0; }
+.install-plan dl div { display: flex; justify-content: space-between; gap: 12px; padding-top: 8px; border-top: 1px solid var(--pro-border-soft); font-size: 9px; }
+.install-plan dt { color: var(--pro-text-muted); }
+.install-plan dd { min-width: 0; margin: 0; overflow: hidden; color: var(--pro-text-secondary); text-overflow: ellipsis; white-space: nowrap; }
+.install-plan dd.is-warning { display: flex; align-items: center; gap: 5px; color: var(--pro-warning); }
+.install-plan__actions { display: flex; justify-content: flex-end; gap: 7px; }
+.install-plan__empty { min-height: 230px; display: grid; place-items: center; align-content: center; color: var(--pro-text-muted); text-align: center; }
+.install-plan__empty p { max-width: 260px; line-height: 1.5; }
+@media (max-width: 1050px) { .discover-source-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } }
+@media (max-width: 820px) { .discover-workspace { grid-template-columns: 1fr; } }
+@media (max-width: 540px) { .discover-source-grid, .git-intake__row { grid-template-columns: 1fr; } }
