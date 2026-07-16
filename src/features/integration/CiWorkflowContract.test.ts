@@ -27,6 +27,7 @@ describe("GitHub Actions release-quality contract", () => {
     expect(workflow).toContain("workspaces: src-tauri");
     expect(workflow).toContain("npm run security:repo");
     expect(workflow).toContain("npm run supply-chain:check");
+    expect(workflow).toContain("git remote add upstream https://github.com/liu673/skill-studio.git");
     expect(workflow).toContain("gitleaks/gitleaks-action@");
     expect(workflow).toContain("native_secret_store_contract");
     expect(workflow).toContain("test-secret-store-linux.sh");
@@ -44,6 +45,7 @@ describe("GitHub Actions release-quality contract", () => {
     }
     expect(workflow).toContain("npm run check 2>&1");
     expect(workflow).toContain("npm run supply-chain:check");
+    expect(workflow).toContain("git remote add upstream https://github.com/liu673/skill-studio.git");
     expect(workflow).toContain("native_secret_store_contract");
     expect(workflow).toContain("assemble-release-assets.mjs");
     expect(workflow).toContain("actions/download-artifact@");

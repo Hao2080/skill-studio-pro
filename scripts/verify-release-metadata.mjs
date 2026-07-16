@@ -55,7 +55,7 @@ try {
 try {
   const origin = execFileSync("git", ["remote", "get-url", "origin"], { cwd: root, encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim();
   requireCondition(
-    origin === `${expectedRepository}.git` || origin === `git@github.com:Hao2080/skill-studio-pro.git`,
+    origin === expectedRepository || origin === `${expectedRepository}.git` || origin === `git@github.com:Hao2080/skill-studio-pro.git`,
     "origin must point to the independent Pro repository",
   );
 } catch {
