@@ -3,6 +3,9 @@ set -euo pipefail
 
 root="${RUNNER_TEMP:-/tmp}/skill-studio-pro-secret-store-$$"
 mkdir -p "$root/home" "$root/data"
+runner_home="$HOME"
+export RUSTUP_HOME="${RUSTUP_HOME:-$runner_home/.rustup}"
+export CARGO_HOME="${CARGO_HOME:-$runner_home/.cargo}"
 export HOME="$root/home"
 export XDG_DATA_HOME="$root/data"
 
