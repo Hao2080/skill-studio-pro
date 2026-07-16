@@ -69,15 +69,31 @@ try {
     if ($appProcess.MainWindowHandle -eq [IntPtr]::Zero) {
         throw "Installed application did not expose a desktop window within 30 seconds"
     }
-    Start-Sleep -Seconds 5
+    $workspaceConfig = Join-Path $config "workspace-config.json"
+    $database = Join-Path $workspace "metadata.db"
+    $bootstrapStarted = [DateTime]::UtcNow
+    $bootstrapDeadline = $bootstrapStarted.AddSeconds(30)
+    do {
+        Start-Sleep -Milliseconds 250
+        $appProcess.Refresh()
+        if ($appProcess.HasExited) {
+            throw "Installed application did not remain running during bootstrap observation"
+        }
+        $bootstrapComplete =
+            (Test-Path -LiteralPath $workspaceConfig -PathType Leaf) -and
+            (Test-Path -LiteralPath $database -PathType Leaf)
+    } until ($bootstrapComplete -or [DateTime]::UtcNow -ge $bootstrapDeadline)
+    if (-not (Test-Path -LiteralPath $workspaceConfig -PathType Leaf) -or -not (Test-Path -LiteralPath $database -PathType Leaf)) {
+        throw "Application did not bootstrap the isolated config and database within 30 seconds"
+    }
+    $bootstrapSeconds = [Math]::Round(([DateTime]::UtcNow - $bootstrapStarted).TotalSeconds, 3)
+    $remainingObservationSeconds = [Math]::Max(0, 5 - $bootstrapSeconds)
+    if ($remainingObservationSeconds -gt 0) {
+        Start-Sleep -Milliseconds ([int][Math]::Ceiling($remainingObservationSeconds * 1000))
+    }
     $appProcess.Refresh()
     if ($appProcess.HasExited) {
         throw "Installed application did not remain running during smoke observation"
-    }
-    $workspaceConfig = Join-Path $config "workspace-config.json"
-    $database = Join-Path $workspace "metadata.db"
-    if (-not (Test-Path -LiteralPath $workspaceConfig -PathType Leaf) -or -not (Test-Path -LiteralPath $database -PathType Leaf)) {
-        throw "Application did not bootstrap the isolated config and database"
     }
     $result = [ordered]@{
         status = "PASS"
@@ -87,6 +103,7 @@ try {
         executableLaunched = $true
         mainWindowObserved = $true
         remainedRunningSeconds = 5
+        bootstrapObservedSeconds = $bootstrapSeconds
         isolatedBootstrap = $true
         userDataAccessed = $false
         signing = "unsigned"
