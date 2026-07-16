@@ -214,10 +214,10 @@
     {
       "ecosystem": "cargo",
       "name": "anyhow",
-      "version": "1.0.102",
+      "version": "1.0.103",
       "license": "MIT OR Apache-2.0",
       "licenseSource": "Cargo.toml via cargo metadata",
-      "purl": "pkg:cargo/anyhow@1.0.102"
+      "purl": "pkg:cargo/anyhow@1.0.103"
     },
     {
       "ecosystem": "cargo",
@@ -573,6 +573,14 @@
     },
     {
       "ecosystem": "cargo",
+      "name": "chacha20",
+      "version": "0.10.1",
+      "license": "MIT OR Apache-2.0",
+      "licenseSource": "Cargo.toml via cargo metadata",
+      "purl": "pkg:cargo/chacha20@0.10.1"
+    },
+    {
+      "ecosystem": "cargo",
       "name": "chrono",
       "version": "0.4.44",
       "license": "MIT OR Apache-2.0",
@@ -666,6 +674,14 @@
       "license": "MIT OR Apache-2.0",
       "licenseSource": "Cargo.toml via cargo metadata",
       "purl": "pkg:cargo/cpufeatures@0.2.17"
+    },
+    {
+      "ecosystem": "cargo",
+      "name": "cpufeatures",
+      "version": "0.3.0",
+      "license": "MIT OR Apache-2.0",
+      "licenseSource": "Cargo.toml via cargo metadata",
+      "purl": "pkg:cargo/cpufeatures@0.3.0"
     },
     {
       "ecosystem": "cargo",
@@ -2558,10 +2574,10 @@
     {
       "ecosystem": "cargo",
       "name": "plist",
-      "version": "1.8.0",
+      "version": "1.10.0",
       "license": "MIT",
       "licenseSource": "Cargo.toml via cargo metadata",
-      "purl": "pkg:cargo/plist@1.8.0"
+      "purl": "pkg:cargo/plist@1.10.0"
     },
     {
       "ecosystem": "cargo",
@@ -2678,18 +2694,18 @@
     {
       "ecosystem": "cargo",
       "name": "quick-xml",
-      "version": "0.38.4",
+      "version": "0.41.0",
       "license": "MIT",
       "licenseSource": "Cargo.toml via cargo metadata",
-      "purl": "pkg:cargo/quick-xml@0.38.4"
+      "purl": "pkg:cargo/quick-xml@0.41.0"
     },
     {
       "ecosystem": "cargo",
       "name": "quinn-proto",
-      "version": "0.11.14",
+      "version": "0.11.16",
       "license": "MIT OR Apache-2.0",
       "licenseSource": "Cargo.toml via cargo metadata",
-      "purl": "pkg:cargo/quinn-proto@0.11.14"
+      "purl": "pkg:cargo/quinn-proto@0.11.16"
     },
     {
       "ecosystem": "cargo",
@@ -2749,11 +2765,11 @@
     },
     {
       "ecosystem": "cargo",
-      "name": "rand_chacha",
-      "version": "0.9.0",
+      "name": "rand_core",
+      "version": "0.10.1",
       "license": "MIT OR Apache-2.0",
       "licenseSource": "Cargo.toml via cargo metadata",
-      "purl": "pkg:cargo/rand_chacha@0.9.0"
+      "purl": "pkg:cargo/rand_core@0.10.1"
     },
     {
       "ecosystem": "cargo",
@@ -2773,19 +2789,19 @@
     },
     {
       "ecosystem": "cargo",
-      "name": "rand_core",
-      "version": "0.9.5",
-      "license": "MIT OR Apache-2.0",
-      "licenseSource": "Cargo.toml via cargo metadata",
-      "purl": "pkg:cargo/rand_core@0.9.5"
-    },
-    {
-      "ecosystem": "cargo",
       "name": "rand_hc",
       "version": "0.2.0",
       "license": "MIT/Apache-2.0",
       "licenseSource": "Cargo.toml via cargo metadata",
       "purl": "pkg:cargo/rand_hc@0.2.0"
+    },
+    {
+      "ecosystem": "cargo",
+      "name": "rand_pcg",
+      "version": "0.10.2",
+      "license": "MIT OR Apache-2.0",
+      "licenseSource": "Cargo.toml via cargo metadata",
+      "purl": "pkg:cargo/rand_pcg@0.10.2"
     },
     {
       "ecosystem": "cargo",
@@ -2798,6 +2814,14 @@
     {
       "ecosystem": "cargo",
       "name": "rand",
+      "version": "0.10.2",
+      "license": "MIT OR Apache-2.0",
+      "licenseSource": "Cargo.toml via cargo metadata",
+      "purl": "pkg:cargo/rand@0.10.2"
+    },
+    {
+      "ecosystem": "cargo",
+      "name": "rand",
       "version": "0.7.3",
       "license": "MIT OR Apache-2.0",
       "licenseSource": "Cargo.toml via cargo metadata",
@@ -2806,18 +2830,10 @@
     {
       "ecosystem": "cargo",
       "name": "rand",
-      "version": "0.8.5",
+      "version": "0.8.6",
       "license": "MIT OR Apache-2.0",
       "licenseSource": "Cargo.toml via cargo metadata",
-      "purl": "pkg:cargo/rand@0.8.5"
-    },
-    {
-      "ecosystem": "cargo",
-      "name": "rand",
-      "version": "0.9.4",
-      "license": "MIT OR Apache-2.0",
-      "licenseSource": "Cargo.toml via cargo metadata",
-      "purl": "pkg:cargo/rand@0.9.4"
+      "purl": "pkg:cargo/rand@0.8.6"
     },
     {
       "ecosystem": "cargo",

@@ -268,9 +268,9 @@
     },
     {
       "type": "library",
-      "bom-ref": "pkg:cargo/anyhow@1.0.102",
+      "bom-ref": "pkg:cargo/anyhow@1.0.103",
       "name": "anyhow",
-      "version": "1.0.102",
+      "version": "1.0.103",
       "licenses": [
         {
           "expression": "MIT OR Apache-2.0"
@@ -279,10 +279,10 @@
       "hashes": [
         {
           "alg": "SHA-256",
-          "content": "7f202df86484c868dbad7eaa557ef785d5c66295e41b460ef922eca0723b842c"
+          "content": "2a4385e2e34eb35d6b3efe798b9eb88096925d87726c0798709bf56d9ed84af3"
         }
       ],
-      "purl": "pkg:cargo/anyhow@1.0.102",
+      "purl": "pkg:cargo/anyhow@1.0.103",
       "externalReferences": [
         {
           "type": "vcs",
@@ -1798,6 +1798,40 @@
     },
     {
       "type": "library",
+      "bom-ref": "pkg:cargo/chacha20@0.10.1",
+      "name": "chacha20",
+      "version": "0.10.1",
+      "licenses": [
+        {
+          "expression": "MIT OR Apache-2.0"
+        }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "d524456ba66e72eb8b115ff89e01e497f8e6d11d78b70b1aa13c0fbd97540a81"
+        }
+      ],
+      "purl": "pkg:cargo/chacha20@0.10.1",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/RustCrypto/stream-ciphers"
+        }
+      ],
+      "properties": [
+        {
+          "name": "skill-studio-pro:ecosystem",
+          "value": "cargo"
+        },
+        {
+          "name": "skill-studio-pro:license-source",
+          "value": "Cargo.toml via cargo metadata"
+        }
+      ]
+    },
+    {
+      "type": "library",
       "bom-ref": "pkg:cargo/chrono@0.4.44",
       "name": "chrono",
       "version": "0.4.44",
@@ -2187,6 +2221,40 @@
         }
       ],
       "purl": "pkg:cargo/cpufeatures@0.2.17",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/RustCrypto/utils"
+        }
+      ],
+      "properties": [
+        {
+          "name": "skill-studio-pro:ecosystem",
+          "value": "cargo"
+        },
+        {
+          "name": "skill-studio-pro:license-source",
+          "value": "Cargo.toml via cargo metadata"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:cargo/cpufeatures@0.3.0",
+      "name": "cpufeatures",
+      "version": "0.3.0",
+      "licenses": [
+        {
+          "expression": "MIT OR Apache-2.0"
+        }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "8b2a41393f66f16b0823bb79094d54ac5fbd34ab292ddafb9a0456ac9f87d201"
+        }
+      ],
+      "purl": "pkg:cargo/cpufeatures@0.3.0",
       "externalReferences": [
         {
           "type": "vcs",
@@ -10218,9 +10286,9 @@
     },
     {
       "type": "library",
-      "bom-ref": "pkg:cargo/plist@1.8.0",
+      "bom-ref": "pkg:cargo/plist@1.10.0",
       "name": "plist",
-      "version": "1.8.0",
+      "version": "1.10.0",
       "licenses": [
         {
           "expression": "MIT"
@@ -10229,10 +10297,10 @@
       "hashes": [
         {
           "alg": "SHA-256",
-          "content": "740ebea15c5d1428f910cd1a5f52cebf8d25006245ed8ade92702f4943d91e07"
+          "content": "7da1d65da6dd5d1e44199ac0f58712d241c0f439f80adea8924d832384087f85"
         }
       ],
-      "purl": "pkg:cargo/plist@1.8.0",
+      "purl": "pkg:cargo/plist@1.10.0",
       "externalReferences": [
         {
           "type": "vcs",
@@ -10728,9 +10796,9 @@
     },
     {
       "type": "library",
-      "bom-ref": "pkg:cargo/quick-xml@0.38.4",
+      "bom-ref": "pkg:cargo/quick-xml@0.41.0",
       "name": "quick-xml",
-      "version": "0.38.4",
+      "version": "0.41.0",
       "licenses": [
         {
           "expression": "MIT"
@@ -10739,10 +10807,10 @@
       "hashes": [
         {
           "alg": "SHA-256",
-          "content": "b66c2058c55a409d601666cffe35f04333cf1013010882cec174a7467cd4e21c"
+          "content": "e660451e55124f798a69a5af3f49ccfbefbd41910eefd25caf2393e1f3473ec1"
         }
       ],
-      "purl": "pkg:cargo/quick-xml@0.38.4",
+      "purl": "pkg:cargo/quick-xml@0.41.0",
       "externalReferences": [
         {
           "type": "vcs",
@@ -10762,9 +10830,9 @@
     },
     {
       "type": "library",
-      "bom-ref": "pkg:cargo/quinn-proto@0.11.14",
+      "bom-ref": "pkg:cargo/quinn-proto@0.11.16",
       "name": "quinn-proto",
-      "version": "0.11.14",
+      "version": "0.11.16",
       "licenses": [
         {
           "expression": "MIT OR Apache-2.0"
@@ -10773,10 +10841,10 @@
       "hashes": [
         {
           "alg": "SHA-256",
-          "content": "434b42fec591c96ef50e21e886936e66d3cc3f737104fdb9b737c40ffb94c098"
+          "content": "2f4bfc015262b9df63c8845072ce59068853ff5872180c2ce2f13038b970e560"
         }
       ],
-      "purl": "pkg:cargo/quinn-proto@0.11.14",
+      "purl": "pkg:cargo/quinn-proto@0.11.16",
       "externalReferences": [
         {
           "type": "vcs",
@@ -11034,9 +11102,9 @@
     },
     {
       "type": "library",
-      "bom-ref": "pkg:cargo/rand_chacha@0.9.0",
-      "name": "rand_chacha",
-      "version": "0.9.0",
+      "bom-ref": "pkg:cargo/rand_core@0.10.1",
+      "name": "rand_core",
+      "version": "0.10.1",
       "licenses": [
         {
           "expression": "MIT OR Apache-2.0"
@@ -11045,14 +11113,14 @@
       "hashes": [
         {
           "alg": "SHA-256",
-          "content": "d3022b5f1df60f26e1ffddd6c66e8aa15de382ae63b3a0c1bfc0e4d3e3f325cb"
+          "content": "63b8176103e19a2643978565ca18b50549f6101881c443590420e4dc998a3c69"
         }
       ],
-      "purl": "pkg:cargo/rand_chacha@0.9.0",
+      "purl": "pkg:cargo/rand_core@0.10.1",
       "externalReferences": [
         {
           "type": "vcs",
-          "url": "https://github.com/rust-random/rand"
+          "url": "https://github.com/rust-random/rand_core"
         }
       ],
       "properties": [
@@ -11136,40 +11204,6 @@
     },
     {
       "type": "library",
-      "bom-ref": "pkg:cargo/rand_core@0.9.5",
-      "name": "rand_core",
-      "version": "0.9.5",
-      "licenses": [
-        {
-          "expression": "MIT OR Apache-2.0"
-        }
-      ],
-      "hashes": [
-        {
-          "alg": "SHA-256",
-          "content": "76afc826de14238e6e8c374ddcc1fa19e374fd8dd986b0d2af0d02377261d83c"
-        }
-      ],
-      "purl": "pkg:cargo/rand_core@0.9.5",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/rust-random/rand"
-        }
-      ],
-      "properties": [
-        {
-          "name": "skill-studio-pro:ecosystem",
-          "value": "cargo"
-        },
-        {
-          "name": "skill-studio-pro:license-source",
-          "value": "Cargo.toml via cargo metadata"
-        }
-      ]
-    },
-    {
-      "type": "library",
       "bom-ref": "pkg:cargo/rand_hc@0.2.0",
       "name": "rand_hc",
       "version": "0.2.0",
@@ -11204,6 +11238,40 @@
     },
     {
       "type": "library",
+      "bom-ref": "pkg:cargo/rand_pcg@0.10.2",
+      "name": "rand_pcg",
+      "version": "0.10.2",
+      "licenses": [
+        {
+          "expression": "MIT OR Apache-2.0"
+        }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "caa0f4137e1c0a72f4c651489402276c8e8e1cf081f3b0ba156d2cbeef09e86a"
+        }
+      ],
+      "purl": "pkg:cargo/rand_pcg@0.10.2",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/rust-random/rngs"
+        }
+      ],
+      "properties": [
+        {
+          "name": "skill-studio-pro:ecosystem",
+          "value": "cargo"
+        },
+        {
+          "name": "skill-studio-pro:license-source",
+          "value": "Cargo.toml via cargo metadata"
+        }
+      ]
+    },
+    {
+      "type": "library",
       "bom-ref": "pkg:cargo/rand_pcg@0.2.1",
       "name": "rand_pcg",
       "version": "0.2.1",
@@ -11219,6 +11287,40 @@
         }
       ],
       "purl": "pkg:cargo/rand_pcg@0.2.1",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/rust-random/rand"
+        }
+      ],
+      "properties": [
+        {
+          "name": "skill-studio-pro:ecosystem",
+          "value": "cargo"
+        },
+        {
+          "name": "skill-studio-pro:license-source",
+          "value": "Cargo.toml via cargo metadata"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:cargo/rand@0.10.2",
+      "name": "rand",
+      "version": "0.10.2",
+      "licenses": [
+        {
+          "expression": "MIT OR Apache-2.0"
+        }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "c7f5fa3a058cd35567ef9bfa5e75732bee0f9e4c55fa90477bef2dfcdbc4be80"
+        }
+      ],
+      "purl": "pkg:cargo/rand@0.10.2",
       "externalReferences": [
         {
           "type": "vcs",
@@ -11272,9 +11374,9 @@
     },
     {
       "type": "library",
-      "bom-ref": "pkg:cargo/rand@0.8.5",
+      "bom-ref": "pkg:cargo/rand@0.8.6",
       "name": "rand",
-      "version": "0.8.5",
+      "version": "0.8.6",
       "licenses": [
         {
           "expression": "MIT OR Apache-2.0"
@@ -11283,44 +11385,10 @@
       "hashes": [
         {
           "alg": "SHA-256",
-          "content": "34af8d1a0e25924bc5b7c43c079c942339d8f0a8b57c39049bef581b46327404"
+          "content": "5ca0ecfa931c29007047d1bc58e623ab12e5590e8c7cc53200d5202b69266d8a"
         }
       ],
-      "purl": "pkg:cargo/rand@0.8.5",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/rust-random/rand"
-        }
-      ],
-      "properties": [
-        {
-          "name": "skill-studio-pro:ecosystem",
-          "value": "cargo"
-        },
-        {
-          "name": "skill-studio-pro:license-source",
-          "value": "Cargo.toml via cargo metadata"
-        }
-      ]
-    },
-    {
-      "type": "library",
-      "bom-ref": "pkg:cargo/rand@0.9.4",
-      "name": "rand",
-      "version": "0.9.4",
-      "licenses": [
-        {
-          "expression": "MIT OR Apache-2.0"
-        }
-      ],
-      "hashes": [
-        {
-          "alg": "SHA-256",
-          "content": "44c5af06bb1b7d3216d91932aed5265164bf384dc89cd6ba05cf59a35f5f76ea"
-        }
-      ],
-      "purl": "pkg:cargo/rand@0.9.4",
+      "purl": "pkg:cargo/rand@0.8.6",
       "externalReferences": [
         {
           "type": "vcs",
@@ -20904,7 +20972,7 @@
       ]
     },
     {
-      "ref": "pkg:cargo/anyhow@1.0.102",
+      "ref": "pkg:cargo/anyhow@1.0.103",
       "dependsOn": []
     },
     {
@@ -21219,6 +21287,14 @@
       "dependsOn": []
     },
     {
+      "ref": "pkg:cargo/chacha20@0.10.1",
+      "dependsOn": [
+        "pkg:cargo/cfg-if@1.0.4",
+        "pkg:cargo/cpufeatures@0.3.0",
+        "pkg:cargo/rand_core@0.10.1"
+      ]
+    },
+    {
       "ref": "pkg:cargo/chrono@0.4.44",
       "dependsOn": [
         "pkg:cargo/iana-time-zone@0.1.65",
@@ -21298,6 +21374,12 @@
     },
     {
       "ref": "pkg:cargo/cpufeatures@0.2.17",
+      "dependsOn": [
+        "pkg:cargo/libc@0.2.183"
+      ]
+    },
+    {
+      "ref": "pkg:cargo/cpufeatures@0.3.0",
       "dependsOn": [
         "pkg:cargo/libc@0.2.183"
       ]
@@ -21888,21 +21970,22 @@
       "ref": "pkg:cargo/getrandom@0.3.4",
       "dependsOn": [
         "pkg:cargo/cfg-if@1.0.4",
-        "pkg:cargo/js-sys@0.3.92",
         "pkg:cargo/libc@0.2.183",
         "pkg:cargo/r-efi@5.3.0",
-        "pkg:cargo/wasip2@1.0.2%2Bwasi-0.2.9",
-        "pkg:cargo/wasm-bindgen@0.2.115"
+        "pkg:cargo/wasip2@1.0.2%2Bwasi-0.2.9"
       ]
     },
     {
       "ref": "pkg:cargo/getrandom@0.4.2",
       "dependsOn": [
         "pkg:cargo/cfg-if@1.0.4",
+        "pkg:cargo/js-sys@0.3.92",
         "pkg:cargo/libc@0.2.183",
         "pkg:cargo/r-efi@6.0.0",
+        "pkg:cargo/rand_core@0.10.1",
         "pkg:cargo/wasip2@1.0.2%2Bwasi-0.2.9",
-        "pkg:cargo/wasip3@0.4.0%2Bwasi-0.3.0-rc-2026-01-06"
+        "pkg:cargo/wasip3@0.4.0%2Bwasi-0.3.0-rc-2026-01-06",
+        "pkg:cargo/wasm-bindgen@0.2.115"
       ]
     },
     {
@@ -22951,14 +23034,14 @@
       "ref": "pkg:cargo/phf_generator@0.10.0",
       "dependsOn": [
         "pkg:cargo/phf_shared@0.10.0",
-        "pkg:cargo/rand@0.8.5"
+        "pkg:cargo/rand@0.8.6"
       ]
     },
     {
       "ref": "pkg:cargo/phf_generator@0.11.3",
       "dependsOn": [
         "pkg:cargo/phf_shared@0.11.3",
-        "pkg:cargo/rand@0.8.5"
+        "pkg:cargo/rand@0.8.6"
       ]
     },
     {
@@ -23080,11 +23163,11 @@
       "dependsOn": []
     },
     {
-      "ref": "pkg:cargo/plist@1.8.0",
+      "ref": "pkg:cargo/plist@1.10.0",
       "dependsOn": [
         "pkg:cargo/base64@0.22.1",
         "pkg:cargo/indexmap@2.13.0",
-        "pkg:cargo/quick-xml@0.38.4",
+        "pkg:cargo/quick-xml@0.41.0",
         "pkg:cargo/serde@1.0.228",
         "pkg:cargo/time@0.3.47"
       ]
@@ -23186,18 +23269,19 @@
       ]
     },
     {
-      "ref": "pkg:cargo/quick-xml@0.38.4",
+      "ref": "pkg:cargo/quick-xml@0.41.0",
       "dependsOn": [
         "pkg:cargo/memchr@2.8.0"
       ]
     },
     {
-      "ref": "pkg:cargo/quinn-proto@0.11.14",
+      "ref": "pkg:cargo/quinn-proto@0.11.16",
       "dependsOn": [
         "pkg:cargo/bytes@1.11.1",
-        "pkg:cargo/getrandom@0.3.4",
+        "pkg:cargo/getrandom@0.4.2",
         "pkg:cargo/lru-slab@0.1.2",
-        "pkg:cargo/rand@0.9.4",
+        "pkg:cargo/rand@0.10.2",
+        "pkg:cargo/rand_pcg@0.10.2",
         "pkg:cargo/ring@0.17.14",
         "pkg:cargo/rustc-hash@2.1.2",
         "pkg:cargo/rustls-pki-types@1.14.0",
@@ -23226,7 +23310,7 @@
         "pkg:cargo/bytes@1.11.1",
         "pkg:cargo/cfg_aliases@0.2.1",
         "pkg:cargo/pin-project-lite@0.2.17",
-        "pkg:cargo/quinn-proto@0.11.14",
+        "pkg:cargo/quinn-proto@0.11.16",
         "pkg:cargo/quinn-udp@0.5.14",
         "pkg:cargo/rustc-hash@2.1.2",
         "pkg:cargo/rustls@0.23.39",
@@ -23266,11 +23350,8 @@
       ]
     },
     {
-      "ref": "pkg:cargo/rand_chacha@0.9.0",
-      "dependsOn": [
-        "pkg:cargo/ppv-lite86@0.2.21",
-        "pkg:cargo/rand_core@0.9.5"
-      ]
+      "ref": "pkg:cargo/rand_core@0.10.1",
+      "dependsOn": []
     },
     {
       "ref": "pkg:cargo/rand_core@0.5.1",
@@ -23285,21 +23366,29 @@
       ]
     },
     {
-      "ref": "pkg:cargo/rand_core@0.9.5",
-      "dependsOn": [
-        "pkg:cargo/getrandom@0.3.4"
-      ]
-    },
-    {
       "ref": "pkg:cargo/rand_hc@0.2.0",
       "dependsOn": [
         "pkg:cargo/rand_core@0.5.1"
       ]
     },
     {
+      "ref": "pkg:cargo/rand_pcg@0.10.2",
+      "dependsOn": [
+        "pkg:cargo/rand_core@0.10.1"
+      ]
+    },
+    {
       "ref": "pkg:cargo/rand_pcg@0.2.1",
       "dependsOn": [
         "pkg:cargo/rand_core@0.5.1"
+      ]
+    },
+    {
+      "ref": "pkg:cargo/rand@0.10.2",
+      "dependsOn": [
+        "pkg:cargo/chacha20@0.10.1",
+        "pkg:cargo/getrandom@0.4.2",
+        "pkg:cargo/rand_core@0.10.1"
       ]
     },
     {
@@ -23314,18 +23403,11 @@
       ]
     },
     {
-      "ref": "pkg:cargo/rand@0.8.5",
+      "ref": "pkg:cargo/rand@0.8.6",
       "dependsOn": [
         "pkg:cargo/libc@0.2.183",
         "pkg:cargo/rand_chacha@0.3.1",
         "pkg:cargo/rand_core@0.6.4"
-      ]
-    },
-    {
-      "ref": "pkg:cargo/rand@0.9.4",
-      "dependsOn": [
-        "pkg:cargo/rand_chacha@0.9.0",
-        "pkg:cargo/rand_core@0.9.5"
       ]
     },
     {
@@ -23613,7 +23695,7 @@
         "pkg:cargo/hkdf@0.12.4",
         "pkg:cargo/num@0.4.3",
         "pkg:cargo/once_cell@1.21.4",
-        "pkg:cargo/rand@0.8.5",
+        "pkg:cargo/rand@0.8.6",
         "pkg:cargo/serde@1.0.228",
         "pkg:cargo/sha2@0.10.9",
         "pkg:cargo/zbus@4.4.0"
@@ -24105,7 +24187,7 @@
     {
       "ref": "pkg:cargo/tauri-build@2.5.6",
       "dependsOn": [
-        "pkg:cargo/anyhow@1.0.102",
+        "pkg:cargo/anyhow@1.0.103",
         "pkg:cargo/cargo_toml@0.22.3",
         "pkg:cargo/dirs@6.0.0",
         "pkg:cargo/glob@0.3.3",
@@ -24128,7 +24210,7 @@
         "pkg:cargo/brotli@8.0.2",
         "pkg:cargo/ico@0.5.0",
         "pkg:cargo/json-patch@3.0.1",
-        "pkg:cargo/plist@1.8.0",
+        "pkg:cargo/plist@1.10.0",
         "pkg:cargo/png@0.17.16",
         "pkg:cargo/proc-macro2@1.0.106",
         "pkg:cargo/quote@1.0.45",
@@ -24174,7 +24256,7 @@
     {
       "ref": "pkg:cargo/tauri-plugin-fs@2.4.5",
       "dependsOn": [
-        "pkg:cargo/anyhow@1.0.102",
+        "pkg:cargo/anyhow@1.0.103",
         "pkg:cargo/dunce@1.0.5",
         "pkg:cargo/glob@0.3.3",
         "pkg:cargo/percent-encoding@2.3.2",
@@ -24212,9 +24294,9 @@
     {
       "ref": "pkg:cargo/tauri-plugin@2.5.4",
       "dependsOn": [
-        "pkg:cargo/anyhow@1.0.102",
+        "pkg:cargo/anyhow@1.0.103",
         "pkg:cargo/glob@0.3.3",
-        "pkg:cargo/plist@1.8.0",
+        "pkg:cargo/plist@1.10.0",
         "pkg:cargo/schemars@0.8.22",
         "pkg:cargo/serde@1.0.228",
         "pkg:cargo/serde_json@1.0.149",
@@ -24271,7 +24353,7 @@
     {
       "ref": "pkg:cargo/tauri-utils@2.8.3",
       "dependsOn": [
-        "pkg:cargo/anyhow@1.0.102",
+        "pkg:cargo/anyhow@1.0.103",
         "pkg:cargo/brotli@8.0.2",
         "pkg:cargo/cargo_metadata@0.19.2",
         "pkg:cargo/ctor@0.2.9",
@@ -24314,7 +24396,7 @@
     {
       "ref": "pkg:cargo/tauri@2.10.3",
       "dependsOn": [
-        "pkg:cargo/anyhow@1.0.102",
+        "pkg:cargo/anyhow@1.0.103",
         "pkg:cargo/bytes@1.11.1",
         "pkg:cargo/cookie@0.18.1",
         "pkg:cargo/dirs@6.0.0",
@@ -24336,7 +24418,7 @@
         "pkg:cargo/objc2-web-kit@0.3.2",
         "pkg:cargo/objc2@0.6.4",
         "pkg:cargo/percent-encoding@2.3.2",
-        "pkg:cargo/plist@1.8.0",
+        "pkg:cargo/plist@1.10.0",
         "pkg:cargo/raw-window-handle@0.6.2",
         "pkg:cargo/reqwest@0.13.2",
         "pkg:cargo/serde@1.0.228",
@@ -24855,7 +24937,7 @@
     {
       "ref": "pkg:cargo/wasm-metadata@0.244.0",
       "dependsOn": [
-        "pkg:cargo/anyhow@1.0.102",
+        "pkg:cargo/anyhow@1.0.103",
         "pkg:cargo/indexmap@2.13.0",
         "pkg:cargo/wasm-encoder@0.244.0",
         "pkg:cargo/wasmparser@0.244.0"
@@ -25353,7 +25435,7 @@
     {
       "ref": "pkg:cargo/wit-bindgen-core@0.51.0",
       "dependsOn": [
-        "pkg:cargo/anyhow@1.0.102",
+        "pkg:cargo/anyhow@1.0.103",
         "pkg:cargo/heck@0.5.0",
         "pkg:cargo/wit-parser@0.244.0"
       ]
@@ -25361,7 +25443,7 @@
     {
       "ref": "pkg:cargo/wit-bindgen-rust-macro@0.51.0",
       "dependsOn": [
-        "pkg:cargo/anyhow@1.0.102",
+        "pkg:cargo/anyhow@1.0.103",
         "pkg:cargo/prettyplease@0.2.37",
         "pkg:cargo/proc-macro2@1.0.106",
         "pkg:cargo/quote@1.0.45",
@@ -25373,7 +25455,7 @@
     {
       "ref": "pkg:cargo/wit-bindgen-rust@0.51.0",
       "dependsOn": [
-        "pkg:cargo/anyhow@1.0.102",
+        "pkg:cargo/anyhow@1.0.103",
         "pkg:cargo/heck@0.5.0",
         "pkg:cargo/indexmap@2.13.0",
         "pkg:cargo/prettyplease@0.2.37",
@@ -25392,7 +25474,7 @@
     {
       "ref": "pkg:cargo/wit-component@0.244.0",
       "dependsOn": [
-        "pkg:cargo/anyhow@1.0.102",
+        "pkg:cargo/anyhow@1.0.103",
         "pkg:cargo/bitflags@2.11.0",
         "pkg:cargo/indexmap@2.13.0",
         "pkg:cargo/log@0.4.29",
@@ -25408,7 +25490,7 @@
     {
       "ref": "pkg:cargo/wit-parser@0.244.0",
       "dependsOn": [
-        "pkg:cargo/anyhow@1.0.102",
+        "pkg:cargo/anyhow@1.0.103",
         "pkg:cargo/id-arena@2.3.0",
         "pkg:cargo/indexmap@2.13.0",
         "pkg:cargo/log@0.4.29",
@@ -25557,7 +25639,7 @@
         "pkg:cargo/hex@0.4.3",
         "pkg:cargo/nix@0.29.0",
         "pkg:cargo/ordered-stream@0.2.0",
-        "pkg:cargo/rand@0.8.5",
+        "pkg:cargo/rand@0.8.6",
         "pkg:cargo/serde@1.0.228",
         "pkg:cargo/serde_repr@0.1.20",
         "pkg:cargo/sha1@0.10.7",

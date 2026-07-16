@@ -6,7 +6,7 @@ The declared expressions below are evidence, not a substitute for legal advice.
 ## License policy result
 
 - Policy: **PASS**
-- Dependency records: **898**
+- Dependency records: **900**
 - Blocked strong-copyleft/source-available records: **0**
 - Unknown or undeclared records: **0**
 - Notice/attribution/file-level review records: **10**
@@ -43,7 +43,7 @@ No dependency is silently assigned a guessed license. Optional npm platform pack
 | ISC | 13 |
 | MIT | 393 |
 | MIT / Apache-2.0 | 1 |
-| MIT OR Apache-2.0 | 293 |
+| MIT OR Apache-2.0 | 295 |
 | MIT OR Apache-2.0 OR LGPL-2.1-or-later | 2 |
 | MIT OR Apache-2.0 OR Zlib | 3 |
 | MIT OR Zlib OR Apache-2.0 | 1 |
@@ -92,7 +92,7 @@ No dependency is silently assigned a guessed license. Optional npm platform pack
 | cargo | alloc-no-stdlib | 2.0.4 | BSD-3-Clause | Cargo.toml via cargo metadata |
 | cargo | alloc-stdlib | 0.2.2 | BSD-3-Clause | Cargo.toml via cargo metadata |
 | cargo | android_system_properties | 0.1.5 | MIT/Apache-2.0 | Cargo.toml via cargo metadata |
-| cargo | anyhow | 1.0.102 | MIT OR Apache-2.0 | Cargo.toml via cargo metadata |
+| cargo | anyhow | 1.0.103 | MIT OR Apache-2.0 | Cargo.toml via cargo metadata |
 | cargo | arbitrary | 1.4.2 | MIT OR Apache-2.0 | Cargo.toml via cargo metadata |
 | cargo | async-broadcast | 0.7.2 | MIT OR Apache-2.0 | Cargo.toml via cargo metadata |
 | cargo | async-channel | 2.5.0 | Apache-2.0 OR MIT | Cargo.toml via cargo metadata |
@@ -137,6 +137,7 @@ No dependency is silently assigned a guessed license. Optional npm platform pack
 | cargo | cfg_aliases | 0.2.1 | MIT | Cargo.toml via cargo metadata |
 | cargo | cfg-expr | 0.15.8 | MIT OR Apache-2.0 | Cargo.toml via cargo metadata |
 | cargo | cfg-if | 1.0.4 | MIT OR Apache-2.0 | Cargo.toml via cargo metadata |
+| cargo | chacha20 | 0.10.1 | MIT OR Apache-2.0 | Cargo.toml via cargo metadata |
 | cargo | chrono | 0.4.44 | MIT OR Apache-2.0 | Cargo.toml via cargo metadata |
 | cargo | cipher | 0.4.4 | MIT OR Apache-2.0 | Cargo.toml via cargo metadata |
 | cargo | combine | 4.6.7 | MIT | Cargo.toml via cargo metadata |
@@ -149,6 +150,7 @@ No dependency is silently assigned a guessed license. Optional npm platform pack
 | cargo | core-graphics-types | 0.2.0 | MIT OR Apache-2.0 | Cargo.toml via cargo metadata |
 | cargo | core-graphics | 0.25.0 | MIT OR Apache-2.0 | Cargo.toml via cargo metadata |
 | cargo | cpufeatures | 0.2.17 | MIT OR Apache-2.0 | Cargo.toml via cargo metadata |
+| cargo | cpufeatures | 0.3.0 | MIT OR Apache-2.0 | Cargo.toml via cargo metadata |
 | cargo | crc32fast | 1.5.0 | MIT OR Apache-2.0 | Cargo.toml via cargo metadata |
 | cargo | crossbeam-channel | 0.5.15 | MIT OR Apache-2.0 | Cargo.toml via cargo metadata |
 | cargo | crossbeam-utils | 0.8.21 | MIT OR Apache-2.0 | Cargo.toml via cargo metadata |
@@ -385,7 +387,7 @@ No dependency is silently assigned a guessed license. Optional npm platform pack
 | cargo | pin-utils | 0.1.0 | MIT OR Apache-2.0 | Cargo.toml via cargo metadata |
 | cargo | piper | 0.2.5 | MIT OR Apache-2.0 | Cargo.toml via cargo metadata |
 | cargo | pkg-config | 0.3.32 | MIT OR Apache-2.0 | Cargo.toml via cargo metadata |
-| cargo | plist | 1.8.0 | MIT | Cargo.toml via cargo metadata |
+| cargo | plist | 1.10.0 | MIT | Cargo.toml via cargo metadata |
 | cargo | png | 0.17.16 | MIT OR Apache-2.0 | Cargo.toml via cargo metadata |
 | cargo | polling | 3.11.0 | Apache-2.0 OR MIT | Cargo.toml via cargo metadata |
 | cargo | potential_utf | 0.1.4 | Unicode-3.0 | Cargo.toml via cargo metadata |
@@ -400,8 +402,8 @@ No dependency is silently assigned a guessed license. Optional npm platform pack
 | cargo | proc-macro-error | 1.0.4 | MIT OR Apache-2.0 | Cargo.toml via cargo metadata |
 | cargo | proc-macro-hack | 0.5.20+deprecated | MIT OR Apache-2.0 | Cargo.toml via cargo metadata |
 | cargo | proc-macro2 | 1.0.106 | MIT OR Apache-2.0 | Cargo.toml via cargo metadata |
-| cargo | quick-xml | 0.38.4 | MIT | Cargo.toml via cargo metadata |
-| cargo | quinn-proto | 0.11.14 | MIT OR Apache-2.0 | Cargo.toml via cargo metadata |
+| cargo | quick-xml | 0.41.0 | MIT | Cargo.toml via cargo metadata |
+| cargo | quinn-proto | 0.11.16 | MIT OR Apache-2.0 | Cargo.toml via cargo metadata |
 | cargo | quinn-udp | 0.5.14 | MIT OR Apache-2.0 | Cargo.toml via cargo metadata |
 | cargo | quinn | 0.11.9 | MIT OR Apache-2.0 | Cargo.toml via cargo metadata |
 | cargo | quote | 1.0.45 | MIT OR Apache-2.0 | Cargo.toml via cargo metadata |
@@ -409,15 +411,15 @@ No dependency is silently assigned a guessed license. Optional npm platform pack
 | cargo | r-efi | 6.0.0 | MIT OR Apache-2.0 OR LGPL-2.1-or-later | Cargo.toml via cargo metadata |
 | cargo | rand_chacha | 0.2.2 | MIT OR Apache-2.0 | Cargo.toml via cargo metadata |
 | cargo | rand_chacha | 0.3.1 | MIT OR Apache-2.0 | Cargo.toml via cargo metadata |
-| cargo | rand_chacha | 0.9.0 | MIT OR Apache-2.0 | Cargo.toml via cargo metadata |
+| cargo | rand_core | 0.10.1 | MIT OR Apache-2.0 | Cargo.toml via cargo metadata |
 | cargo | rand_core | 0.5.1 | MIT OR Apache-2.0 | Cargo.toml via cargo metadata |
 | cargo | rand_core | 0.6.4 | MIT OR Apache-2.0 | Cargo.toml via cargo metadata |
-| cargo | rand_core | 0.9.5 | MIT OR Apache-2.0 | Cargo.toml via cargo metadata |
 | cargo | rand_hc | 0.2.0 | MIT/Apache-2.0 | Cargo.toml via cargo metadata |
+| cargo | rand_pcg | 0.10.2 | MIT OR Apache-2.0 | Cargo.toml via cargo metadata |
 | cargo | rand_pcg | 0.2.1 | MIT OR Apache-2.0 | Cargo.toml via cargo metadata |
+| cargo | rand | 0.10.2 | MIT OR Apache-2.0 | Cargo.toml via cargo metadata |
 | cargo | rand | 0.7.3 | MIT OR Apache-2.0 | Cargo.toml via cargo metadata |
-| cargo | rand | 0.8.5 | MIT OR Apache-2.0 | Cargo.toml via cargo metadata |
-| cargo | rand | 0.9.4 | MIT OR Apache-2.0 | Cargo.toml via cargo metadata |
+| cargo | rand | 0.8.6 | MIT OR Apache-2.0 | Cargo.toml via cargo metadata |
 | cargo | raw-window-handle | 0.6.2 | MIT OR Apache-2.0 OR Zlib | Cargo.toml via cargo metadata |
 | cargo | redox_syscall | 0.5.18 | MIT | Cargo.toml via cargo metadata |
 | cargo | redox_users | 0.4.6 | MIT | Cargo.toml via cargo metadata |

@@ -158,6 +158,9 @@ jobs:
   supply-chain:
     name: SBOM, licenses, links, audits, and secrets
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      checks: write
     steps:
       - name: Checkout full history
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
