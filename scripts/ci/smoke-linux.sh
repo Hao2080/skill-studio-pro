@@ -24,19 +24,21 @@ export SKILL_STUDIO_PRO_CONFIG_HOME="$config"
 export SKILL_STUDIO_PRO_WORKSPACE="$workspace"
 mkdir -p "$XDG_CONFIG_HOME"
 
-setsid xvfb-run -a "$binary" >"$log" 2>&1 &
-pid=$!
-cleanup() {
-  if kill -0 "$pid" 2>/dev/null; then
-    kill -- "-$pid" 2>/dev/null || kill "$pid" 2>/dev/null || true
-    wait "$pid" 2>/dev/null || true
-  fi
-}
-trap cleanup EXIT
-sleep 10
-kill -0 "$pid"
-test -f "$config/workspace-config.json"
-test -f "$workspace/metadata.db"
+set +e
+NO_AT_BRIDGE=1 timeout --kill-after=5s 10s dbus-run-session -- xvfb-run -a "$binary" >"$log" 2>&1
+launch_status=$?
+set -e
+if [[ "$launch_status" -ne 124 ]]; then
+  echo "Installed application exited before the 10-second observation window (status $launch_status)" >&2
+  cat "$log" >&2
+  exit 1
+fi
+if [[ ! -f "$config/workspace-config.json" || ! -f "$workspace/metadata.db" ]]; then
+  echo "Installed application did not bootstrap the isolated config and database" >&2
+  find "$root" -maxdepth 3 -type f -print >&2
+  cat "$log" >&2
+  exit 1
+fi
 
-node -e 'const fs=require("fs");fs.writeFileSync(process.argv[1],JSON.stringify({status:"PASS",platform:"linux",installType:"deb installed with dpkg",executableLaunched:true,displayHarness:"xvfb-run",remainedRunningSeconds:10,isolatedBootstrap:true,userDataAccessed:false,signing:"unsigned"},null,2)+"\n")' "$output"
+node -e 'const fs=require("fs");fs.writeFileSync(process.argv[1],JSON.stringify({status:"PASS",platform:"linux",installType:"deb installed with dpkg",executableLaunched:true,displayHarness:"dbus-run-session + xvfb-run",observationTimeoutExitCode:124,remainedRunningSeconds:10,isolatedBootstrap:true,userDataAccessed:false,signing:"unsigned"},null,2)+"\n")' "$output"
 cat "$output"
