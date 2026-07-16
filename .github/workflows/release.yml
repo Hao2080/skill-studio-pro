@@ -31,6 +31,13 @@ jobs:
         run: npm ci
       - name: Verify SBOM, dependency licenses, versions, links, and updater isolation
         run: npm run supply-chain:check
+      - name: Audit npm dependencies
+        run: npm audit --audit-level=high
+      - name: Audit Rust dependencies
+        uses: rustsec/audit-check@69366f33c96575abad1ee0dba8212993eecbe998 # v2.0.0
+        with:
+          token: ${{ github.token }}
+          working-directory: src-tauri
       - name: Verify repository hygiene
         run: npm run security:repo
       - name: Scan full Git history for secrets
