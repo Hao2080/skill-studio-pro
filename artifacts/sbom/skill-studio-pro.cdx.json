@@ -20876,12 +20876,6 @@
       ],
       "purl": "pkg:npm/%40ant-design%2Fcolors@7.2.1",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/ant-design/ant-design-colors.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -20889,7 +20883,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@ant-design/colors/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -20915,12 +20909,6 @@
       ],
       "purl": "pkg:npm/%40ant-design%2Fcssinjs-utils@1.1.3",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/ant-design/cssinjs-util.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -20928,7 +20916,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@ant-design/cssinjs-utils/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -20954,12 +20942,6 @@
       ],
       "purl": "pkg:npm/%40ant-design%2Fcssinjs@1.24.0",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "git@github.com:ant-design/cssinjs.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -20967,7 +20949,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@ant-design/cssinjs/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -20993,12 +20975,6 @@
       ],
       "purl": "pkg:npm/%40ant-design%2Ffast-color@2.0.6",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/ant-design/fast-color.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -21006,7 +20982,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@ant-design/fast-color/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -21032,12 +21008,6 @@
       ],
       "purl": "pkg:npm/%40ant-design%2Ficons-svg@4.4.2",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/ant-design/ant-design-icons.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -21045,7 +21015,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@ant-design/icons-svg/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -21071,12 +21041,6 @@
       ],
       "purl": "pkg:npm/%40ant-design%2Ficons@5.6.1",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/ant-design/ant-design-icons/tree/master/packages/icons-react"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -21084,7 +21048,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@ant-design/icons/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -21110,12 +21074,6 @@
       ],
       "purl": "pkg:npm/%40ant-design%2Freact-slick@1.1.2",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/ant-design/react-slick"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -21123,7 +21081,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@ant-design/react-slick/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -21149,12 +21107,6 @@
       ],
       "purl": "pkg:npm/%40asamuzakjp%2Fcss-color@5.1.10",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/asamuzaK/cssColor.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -21162,7 +21114,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@asamuzakjp/css-color/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -21188,12 +21140,6 @@
       ],
       "purl": "pkg:npm/%40asamuzakjp%2Fdom-selector@7.0.9",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/asamuzaK/domSelector.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -21201,7 +21147,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@asamuzakjp/dom-selector/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -21227,12 +21173,6 @@
       ],
       "purl": "pkg:npm/%40asamuzakjp%2Fnwsapi@2.3.9",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "git://github.com/dperini/nwsapi.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -21240,7 +21180,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@asamuzakjp/nwsapi/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -21266,12 +21206,6 @@
       ],
       "purl": "pkg:npm/%40babel%2Fcode-frame@7.29.7",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/babel/babel.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -21279,7 +21213,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@babel/code-frame/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -21305,12 +21239,6 @@
       ],
       "purl": "pkg:npm/%40babel%2Fcompat-data@7.29.7",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/babel/babel.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -21318,7 +21246,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@babel/compat-data/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -21344,12 +21272,6 @@
       ],
       "purl": "pkg:npm/%40babel%2Fcore@7.29.7",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/babel/babel.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -21357,7 +21279,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@babel/core/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -21383,12 +21305,6 @@
       ],
       "purl": "pkg:npm/%40babel%2Fgenerator@7.29.7",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/babel/babel.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -21396,7 +21312,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@babel/generator/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -21422,12 +21338,6 @@
       ],
       "purl": "pkg:npm/%40babel%2Fhelper-compilation-targets@7.29.7",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/babel/babel.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -21435,7 +21345,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@babel/helper-compilation-targets/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -21461,12 +21371,6 @@
       ],
       "purl": "pkg:npm/%40babel%2Fhelper-globals@7.29.7",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/babel/babel.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -21474,7 +21378,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@babel/helper-globals/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -21500,12 +21404,6 @@
       ],
       "purl": "pkg:npm/%40babel%2Fhelper-module-imports@7.29.7",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/babel/babel.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -21513,7 +21411,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@babel/helper-module-imports/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -21539,12 +21437,6 @@
       ],
       "purl": "pkg:npm/%40babel%2Fhelper-module-transforms@7.29.7",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/babel/babel.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -21552,7 +21444,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@babel/helper-module-transforms/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -21578,12 +21470,6 @@
       ],
       "purl": "pkg:npm/%40babel%2Fhelper-plugin-utils@7.28.6",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/babel/babel.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -21591,7 +21477,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@babel/helper-plugin-utils/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -21617,12 +21503,6 @@
       ],
       "purl": "pkg:npm/%40babel%2Fhelper-string-parser@7.29.7",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/babel/babel.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -21630,7 +21510,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@babel/helper-string-parser/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -21656,12 +21536,6 @@
       ],
       "purl": "pkg:npm/%40babel%2Fhelper-validator-identifier@7.29.7",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/babel/babel.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -21669,7 +21543,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@babel/helper-validator-identifier/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -21695,12 +21569,6 @@
       ],
       "purl": "pkg:npm/%40babel%2Fhelper-validator-option@7.29.7",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/babel/babel.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -21708,7 +21576,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@babel/helper-validator-option/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -21734,12 +21602,6 @@
       ],
       "purl": "pkg:npm/%40babel%2Fhelpers@7.29.7",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/babel/babel.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -21747,7 +21609,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@babel/helpers/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -21773,12 +21635,6 @@
       ],
       "purl": "pkg:npm/%40babel%2Fparser@7.29.7",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/babel/babel.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -21786,7 +21642,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@babel/parser/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -21812,12 +21668,6 @@
       ],
       "purl": "pkg:npm/%40babel%2Fplugin-transform-react-jsx-self@7.27.1",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/babel/babel.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -21825,7 +21675,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@babel/plugin-transform-react-jsx-self/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -21851,12 +21701,6 @@
       ],
       "purl": "pkg:npm/%40babel%2Fplugin-transform-react-jsx-source@7.27.1",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/babel/babel.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -21864,7 +21708,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@babel/plugin-transform-react-jsx-source/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -21890,12 +21734,6 @@
       ],
       "purl": "pkg:npm/%40babel%2Fruntime@7.29.2",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/babel/babel.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -21903,7 +21741,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@babel/runtime/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -21929,12 +21767,6 @@
       ],
       "purl": "pkg:npm/%40babel%2Ftemplate@7.29.7",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/babel/babel.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -21942,7 +21774,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@babel/template/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -21968,12 +21800,6 @@
       ],
       "purl": "pkg:npm/%40babel%2Ftraverse@7.29.7",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/babel/babel.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -21981,7 +21807,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@babel/traverse/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -22007,12 +21833,6 @@
       ],
       "purl": "pkg:npm/%40babel%2Ftypes@7.29.7",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/babel/babel.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -22020,7 +21840,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@babel/types/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -22046,12 +21866,6 @@
       ],
       "purl": "pkg:npm/%40bramus%2Fspecificity@2.4.2",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/bramus/specificity.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -22059,7 +21873,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@bramus/specificity/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -22085,12 +21899,6 @@
       ],
       "purl": "pkg:npm/%40csstools%2Fcolor-helpers@6.0.2",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/csstools/postcss-plugins.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -22098,7 +21906,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@csstools/color-helpers/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -22124,12 +21932,6 @@
       ],
       "purl": "pkg:npm/%40csstools%2Fcss-calc@3.2.0",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/csstools/postcss-plugins.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -22137,7 +21939,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@csstools/css-calc/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -22163,12 +21965,6 @@
       ],
       "purl": "pkg:npm/%40csstools%2Fcss-color-parser@4.1.0",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/csstools/postcss-plugins.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -22176,7 +21972,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@csstools/css-color-parser/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -22202,12 +21998,6 @@
       ],
       "purl": "pkg:npm/%40csstools%2Fcss-parser-algorithms@4.0.0",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/csstools/postcss-plugins.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -22215,7 +22005,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@csstools/css-parser-algorithms/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -22241,12 +22031,6 @@
       ],
       "purl": "pkg:npm/%40csstools%2Fcss-syntax-patches-for-csstree@1.1.3",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/csstools/postcss-plugins.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -22254,7 +22038,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@csstools/css-syntax-patches-for-csstree/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -22280,12 +22064,6 @@
       ],
       "purl": "pkg:npm/%40csstools%2Fcss-tokenizer@4.0.0",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/csstools/postcss-plugins.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -22293,7 +22071,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@csstools/css-tokenizer/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -22319,12 +22097,6 @@
       ],
       "purl": "pkg:npm/%40emotion%2Fhash@0.8.0",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/emotion-js/emotion/tree/master/packages/hash"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -22332,7 +22104,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@emotion/hash/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -22358,12 +22130,6 @@
       ],
       "purl": "pkg:npm/%40emotion%2Funitless@0.7.5",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/emotion-js/emotion/tree/master/packages/unitless"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -22371,7 +22137,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@emotion/unitless/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -23222,12 +22988,6 @@
       ],
       "purl": "pkg:npm/%40esbuild%2Fwin32-x64@0.25.12",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/evanw/esbuild.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -23235,7 +22995,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@esbuild/win32-x64/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -23261,12 +23021,6 @@
       ],
       "purl": "pkg:npm/%40exodus%2Fbytes@1.15.0",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/ExodusOSS/bytes.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -23274,7 +23028,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@exodus/bytes/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -23300,12 +23054,6 @@
       ],
       "purl": "pkg:npm/%40jridgewell%2Fgen-mapping@0.3.13",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/jridgewell/sourcemaps.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -23313,7 +23061,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@jridgewell/gen-mapping/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -23339,12 +23087,6 @@
       ],
       "purl": "pkg:npm/%40jridgewell%2Fremapping@2.3.5",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/jridgewell/sourcemaps.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -23352,7 +23094,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@jridgewell/remapping/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -23378,12 +23120,6 @@
       ],
       "purl": "pkg:npm/%40jridgewell%2Fresolve-uri@3.1.2",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/jridgewell/resolve-uri"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -23391,7 +23127,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@jridgewell/resolve-uri/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -23417,12 +23153,6 @@
       ],
       "purl": "pkg:npm/%40jridgewell%2Fsourcemap-codec@1.5.5",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/jridgewell/sourcemaps.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -23430,7 +23160,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@jridgewell/sourcemap-codec/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -23456,12 +23186,6 @@
       ],
       "purl": "pkg:npm/%40jridgewell%2Ftrace-mapping@0.3.31",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/jridgewell/sourcemaps.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -23469,7 +23193,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@jridgewell/trace-mapping/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -23495,12 +23219,6 @@
       ],
       "purl": "pkg:npm/%40lobehub%2Ficons-static-svg@1.87.0",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/lobehub/lobe-icons.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -23508,7 +23226,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@lobehub/icons-static-svg/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -23534,12 +23252,6 @@
       ],
       "purl": "pkg:npm/%40rc-component%2Fasync-validator@5.1.0",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "git@github.com:react-component/async-validator.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -23547,7 +23259,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@rc-component/async-validator/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -23573,12 +23285,6 @@
       ],
       "purl": "pkg:npm/%40rc-component%2Fcolor-picker@2.0.1",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "git@github.com:react-component/color-picker.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -23586,7 +23292,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@rc-component/color-picker/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -23612,12 +23318,6 @@
       ],
       "purl": "pkg:npm/%40rc-component%2Fcontext@1.4.0",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "git@github.com:react-component/context.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -23625,7 +23325,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@rc-component/context/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -23651,12 +23351,6 @@
       ],
       "purl": "pkg:npm/%40rc-component%2Fmini-decimal@1.1.3",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/react-component/mini-decimal.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -23664,7 +23358,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@rc-component/mini-decimal/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -23690,12 +23384,6 @@
       ],
       "purl": "pkg:npm/%40rc-component%2Fmutate-observer@1.1.0",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/react-component/mutate-observer.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -23703,7 +23391,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@rc-component/mutate-observer/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -23729,12 +23417,6 @@
       ],
       "purl": "pkg:npm/%40rc-component%2Fportal@1.1.2",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/react-component/portal.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -23742,7 +23424,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@rc-component/portal/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -23768,12 +23450,6 @@
       ],
       "purl": "pkg:npm/%40rc-component%2Fqrcode@1.1.1",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/react-component/qrcode.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -23781,7 +23457,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@rc-component/qrcode/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -23807,12 +23483,6 @@
       ],
       "purl": "pkg:npm/%40rc-component%2Ftour@1.15.1",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/react-component/tour.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -23820,7 +23490,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@rc-component/tour/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -23846,12 +23516,6 @@
       ],
       "purl": "pkg:npm/%40rc-component%2Ftrigger@2.3.1",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/react-component/trigger.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -23859,7 +23523,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@rc-component/trigger/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -23885,12 +23549,6 @@
       ],
       "purl": "pkg:npm/%40rolldown%2Fpluginutils@1.0.0-beta.27",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/rolldown/rolldown.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -23898,7 +23556,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@rolldown/pluginutils/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -24683,12 +24341,6 @@
       ],
       "purl": "pkg:npm/%40rollup%2Frollup-win32-x64-gnu@4.60.0",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/rollup/rollup.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -24696,7 +24348,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@rollup/rollup-win32-x64-gnu/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -24722,12 +24374,6 @@
       ],
       "purl": "pkg:npm/%40rollup%2Frollup-win32-x64-msvc@4.60.0",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/rollup/rollup.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -24735,7 +24381,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@rollup/rollup-win32-x64-msvc/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -24761,12 +24407,6 @@
       ],
       "purl": "pkg:npm/%40standard-schema%2Fspec@1.1.0",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/standard-schema/standard-schema"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -24774,7 +24414,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@standard-schema/spec/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -24800,12 +24440,6 @@
       ],
       "purl": "pkg:npm/%40tauri-apps%2Fapi@2.10.1",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/tauri-apps/tauri.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -24813,7 +24447,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@tauri-apps/api/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -25169,12 +24803,6 @@
       ],
       "purl": "pkg:npm/%40tauri-apps%2Fcli-win32-x64-msvc@2.10.1",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/tauri-apps/tauri.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -25182,7 +24810,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@tauri-apps/cli-win32-x64-msvc/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -25208,12 +24836,6 @@
       ],
       "purl": "pkg:npm/%40tauri-apps%2Fcli@2.10.1",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/tauri-apps/tauri.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -25221,7 +24843,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@tauri-apps/cli/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -25247,12 +24869,6 @@
       ],
       "purl": "pkg:npm/%40tauri-apps%2Fplugin-dialog@2.6.0",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/tauri-apps/plugins-workspace"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -25260,7 +24876,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@tauri-apps/plugin-dialog/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -25286,12 +24902,6 @@
       ],
       "purl": "pkg:npm/%40tauri-apps%2Fplugin-fs@2.4.5",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/tauri-apps/plugins-workspace"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -25299,7 +24909,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@tauri-apps/plugin-fs/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -25325,12 +24935,6 @@
       ],
       "purl": "pkg:npm/%40tauri-apps%2Fplugin-opener@2.5.3",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/tauri-apps/plugins-workspace"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -25338,7 +24942,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@tauri-apps/plugin-opener/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -25364,12 +24968,6 @@
       ],
       "purl": "pkg:npm/%40testing-library%2Fdom@10.4.1",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/testing-library/dom-testing-library"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -25377,7 +24975,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@testing-library/dom/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -25403,12 +25001,6 @@
       ],
       "purl": "pkg:npm/%40testing-library%2Freact@16.3.2",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/testing-library/react-testing-library"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -25416,7 +25008,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@testing-library/react/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -25442,12 +25034,6 @@
       ],
       "purl": "pkg:npm/%40types%2Faria-query@5.0.4",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -25455,7 +25041,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@types/aria-query/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -25481,12 +25067,6 @@
       ],
       "purl": "pkg:npm/%40types%2Fbabel__core@7.20.5",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -25494,7 +25074,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@types/babel__core/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -25520,12 +25100,6 @@
       ],
       "purl": "pkg:npm/%40types%2Fbabel__generator@7.27.0",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -25533,7 +25107,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@types/babel__generator/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -25559,12 +25133,6 @@
       ],
       "purl": "pkg:npm/%40types%2Fbabel__template@7.4.4",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -25572,7 +25140,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@types/babel__template/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -25598,12 +25166,6 @@
       ],
       "purl": "pkg:npm/%40types%2Fbabel__traverse@7.28.0",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -25611,7 +25173,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@types/babel__traverse/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -25637,12 +25199,6 @@
       ],
       "purl": "pkg:npm/%40types%2Fchai@5.2.3",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -25650,7 +25206,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@types/chai/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -25676,12 +25232,6 @@
       ],
       "purl": "pkg:npm/%40types%2Fdeep-eql@4.0.2",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -25689,7 +25239,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@types/deep-eql/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -25715,12 +25265,6 @@
       ],
       "purl": "pkg:npm/%40types%2Festree@1.0.8",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -25728,7 +25272,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@types/estree/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -25754,12 +25298,6 @@
       ],
       "purl": "pkg:npm/%40types%2Fnode@26.1.1",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -25767,7 +25305,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@types/node/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -25793,12 +25331,6 @@
       ],
       "purl": "pkg:npm/%40types%2Fprop-types@15.7.15",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -25806,7 +25338,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@types/prop-types/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -25832,12 +25364,6 @@
       ],
       "purl": "pkg:npm/%40types%2Freact-dom@18.3.7",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -25845,7 +25371,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@types/react-dom/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -25871,12 +25397,6 @@
       ],
       "purl": "pkg:npm/%40types%2Freact@18.3.28",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -25884,7 +25404,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@types/react/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -25910,12 +25430,6 @@
       ],
       "purl": "pkg:npm/%40vitejs%2Fplugin-react@4.7.0",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/vitejs/vite-plugin-react.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -25923,7 +25437,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@vitejs/plugin-react/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -25949,12 +25463,6 @@
       ],
       "purl": "pkg:npm/%40vitest%2Fexpect@4.1.3",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/vitest-dev/vitest.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -25962,7 +25470,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@vitest/expect/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -25988,12 +25496,6 @@
       ],
       "purl": "pkg:npm/%40vitest%2Fmocker@4.1.3",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/vitest-dev/vitest.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -26001,7 +25503,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@vitest/mocker/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -26027,12 +25529,6 @@
       ],
       "purl": "pkg:npm/%40vitest%2Fpretty-format@4.1.3",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/vitest-dev/vitest.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -26040,7 +25536,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@vitest/pretty-format/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -26066,12 +25562,6 @@
       ],
       "purl": "pkg:npm/%40vitest%2Frunner@4.1.3",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/vitest-dev/vitest.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -26079,7 +25569,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@vitest/runner/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -26105,12 +25595,6 @@
       ],
       "purl": "pkg:npm/%40vitest%2Fsnapshot@4.1.3",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/vitest-dev/vitest.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -26118,7 +25602,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@vitest/snapshot/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -26144,12 +25628,6 @@
       ],
       "purl": "pkg:npm/%40vitest%2Fspy@4.1.3",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/vitest-dev/vitest.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -26157,7 +25635,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@vitest/spy/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -26183,12 +25661,6 @@
       ],
       "purl": "pkg:npm/%40vitest%2Futils@4.1.3",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/vitest-dev/vitest.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -26196,7 +25668,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/@vitest/utils/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -26222,12 +25694,6 @@
       ],
       "purl": "pkg:npm/ansi-regex@5.0.1",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "chalk/ansi-regex"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -26235,7 +25701,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/ansi-regex/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -26261,12 +25727,6 @@
       ],
       "purl": "pkg:npm/ansi-styles@5.2.0",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "chalk/ansi-styles"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -26274,7 +25734,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/ansi-styles/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -26300,12 +25760,6 @@
       ],
       "purl": "pkg:npm/antd@5.29.3",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/ant-design/ant-design"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -26313,7 +25767,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/antd/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -26339,12 +25793,6 @@
       ],
       "purl": "pkg:npm/aria-query@5.3.0",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/A11yance/aria-query.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -26352,7 +25800,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/aria-query/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -26378,12 +25826,6 @@
       ],
       "purl": "pkg:npm/assertion-error@2.0.1",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "git@github.com:chaijs/assertion-error.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -26391,7 +25833,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/assertion-error/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -26417,12 +25859,6 @@
       ],
       "purl": "pkg:npm/baseline-browser-mapping@2.10.43",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/web-platform-dx/baseline-browser-mapping.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -26430,7 +25866,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/baseline-browser-mapping/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -26456,12 +25892,6 @@
       ],
       "purl": "pkg:npm/bidi-js@1.0.3",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/lojjic/bidi-js.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -26469,7 +25899,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/bidi-js/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -26495,12 +25925,6 @@
       ],
       "purl": "pkg:npm/browserslist@4.28.6",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "browserslist/browserslist"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -26508,7 +25932,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/browserslist/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -26534,12 +25958,6 @@
       ],
       "purl": "pkg:npm/caniuse-lite@1.0.30001805",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "browserslist/caniuse-lite"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -26547,7 +25965,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/caniuse-lite/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -26573,12 +25991,6 @@
       ],
       "purl": "pkg:npm/chai@6.2.2",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/chaijs/chai"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -26586,7 +25998,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/chai/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -26612,12 +26024,6 @@
       ],
       "purl": "pkg:npm/classnames@2.5.1",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/JedWatson/classnames.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -26625,7 +26031,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/classnames/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -26651,12 +26057,6 @@
       ],
       "purl": "pkg:npm/compute-scroll-into-view@3.1.1",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/scroll-into-view/compute-scroll-into-view.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -26664,7 +26064,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/compute-scroll-into-view/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -26690,12 +26090,6 @@
       ],
       "purl": "pkg:npm/convert-source-map@2.0.0",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "git://github.com/thlorenz/convert-source-map.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -26703,7 +26097,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/convert-source-map/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -26729,12 +26123,6 @@
       ],
       "purl": "pkg:npm/cookie@1.1.1",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "jshttp/cookie"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -26742,7 +26130,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/cookie/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -26768,12 +26156,6 @@
       ],
       "purl": "pkg:npm/copy-to-clipboard@3.3.3",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/sudodoki/copy-to-clipboard"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -26781,7 +26163,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/copy-to-clipboard/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -26807,12 +26189,6 @@
       ],
       "purl": "pkg:npm/css-tree@3.2.1",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "csstree/csstree"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -26820,7 +26196,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/css-tree/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -26846,12 +26222,6 @@
       ],
       "purl": "pkg:npm/csstype@3.2.3",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/frenic/csstype"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -26859,7 +26229,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/csstype/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -26885,12 +26255,6 @@
       ],
       "purl": "pkg:npm/data-urls@7.0.0",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/jsdom/data-urls.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -26898,7 +26262,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/data-urls/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -26924,12 +26288,6 @@
       ],
       "purl": "pkg:npm/dayjs@1.11.20",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/iamkun/dayjs.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -26937,7 +26295,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/dayjs/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -26963,12 +26321,6 @@
       ],
       "purl": "pkg:npm/debug@4.4.3",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "git://github.com/debug-js/debug.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -26976,7 +26328,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/debug/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -27002,12 +26354,6 @@
       ],
       "purl": "pkg:npm/decimal.js@10.6.0",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/MikeMcl/decimal.js.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -27015,7 +26361,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/decimal.js/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -27041,12 +26387,6 @@
       ],
       "purl": "pkg:npm/dequal@2.0.3",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "lukeed/dequal"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -27054,7 +26394,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/dequal/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -27080,12 +26420,6 @@
       ],
       "purl": "pkg:npm/dom-accessibility-api@0.5.16",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/eps1lon/dom-accessibility-api.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -27093,7 +26427,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/dom-accessibility-api/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -27119,12 +26453,6 @@
       ],
       "purl": "pkg:npm/electron-to-chromium@1.5.392",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/Kilian/electron-to-chromium.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -27132,7 +26460,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/electron-to-chromium/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -27158,12 +26486,6 @@
       ],
       "purl": "pkg:npm/entities@6.0.1",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "git://github.com/fb55/entities.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -27171,7 +26493,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/entities/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -27197,12 +26519,6 @@
       ],
       "purl": "pkg:npm/es-module-lexer@2.0.0",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/guybedford/es-module-lexer.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -27210,7 +26526,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/es-module-lexer/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -27236,12 +26552,6 @@
       ],
       "purl": "pkg:npm/esbuild@0.25.12",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/evanw/esbuild.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -27249,7 +26559,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/esbuild/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -27275,12 +26585,6 @@
       ],
       "purl": "pkg:npm/escalade@3.2.0",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "lukeed/escalade"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -27288,7 +26592,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/escalade/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -27314,12 +26618,6 @@
       ],
       "purl": "pkg:npm/estree-walker@3.0.3",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/Rich-Harris/estree-walker"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -27327,7 +26625,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/estree-walker/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -27353,12 +26651,6 @@
       ],
       "purl": "pkg:npm/expect-type@1.3.0",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/mmkal/expect-type.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -27366,7 +26658,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/expect-type/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -27392,12 +26684,6 @@
       ],
       "purl": "pkg:npm/fdir@6.5.0",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/thecodrr/fdir.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -27405,7 +26691,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/fdir/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -27464,12 +26750,6 @@
       ],
       "purl": "pkg:npm/gensync@1.0.0-beta.2",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/loganfsmyth/gensync.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -27477,7 +26757,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/gensync/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -27503,12 +26783,6 @@
       ],
       "purl": "pkg:npm/html-encoding-sniffer@6.0.0",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/jsdom/html-encoding-sniffer.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -27516,7 +26790,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/html-encoding-sniffer/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -27542,12 +26816,6 @@
       ],
       "purl": "pkg:npm/is-potential-custom-element-name@1.0.1",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/mathiasbynens/is-potential-custom-element-name.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -27555,7 +26823,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/is-potential-custom-element-name/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -27581,12 +26849,6 @@
       ],
       "purl": "pkg:npm/js-tokens@4.0.0",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "lydell/js-tokens"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -27594,7 +26856,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/js-tokens/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -27620,12 +26882,6 @@
       ],
       "purl": "pkg:npm/jsdom@29.0.2",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/jsdom/jsdom.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -27633,7 +26889,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/jsdom/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -27659,12 +26915,6 @@
       ],
       "purl": "pkg:npm/jsesc@3.1.0",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/mathiasbynens/jsesc.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -27672,7 +26922,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/jsesc/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -27698,12 +26948,6 @@
       ],
       "purl": "pkg:npm/json2mq@0.2.0",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/akiran/json2mq"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -27711,7 +26955,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/json2mq/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -27737,12 +26981,6 @@
       ],
       "purl": "pkg:npm/json5@2.2.3",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/json5/json5.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -27750,7 +26988,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/json5/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -27776,12 +27014,6 @@
       ],
       "purl": "pkg:npm/loose-envify@1.4.0",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "git://github.com/zertosh/loose-envify.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -27789,7 +27021,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/loose-envify/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -27815,12 +27047,6 @@
       ],
       "purl": "pkg:npm/lru-cache@11.3.5",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "ssh://git@github.com/isaacs/node-lru-cache.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -27828,7 +27054,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/jsdom/node_modules/lru-cache/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -27854,12 +27080,6 @@
       ],
       "purl": "pkg:npm/lru-cache@5.1.1",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "git://github.com/isaacs/node-lru-cache.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -27867,7 +27087,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/lru-cache/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -27893,12 +27113,6 @@
       ],
       "purl": "pkg:npm/lucide-react@0.577.0",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/lucide-icons/lucide.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -27906,7 +27120,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/lucide-react/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -27932,12 +27146,6 @@
       ],
       "purl": "pkg:npm/lz-string@1.5.0",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/pieroxy/lz-string.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -27945,7 +27153,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/lz-string/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -27971,12 +27179,6 @@
       ],
       "purl": "pkg:npm/magic-string@0.30.21",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/Rich-Harris/magic-string.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -27984,7 +27186,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/magic-string/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -28010,12 +27212,6 @@
       ],
       "purl": "pkg:npm/mdn-data@2.27.1",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/mdn/data.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -28023,7 +27219,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/mdn-data/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -28049,12 +27245,6 @@
       ],
       "purl": "pkg:npm/ms@2.1.3",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "vercel/ms"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -28062,7 +27252,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/ms/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -28088,12 +27278,6 @@
       ],
       "purl": "pkg:npm/nanoid@3.3.11",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "ai/nanoid"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -28101,7 +27285,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/nanoid/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -28127,12 +27311,6 @@
       ],
       "purl": "pkg:npm/node-releases@2.0.51",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/chicoxyzzy/node-releases.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -28140,7 +27318,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/node-releases/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -28166,12 +27344,6 @@
       ],
       "purl": "pkg:npm/obug@2.1.1",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/sxzz/obug.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -28179,7 +27351,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/obug/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -28205,12 +27377,6 @@
       ],
       "purl": "pkg:npm/parse5@8.0.0",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "git://github.com/inikulin/parse5.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -28218,7 +27384,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/parse5/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -28244,12 +27410,6 @@
       ],
       "purl": "pkg:npm/pathe@2.0.3",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "unjs/pathe"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -28257,7 +27417,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/pathe/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -28283,12 +27443,6 @@
       ],
       "purl": "pkg:npm/picocolors@1.1.1",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "alexeyraspopov/picocolors"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -28296,7 +27450,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/picocolors/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -28322,12 +27476,6 @@
       ],
       "purl": "pkg:npm/picomatch@4.0.4",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "micromatch/picomatch"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -28335,7 +27483,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/picomatch/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -28361,12 +27509,6 @@
       ],
       "purl": "pkg:npm/postcss@8.5.12",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "postcss/postcss"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -28374,7 +27516,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/postcss/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -28400,12 +27542,6 @@
       ],
       "purl": "pkg:npm/pretty-format@27.5.1",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/facebook/jest.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -28413,7 +27549,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/pretty-format/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -28439,12 +27575,6 @@
       ],
       "purl": "pkg:npm/punycode@2.3.1",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/mathiasbynens/punycode.js.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -28452,7 +27582,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/punycode/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -28478,12 +27608,6 @@
       ],
       "purl": "pkg:npm/rc-cascader@3.34.0",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/react-component/cascader.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -28491,7 +27615,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/rc-cascader/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -28517,12 +27641,6 @@
       ],
       "purl": "pkg:npm/rc-checkbox@3.5.0",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "git@github.com:react-component/checkbox.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -28530,7 +27648,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/rc-checkbox/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -28556,12 +27674,6 @@
       ],
       "purl": "pkg:npm/rc-collapse@3.9.0",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "git@github.com:react-component/collapse.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -28569,7 +27681,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/rc-collapse/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -28595,12 +27707,6 @@
       ],
       "purl": "pkg:npm/rc-dialog@9.6.0",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "git@github.com:react-component/dialog.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -28608,7 +27714,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/rc-dialog/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -28634,12 +27740,6 @@
       ],
       "purl": "pkg:npm/rc-drawer@7.3.0",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/react-component/drawer.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -28647,7 +27747,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/rc-drawer/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -28673,12 +27773,6 @@
       ],
       "purl": "pkg:npm/rc-dropdown@4.2.1",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "git@github.com:react-component/dropdown.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -28686,7 +27780,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/rc-dropdown/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -28712,12 +27806,6 @@
       ],
       "purl": "pkg:npm/rc-field-form@2.7.1",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/react-component/field-form.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -28725,7 +27813,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/rc-field-form/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -28751,12 +27839,6 @@
       ],
       "purl": "pkg:npm/rc-image@7.12.0",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "git@github.com:react-component/image.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -28764,7 +27846,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/rc-image/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -28790,12 +27872,6 @@
       ],
       "purl": "pkg:npm/rc-input-number@9.5.0",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "git@github.com:react-component/input-number.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -28803,7 +27879,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/rc-input-number/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -28829,12 +27905,6 @@
       ],
       "purl": "pkg:npm/rc-input@1.8.0",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "git@github.com:react-component/input.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -28842,7 +27912,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/rc-input/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -28868,12 +27938,6 @@
       ],
       "purl": "pkg:npm/rc-mentions@2.20.0",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "git@github.com:react-component/mentions.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -28881,7 +27945,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/rc-mentions/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -28907,12 +27971,6 @@
       ],
       "purl": "pkg:npm/rc-menu@9.16.1",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "git@github.com:react-component/menu.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -28920,7 +27978,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/rc-menu/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -28946,12 +28004,6 @@
       ],
       "purl": "pkg:npm/rc-motion@2.9.5",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "git@github.com:react-component/motion.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -28959,7 +28011,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/rc-motion/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -28985,12 +28037,6 @@
       ],
       "purl": "pkg:npm/rc-notification@5.6.4",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "git@github.com:react-component/notification.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -28998,7 +28044,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/rc-notification/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -29024,12 +28070,6 @@
       ],
       "purl": "pkg:npm/rc-overflow@1.5.0",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "git@github.com:react-component/overflow.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -29037,7 +28077,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/rc-overflow/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -29063,12 +28103,6 @@
       ],
       "purl": "pkg:npm/rc-pagination@5.1.0",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "git@github.com:react-component/pagination.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -29076,7 +28110,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/rc-pagination/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -29102,12 +28136,6 @@
       ],
       "purl": "pkg:npm/rc-picker@4.11.3",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "git@github.com:react-component/picker.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -29115,7 +28143,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/rc-picker/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -29141,12 +28169,6 @@
       ],
       "purl": "pkg:npm/rc-progress@4.0.0",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "git@github.com:react-component/progress.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -29154,7 +28176,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/rc-progress/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -29180,12 +28202,6 @@
       ],
       "purl": "pkg:npm/rc-rate@2.13.1",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/react-component/rate.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -29193,7 +28209,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/rc-rate/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -29219,12 +28235,6 @@
       ],
       "purl": "pkg:npm/rc-resize-observer@1.4.3",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "git@github.com:react-component/resize-observer.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -29232,7 +28242,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/rc-resize-observer/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -29258,12 +28268,6 @@
       ],
       "purl": "pkg:npm/rc-segmented@2.7.1",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "git@github.com:react-component/segmented.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -29271,7 +28275,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/rc-segmented/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -29297,12 +28301,6 @@
       ],
       "purl": "pkg:npm/rc-select@14.16.8",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "git@github.com:react-component/select.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -29310,7 +28308,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/rc-select/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -29336,12 +28334,6 @@
       ],
       "purl": "pkg:npm/rc-slider@11.1.9",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "git@github.com:react-component/slider.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -29349,7 +28341,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/rc-slider/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -29375,12 +28367,6 @@
       ],
       "purl": "pkg:npm/rc-steps@6.0.1",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": " git+ssh://git@github.com/react-component/steps.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -29388,7 +28374,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/rc-steps/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -29414,12 +28400,6 @@
       ],
       "purl": "pkg:npm/rc-switch@4.1.0",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "git@github.com:react-component/switch.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -29427,7 +28407,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/rc-switch/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -29453,12 +28433,6 @@
       ],
       "purl": "pkg:npm/rc-table@7.54.0",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "git@github.com:react-component/table.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -29466,7 +28440,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/rc-table/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -29492,12 +28466,6 @@
       ],
       "purl": "pkg:npm/rc-tabs@15.7.0",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "git@github.com:react-component/tabs.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -29505,7 +28473,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/rc-tabs/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -29531,12 +28499,6 @@
       ],
       "purl": "pkg:npm/rc-textarea@1.10.2",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "git@github.com:react-component/textarea.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -29544,7 +28506,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/rc-textarea/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -29570,12 +28532,6 @@
       ],
       "purl": "pkg:npm/rc-tooltip@6.4.0",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "git@github.com:react-component/tooltip.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -29583,7 +28539,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/rc-tooltip/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -29609,12 +28565,6 @@
       ],
       "purl": "pkg:npm/rc-tree-select@5.27.0",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/react-component/tree-select.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -29622,7 +28572,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/rc-tree-select/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -29648,12 +28598,6 @@
       ],
       "purl": "pkg:npm/rc-tree@5.13.1",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "git@github.com:react-component/tree.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -29661,7 +28605,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/rc-tree/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -29687,12 +28631,6 @@
       ],
       "purl": "pkg:npm/rc-upload@4.11.0",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "git@github.com:react-component/upload.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -29700,7 +28638,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/rc-upload/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -29726,12 +28664,6 @@
       ],
       "purl": "pkg:npm/rc-util@5.44.4",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "git@github.com:react-component/util.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -29739,7 +28671,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/rc-util/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -29765,12 +28697,6 @@
       ],
       "purl": "pkg:npm/rc-virtual-list@3.19.2",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/react-component/virtual-list.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -29778,7 +28704,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/rc-virtual-list/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -29804,12 +28730,6 @@
       ],
       "purl": "pkg:npm/react-dom@18.3.1",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/facebook/react.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -29817,7 +28737,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/react-dom/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -29843,12 +28763,6 @@
       ],
       "purl": "pkg:npm/react-is@17.0.2",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/facebook/react.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -29856,7 +28770,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/pretty-format/node_modules/react-is/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -29882,12 +28796,6 @@
       ],
       "purl": "pkg:npm/react-is@18.3.1",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/facebook/react.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -29895,7 +28803,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/react-is/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -29921,12 +28829,6 @@
       ],
       "purl": "pkg:npm/react-refresh@0.17.0",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/facebook/react.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -29934,7 +28836,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/react-refresh/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -29960,12 +28862,6 @@
       ],
       "purl": "pkg:npm/react-router-dom@7.18.1",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/remix-run/react-router"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -29973,7 +28869,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/react-router-dom/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -29999,12 +28895,6 @@
       ],
       "purl": "pkg:npm/react-router@7.18.1",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/remix-run/react-router"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -30012,7 +28902,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/react-router/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -30038,12 +28928,6 @@
       ],
       "purl": "pkg:npm/react@18.3.1",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/facebook/react.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -30051,7 +28935,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/react/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -30077,12 +28961,6 @@
       ],
       "purl": "pkg:npm/require-from-string@2.0.2",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "floatdrop/require-from-string"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -30090,7 +28968,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/require-from-string/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -30116,12 +28994,6 @@
       ],
       "purl": "pkg:npm/resize-observer-polyfill@1.5.1",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/que-etc/resize-observer-polyfill.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -30129,7 +29001,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/resize-observer-polyfill/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -30155,12 +29027,6 @@
       ],
       "purl": "pkg:npm/rollup@4.60.0",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/rollup/rollup.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -30168,7 +29034,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/rollup/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -30194,12 +29060,6 @@
       ],
       "purl": "pkg:npm/saxes@6.0.0",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/lddubeau/saxes.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -30207,7 +29067,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/saxes/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -30233,12 +29093,6 @@
       ],
       "purl": "pkg:npm/scheduler@0.23.2",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/facebook/react.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -30246,7 +29100,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/scheduler/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -30272,12 +29126,6 @@
       ],
       "purl": "pkg:npm/scroll-into-view-if-needed@3.1.0",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/scroll-into-view/scroll-into-view-if-needed.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -30285,7 +29133,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/scroll-into-view-if-needed/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -30311,12 +29159,6 @@
       ],
       "purl": "pkg:npm/semver@6.3.1",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/npm/node-semver.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -30324,7 +29166,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/semver/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -30350,12 +29192,6 @@
       ],
       "purl": "pkg:npm/set-cookie-parser@2.7.2",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "nfriedly/set-cookie-parser"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -30363,7 +29199,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/set-cookie-parser/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -30389,12 +29225,6 @@
       ],
       "purl": "pkg:npm/siginfo@2.0.0",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/emilbayes/siginfo.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -30402,7 +29232,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/siginfo/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -30428,12 +29258,6 @@
       ],
       "purl": "pkg:npm/simple-icons@16.17.0",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "ssh://git@github.com/simple-icons/simple-icons.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -30441,7 +29265,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/simple-icons/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -30467,12 +29291,6 @@
       ],
       "purl": "pkg:npm/source-map-js@1.2.1",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "7rulnik/source-map-js"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -30480,7 +29298,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/source-map-js/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -30506,12 +29324,6 @@
       ],
       "purl": "pkg:npm/stackback@0.0.2",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "git://github.com/shtylman/node-stackback.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -30519,7 +29331,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/stackback/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -30545,12 +29357,6 @@
       ],
       "purl": "pkg:npm/std-env@4.0.0",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "unjs/std-env"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -30558,7 +29364,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/std-env/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -30584,12 +29390,6 @@
       ],
       "purl": "pkg:npm/string-convert@0.2.1",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/akiran/string-convert"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -30597,7 +29397,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/string-convert/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -30623,12 +29423,6 @@
       ],
       "purl": "pkg:npm/stylis@4.3.6",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/thysultan/stylis.js"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -30636,7 +29430,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/stylis/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -30662,12 +29456,6 @@
       ],
       "purl": "pkg:npm/symbol-tree@3.2.4",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/jsdom/js-symbol-tree.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -30675,7 +29463,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/symbol-tree/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -30701,12 +29489,6 @@
       ],
       "purl": "pkg:npm/throttle-debounce@5.0.2",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/niksy/throttle-debounce.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -30714,7 +29496,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/throttle-debounce/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -30740,12 +29522,6 @@
       ],
       "purl": "pkg:npm/tinybench@2.9.0",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "tinylibs/tinybench"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -30753,7 +29529,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/tinybench/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -30779,12 +29555,6 @@
       ],
       "purl": "pkg:npm/tinyexec@1.1.1",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/tinylibs/tinyexec.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -30792,7 +29562,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/tinyexec/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -30818,12 +29588,6 @@
       ],
       "purl": "pkg:npm/tinyglobby@0.2.15",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/SuperchupuDev/tinyglobby.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -30831,7 +29595,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/tinyglobby/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -30857,12 +29621,6 @@
       ],
       "purl": "pkg:npm/tinyrainbow@3.1.0",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/tinylibs/tinyrainbow.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -30870,7 +29628,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/tinyrainbow/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -30896,12 +29654,6 @@
       ],
       "purl": "pkg:npm/tldts-core@7.0.28",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "ssh://git@github.com/remusao/tldts.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -30909,7 +29661,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/tldts-core/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -30935,12 +29687,6 @@
       ],
       "purl": "pkg:npm/tldts@7.0.28",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "ssh://git@github.com/remusao/tldts.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -30948,7 +29694,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/tldts/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -30974,12 +29720,6 @@
       ],
       "purl": "pkg:npm/toggle-selection@1.0.6",
       "scope": "required",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/sudodoki/toggle-selection"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -30987,7 +29727,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/toggle-selection/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -31013,12 +29753,6 @@
       ],
       "purl": "pkg:npm/tough-cookie@6.0.1",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "git://github.com/salesforce/tough-cookie.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -31026,7 +29760,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/tough-cookie/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -31052,12 +29786,6 @@
       ],
       "purl": "pkg:npm/tr46@6.0.0",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/jsdom/tr46.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -31065,7 +29793,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/tr46/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -31091,12 +29819,6 @@
       ],
       "purl": "pkg:npm/typescript@5.6.3",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/microsoft/TypeScript.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -31104,7 +29826,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/typescript/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -31130,12 +29852,6 @@
       ],
       "purl": "pkg:npm/undici-types@8.3.0",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/nodejs/undici.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -31143,7 +29859,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/undici-types/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -31169,12 +29885,6 @@
       ],
       "purl": "pkg:npm/undici@7.28.0",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/nodejs/undici.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -31182,7 +29892,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/undici/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -31208,12 +29918,6 @@
       ],
       "purl": "pkg:npm/update-browserslist-db@1.2.3",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "browserslist/update-db"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -31221,7 +29925,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/update-browserslist-db/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -31247,12 +29951,6 @@
       ],
       "purl": "pkg:npm/vite@6.4.3",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/vitejs/vite.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -31260,7 +29958,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/vite/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -31286,12 +29984,6 @@
       ],
       "purl": "pkg:npm/vitest@4.1.3",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/vitest-dev/vitest.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -31299,7 +29991,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/vitest/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -31325,12 +30017,6 @@
       ],
       "purl": "pkg:npm/w3c-xmlserializer@5.0.0",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "jsdom/w3c-xmlserializer"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -31338,7 +30024,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/w3c-xmlserializer/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -31364,12 +30050,6 @@
       ],
       "purl": "pkg:npm/webidl-conversions@8.0.1",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/jsdom/webidl-conversions.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -31377,7 +30057,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/webidl-conversions/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -31403,12 +30083,6 @@
       ],
       "purl": "pkg:npm/whatwg-mimetype@5.0.0",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "jsdom/whatwg-mimetype"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -31416,7 +30090,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/whatwg-mimetype/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -31442,12 +30116,6 @@
       ],
       "purl": "pkg:npm/whatwg-url@16.0.1",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/jsdom/whatwg-url.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -31455,7 +30123,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/whatwg-url/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -31481,12 +30149,6 @@
       ],
       "purl": "pkg:npm/why-is-node-running@2.3.0",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/mafintosh/why-is-node-running.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -31494,7 +30156,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/why-is-node-running/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -31520,12 +30182,6 @@
       ],
       "purl": "pkg:npm/xml-name-validator@5.0.0",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "jsdom/xml-name-validator"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -31533,7 +30189,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/xml-name-validator/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -31559,12 +30215,6 @@
       ],
       "purl": "pkg:npm/xmlchars@2.2.0",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/lddubeau/xmlchars.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -31572,7 +30222,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/xmlchars/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",
@@ -31598,12 +30248,6 @@
       ],
       "purl": "pkg:npm/yallist@3.1.1",
       "scope": "excluded",
-      "externalReferences": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/isaacs/yallist.git"
-        }
-      ],
       "properties": [
         {
           "name": "skill-studio-pro:ecosystem",
@@ -31611,7 +30255,7 @@
         },
         {
           "name": "skill-studio-pro:license-source",
-          "value": "file:node_modules/yallist/package.json"
+          "value": "package-lock.json"
         },
         {
           "name": "skill-studio-pro:lock-path",

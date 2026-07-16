@@ -1,7 +1,7 @@
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { dirname, join, relative, resolve } from "node:path";
+import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -123,18 +123,12 @@ function readNpmComponents() {
     if (!packagePath) continue;
     const name = packageNameFromLockPath(packagePath);
     const version = lockEntry.version;
-    const manifestPath = resolve(root, packagePath, "package.json");
-    const manifest = existsSync(manifestPath) ? JSON.parse(readFileSync(manifestPath, "utf8")) : null;
     const evidence = npmEvidence(name, version);
-    const declaredLicense = manifest?.license ?? lockEntry.license ?? evidence?.license ?? null;
-    const licenseSource = manifest?.license
-      ? `file:${normalizePath(relative(root, manifestPath))}`
-      : lockEntry.license
-        ? "package-lock.json"
-        : evidence?.source ?? "not-declared";
-    const repository = typeof manifest?.repository === "string"
-      ? manifest.repository
-      : manifest?.repository?.url ?? null;
+    // package-lock v3 is the cross-platform source of truth. Reading
+    // node_modules here would make optional OS packages and repository fields
+    // depend on the host that happened to run the generator.
+    const declaredLicense = lockEntry.license ?? evidence?.license ?? null;
+    const licenseSource = lockEntry.license ? "package-lock.json" : evidence?.source ?? "not-declared";
     const purl = `pkg:npm/${encodeURIComponent(name)}@${encodeURIComponent(version)}`;
     const component = {
       type: "library",
@@ -147,7 +141,6 @@ function readNpmComponents() {
         : {}),
       purl,
       scope: lockEntry.dev ? "excluded" : lockEntry.optional ? "optional" : "required",
-      ...(repository ? { externalReferences: [{ type: "vcs", url: repository.replace(/^git\+/, "") }] } : {}),
       properties: [
         { name: "skill-studio-pro:ecosystem", value: "npm" },
         { name: "skill-studio-pro:license-source", value: licenseSource },
