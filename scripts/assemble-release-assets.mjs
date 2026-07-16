@@ -26,6 +26,7 @@ if (manifests.length !== 3) throw new Error(`Expected three platform manifests, 
 const copied = new Set();
 function copyUnique(source, preferredName = basename(source)) {
   if (copied.has(preferredName)) throw new Error(`Release asset filename collision: ${preferredName}`);
+  if (statSync(source).size === 0) throw new Error(`Release assets must not be empty: ${source}`);
   copied.add(preferredName);
   copyFileSync(source, join(output, preferredName));
 }

@@ -46,5 +46,9 @@ kill -0 "$pid"
 test -f "$config/workspace-config.json"
 test -f "$workspace/metadata.db"
 
+cleanup
+trap - EXIT
+printf '%s\n' 'PASS: DMG mounted, app copied, executable remained running for 10 seconds, and isolated bootstrap completed.' >>"$log"
+
 node -e 'const fs=require("fs");fs.writeFileSync(process.argv[1],JSON.stringify({status:"PASS",platform:"macos",installType:"DMG mounted and app copied",executableLaunched:true,remainedRunningSeconds:10,isolatedBootstrap:true,userDataAccessed:false,signing:"not Developer ID signed or notarized"},null,2)+"\n")' "$output"
 cat "$output"

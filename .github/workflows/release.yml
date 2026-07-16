@@ -2,6 +2,11 @@ name: Skill Studio Pro Public Beta
 
 on:
   workflow_dispatch:
+    inputs:
+      release_tag:
+        description: Existing immutable tag to rebuild and publish; leave empty for validation only
+        required: false
+        type: string
   push:
     tags:
       - "v*"
@@ -21,6 +26,7 @@ jobs:
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           fetch-depth: 0
+          ref: ${{ inputs.release_tag || github.ref }}
       - name: Setup Node.js
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
@@ -69,6 +75,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          ref: ${{ inputs.release_tag || github.ref }}
 
       - name: Install Linux desktop and Secret Service dependencies
         if: runner.os == 'Linux'
@@ -142,7 +150,11 @@ jobs:
       - name: Smoke installed macOS DMG application
         if: runner.os == 'macOS'
         shell: bash
-        run: bash scripts/ci/smoke-macos.sh "$(find release-assets/macos -maxdepth 1 -name '*.dmg' -print -quit)" release-assets/macos/smoke-macos.json
+        run: |
+          bash scripts/ci/smoke-macos.sh "$(find release-assets/macos -maxdepth 1 -name '*.dmg' -print -quit)" release-assets/macos/smoke-macos.json
+          if [[ ! -s release-assets/macos/smoke-macos.log ]]; then
+            printf '%s\n' 'PASS: macOS installed-application smoke completed without application stderr output.' > release-assets/macos/smoke-macos.log
+          fi
       - name: Smoke installed Linux deb application under Xvfb
         if: runner.os == 'Linux'
         shell: bash
@@ -172,6 +184,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          fetch-depth: 0
+          ref: ${{ inputs.release_tag || github.ref }}
       - name: Setup Node.js
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
@@ -191,14 +206,21 @@ jobs:
           if-no-files-found: error
           retention-days: 90
       - name: Require the release tag to match the application version
-        if: startsWith(github.ref, 'refs/tags/')
-        run: test "${GITHUB_REF_NAME}" = "v0.1.0-beta.1"
+        if: startsWith(github.ref, 'refs/tags/') || inputs.release_tag != ''
+        env:
+          RELEASE_TAG: ${{ inputs.release_tag || github.ref_name }}
+        run: |
+          test "$RELEASE_TAG" = "v0.1.0-beta.1"
+          tag_commit=$(git ls-remote origin "refs/tags/$RELEASE_TAG^{}" | awk '{print $1}')
+          test -n "$tag_commit"
+          test "$(git rev-parse HEAD)" = "$tag_commit"
       - name: Create public beta prerelease
-        if: startsWith(github.ref, 'refs/tags/')
+        if: startsWith(github.ref, 'refs/tags/') || inputs.release_tag != ''
         env:
           GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ inputs.release_tag || github.ref_name }}
         run: |
-          gh release create "$GITHUB_REF_NAME" publish-assets/* \
+          gh release create "$RELEASE_TAG" publish-assets/* \
             --repo "$GITHUB_REPOSITORY" \
             --title "Skill Studio Pro v0.1.0-beta.1" \
             --notes-file docs/release-notes.md \
