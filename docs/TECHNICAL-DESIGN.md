@@ -1056,6 +1056,8 @@ interface AppError {
 
 ## 24. Draft 0.2 产品闭环实现
 
+> 状态标注（2026-07-16）：本章记录从 `d626224` 出发的实现方案和窗口顺序。相关实现与发布窗口现已完成，`main` 是公开默认分支；最终发布事实以 [FINAL-RELEASE-AUDIT.md](./handoffs/FINAL-RELEASE-AUDIT.md) 为准。
+
 ### 24.1 实现基线
 
 `d626224` 已具备编辑、AI、平台、扫描和发布所需的后端 service、IPC 与类型化前端 API。Draft 0.2 的原则是复用这些接口补齐用户流程，不重写数据库、Platform Adapter、AI Provider 或文件事务。
@@ -1115,7 +1117,7 @@ readonly -> loading -> clean -> dirty -> saving -> clean
 ### 24.6 开源发布工程
 
 1. 建立 Pro 自有公开仓库和 `origin`；上游只保留为 `upstream`。
-2. 当前 `wave-0-baseline` 在完成发布审计后合并或改名为 `main`，不得丢失历史。
+2. 历史计划要求 `wave-0-baseline` 在发布审计前合并或改名为 `main` 且不得丢失历史；当前已完成，公开默认分支为 `main`。
 3. PR/主分支 CI 在三种真实 OS Runner 执行 `npm run check`、仓库卫生、秘密与许可证检查。
 4. Release workflow 生成平台安装包、SHA-256、SBOM、第三方清单和产物内容审计结果。
 5. 自动更新在 Pro 自有签名密钥与端点完成前保持关闭。

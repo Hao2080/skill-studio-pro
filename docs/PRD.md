@@ -466,6 +466,8 @@ AI Agent 的 Skill 通常以目录和 Markdown 文件存在。随着用户同时
 
 ## 18. Draft 0.2 当前状态与下一阶段
 
+> 状态标注（2026-07-16）：本节保留的是以 `d626224` 为起点的冲刺计划与阶段定义，不再代表仓库当前发布状态。编辑、AI、平台/扫描根、隔离 Windows UAT、性能基准、三平台原生 Secret Store、安装后 smoke 与 Public Beta 已在后续 handoff 中完成；最终结论以 [FINAL-RELEASE-AUDIT.md](./handoffs/FINAL-RELEASE-AUDIT.md) 为准。
+
 ### 18.1 当前产品阶段
 
 以 `d626224` 为实现基线，Skill Studio Pro 已达到 Windows 内部 Beta 候选：核心 Rust 服务、SQLite 数据模型、真实 Tauri IPC、深海蓝桌面壳、Windows NSIS 打包和自动化安全门槛已经形成。
@@ -521,6 +523,6 @@ AI Agent 的 Skill 通常以目录和 Markdown 文件存在。随着用户同时
 
 1. **Internal Beta**：上述三个产品闭环完成，Windows 真实沙箱流程通过。
 2. **Public Beta (`v0.1.0-beta.1`)**：公开仓库、三平台 CI 和构建/启动证据、文档与依赖清单完成。
-3. **Stable Candidate**：高 DPI/可访问性人工验收、大规模性能基准、真实 Secret Store、签名/公证策略和 Beta 缺陷回归完成。
+3. **Stable Candidate**：持续复验高 DPI/可访问性、性能和真实 Secret Store；完成签名/公证决策与 Beta 缺陷回归。
 
 任何阶段都不得用 Mock 页面、静态平台卡片或仅后端存在的命令作为用户流程完成证据。

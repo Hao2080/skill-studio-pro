@@ -551,6 +551,8 @@ Rust 业务逻辑必须可在不启动桌面窗口时测试；前端通过 Mock 
 
 ## 11. Draft 0.2 实现基线与范围边界
 
+> 状态标注（2026-07-16）：下列清单是 `d626224` 时点的历史阻断项，不是当前未完成清单。后续实现、Windows UAT、三平台 CI、供应链与 Public Beta 证据已逐项关闭这些阻断；最终状态以 [FINAL-RELEASE-AUDIT.md](./handoffs/FINAL-RELEASE-AUDIT.md) 为准。
+
 Draft 0.2 以 `d626224` 为实现审计基线。该基线已完成扫描索引、来源可信度、中央库、映射、安装、回收站、AI Provider、真实后端 IPC 联调和 Windows NSIS 启动 smoke，但以下内容仍是 V1 发布阻断项：
 
 1. 编辑后端能力尚未形成完整桌面编辑器交互。
